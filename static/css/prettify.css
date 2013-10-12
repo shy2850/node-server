@@ -1,0 +1,87 @@
+/* prettify.css */
+.prettyprint {
+  background: #272822;
+  padding: .4em;
+}
+.prettyprint .opn,
+.prettyprint .clo {
+  color: #93a1a1;
+}
+.prettyprint .fun {
+  color: #dc322f;
+}
+.prettyprint .linenums li {
+  color: #1e347b;
+}
+.prettyprint .var {
+  color: teal;
+}
+.prettyprint .str {
+  color: #1DC116;
+}
+.prettyprint .kwd {
+  color: #E83737;
+}
+.prettyprint .com {
+  color: #428BDD;
+}
+.prettyprint .typ {
+  color: #FFAA3E;
+}
+.prettyprint .lit {
+  color: #D1EDFF;
+}
+.prettyprint .pun {
+  color: #D1EDFF;
+}
+.prettyprint .tag {
+  color: #d50;
+}
+.prettyprint .atn {
+  color: #ae2;
+}
+.prettyprint .atv {
+  color: #080;
+}
+.prettyprint .dec {
+  color: #606;
+}
+.prettyprint .pln {
+  color: #FFAA3E;
+}
+.prettyprint li.hover {
+  color: #66f;
+  background: #0F192A;
+  font-weight: bold;
+}
+.prettyprint li.hover .com {
+  color: #93a1a1;
+}
+.prettyprint li.hover .lit {
+  color: #D1EDFF;
+}
+.prettyprint li.hover .pun,
+.prettyprint li.hover .opn,
+.prettyprint li.hover .clo {
+  color: #93a1a1;
+}
+.prettyprint li.hover .fun {
+  color: #dc322f;
+}
+.prettyprint li.hover .str,
+.prettyprint li.hover .atv {
+  color: #D14;
+}
+.prettyprint li.hover .kwd,
+.prettyprint li.hover .linenums .tag {
+  color: #1e347b;
+}
+.prettyprint li.hover .typ,
+.prettyprint li.hover .atn,
+.prettyprint li.hover .dec,
+.prettyprint li.hover .var {
+  color: teal;
+}
+.prettyprint li.hover .pln {
+  color: #FFAA3E;
+}

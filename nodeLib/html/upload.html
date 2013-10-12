@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>文件上传</title>
+    <style type="text/css">
+        *{
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+        html,body{
+            background: transparent;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<form action="/upload?uploadUrl=<%=request.data.uploadUrl||''%>" enctype="multipart/form-data" method="post">
+    <input type="file" name="upload" style="cursor: pointer;width: 82px;height: 38px; position: absolute;" multiple="multiple" >
+    <input type="submit" value="submit" id="submit"/>
+</form>
+</body>
+</html>

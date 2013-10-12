@@ -1,0 +1,17 @@
+<!doctype html>
+<%var $ = request.$;%>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title><%=$.title%></title>
+	<link rel="stylesheet" href="<%=$.staticServer%>static/css/bootstrap.css" data-noprefix>
+	<link rel="stylesheet" href="/agent?<%=$.staticServer%>static/css/prettify.less" >
+	<script src="<%=$.staticServer%>static/js/modernizr-min.js"></script>
+	<script data-main="<%=$.staticServer%>static/js/prettify.js" src="<%=$.staticServer%>static/js/require-min.js"></script>
+</head>
+<body>
+<div id="main">
+	<pre id="holder" class="prettyprint linenums:1" data-url="/agent?<%=$.title%>"></pre>
+</div>
+</body>
+</html>

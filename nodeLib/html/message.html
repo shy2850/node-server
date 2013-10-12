@@ -1,0 +1,40 @@
+<!doctype html>
+<%var $ = request.$, mime = request.util.mime;%>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>留言板</title>
+    <link rel="stylesheet" href="<%=$.staticServer%>static/css/bootstrap.css" data-noprefix>
+    <link rel="stylesheet" href="/agent?<%=$.staticServer%>static/css/message.css" >
+    <script src="<%=$.staticServer%>static/js/modernizr-min.js"></script>
+    <script data-main="<%=$.staticServer%>static/js/message.js" src="<%=$.staticServer%>static/js/require-min.js"></script>
+</head>
+<body>
+    <div id="plate" class="front">
+        <form action="/upload" method="post" onsubmit="return false;">
+            <textarea class="message" id="words" name="words">亲爱的,
+                有些事情不是看到希望才去坚持，而是坚持了才有希望
+            </textarea>
+            <input type="submit" class="send" value="发送">
+            <div id="bottom">
+                <a href="" id="url_link"> * </a>
+            </div>
+        </form>
+    </div>
+
+    <div id="container" class="beginning">
+        <div id="left-wing">
+            <div class="top_left curvable"> </div>
+            <div class="bottom_left curvable"> </div>
+            <div class="wing wing1"></div>
+            <div class="wing wing2"></div>
+        </div>
+        <div id="right-wing">
+            <div class="top_right curvable"> </div>
+            <div class="bottom_right curvable"> </div>
+            <div class="wing wing3"></div>
+            <div class="wing wing4"></div>
+        </div>
+    </div>
+</body>
+</html>

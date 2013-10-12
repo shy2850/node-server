@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+</head>
+<body onload='djs();'>
+	<div style='text-align:center' >
+		<h1 style='color:red' >您访问的资源不存在啊！</h1>
+		<a href='/' id='nu'>60</a>秒钟后返回首页
+	</div>
+	<script>
+		function djs(){ 
+			var v=document.getElementById('nu');
+			if(v.innerHTML > 1){
+				v.innerHTML--;setTimeout('djs()',1000);
+			}else{
+				window.location.href = '/';
+			}
+		}
+	</script>
+</body>
+</html>

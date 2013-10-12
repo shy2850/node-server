@@ -1,0 +1,32 @@
+$include[demo/login/temp.html]
+<%
+_o_ = function(){
+	var postData = "", valid = {
+		"user_name":{ t:"用户名是6-20位的字母或者数字!" ,reg:/^[\w\d]{6,20}$/},
+        "pass":{ t:"密码必须为8位纯数字!" ,reg:/^\d{8}$/},
+        "identify":{ t:"验证码为4为数字或者字母!",reg:/^[\w\d]{4}$/ }
+	}, query = function(str){
+		var o={},t = str.split("&");
+		for(var i = 0; i < t.length; i++){
+			o[t[i].split("=")[0]] = t[i].split("=")[1];
+		}
+		return o;
+	};
+	request.setEncoding("utf-8");
+    request.addListener("data", function(d) {
+		postData += d;
+    });
+    request.addListener("end", function() {
+		var r = query( postData );
+		for(var k in valid){
+			if( !(valid[k].reg.test(r[k]) ) ){
+				response.end( _output_.replace("_info_",valid[k].t) );
+				return;
+			}
+		}  
+		response.end( _output_.replace("_info_","登录成功！") );
+    });
+};
+	
+
+%>

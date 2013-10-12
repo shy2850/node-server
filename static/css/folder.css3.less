@@ -1,0 +1,21 @@
+@charset "utf-8";
+
+.big li{
+	a{
+	    animation-duration:.5s;
+	    animation-name:un-rotate;
+		&:hover{
+		    animation-duration:.2s;
+		    animation-name:rotate;
+		}
+	}
+}
+
+@keyframes rotate{
+    0%{ transform:rotate(0); }
+    100%{ transform:rotate(360deg); }
+}
+@keyframes un-rotate{
+    100%{ transform:rotate(0); }
+    0%{ transform:rotate(360deg); }
+}
