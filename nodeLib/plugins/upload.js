@@ -9,7 +9,7 @@ exports.execute = function(req,resp,root,handle,f){
 	var form = new formidable.IncomingForm(),
         files = [],
         fields = [];
-    if(req.data.iframe == "true"){
+    if(req.method === "GET"){
         fs.readFile(uploadBase,function (err,data){
             resp.writeHead(200, {'content-type': mime.get("html")});
             handle.execute(req,resp,root,data.toString(),f,true);
@@ -44,6 +44,7 @@ exports.execute = function(req,resp,root,handle,f){
                         console.log(err);
                     }
                     resp.writeHead(200, {'content-type': mime.get("html")});
+                    req.forward = true;
                     handle.execute(req,resp,root,data.toString(),f,true);
                 });
 

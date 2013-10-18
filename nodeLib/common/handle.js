@@ -23,14 +23,15 @@ exports.execute = function(req,resp,root,str,mini,debug){
 		str = str.replace( temp[1] , vm );  			//替换关键字
 	}
 
-	var result = str, postData = "";
+	var result = str, postData = "", run = function(t,f){f.call(this)};
 
 	req.addListener("data",function(d){
 		postData += d;
 	});
 
-	req.addListener("end",function(d){
+	( (req.method==="GET" || req.forward) ? run : req.addListener )("end",function(d){
 		req.post = querystring.parse(postData);
+
 		try{
 			if(exports.conf.runJs){
 				var x = "", strs = str.split(/<%|%>/);
@@ -53,7 +54,6 @@ exports.execute = function(req,resp,root,str,mini,debug){
 			resp.writeHead(500, {"Content-Type": "text/html"});
 			resp.end( e.stack.toString().replace(/\n/g,"<br>") );
 		}
-
 	});
 
 		
