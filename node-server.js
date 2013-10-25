@@ -36,9 +36,6 @@ var conf = require("./nodeLib/config/conf"),	//综合配置
 function start(conf){
 	handle.conf = conf;
 	var server = http.createServer(function (req, resp) { try{
-
-		console.log(req);
-
 		var root = conf.root || __dirname;
 		var pathurl = "";
             try{
