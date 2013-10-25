@@ -14,7 +14,8 @@ exports.CONF = {
     fs_mod: true,       //是否支持文件夹列表展示
     port: 80,           //服务器监听端口
     maxConnections: 1000,    //并发处理的最大连接数
-    runJs : true
+    runJs : true,
+    expires : 1000*60*60*24     //服务端缓存时间设置
 };
 
 exports.staticConf = {          //不要修改
@@ -25,11 +26,12 @@ exports.staticConf = {          //不要修改
     handle: true,
     coffee: true,
     less: true,
-    debug: true,
+    debug: false,
     fs_mod: true,
     port: 2850,
     maxConnections: 1000,    //并发处理的最大连接数
-    runJs : true
+    runJs : true,
+    expires : 1000*60*60*24     //服务端缓存时间设置
 };
 
 exports.conf1 = {          //不要修改
@@ -44,6 +46,7 @@ exports.conf1 = {          //不要修改
     fs_mod: true,
     port: 1000,
     maxConnections: 1000,    //并发处理的最大连接数
-    runJs : true
+    runJs : true,
+    expires : 1000*60*60*24     //服务端缓存时间设置
 };
 
