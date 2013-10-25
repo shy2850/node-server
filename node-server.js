@@ -36,6 +36,9 @@ var conf = require("./nodeLib/config/conf"),	//综合配置
 function start(conf){
 	handle.conf = conf;
 	var server = http.createServer(function (req, resp) { try{
+
+		console.log(req);
+
 		var root = conf.root || __dirname;
 		var pathurl = "";
             try{
@@ -53,7 +56,12 @@ function start(conf){
 
 		fs.stat(pathname,function(error,stats){
 			if(stats && stats.isFile && stats.isFile()){  //如果url对应的资源文件存在，根据后缀名写入MIME类型
-				resp.writeHead(200, {"Content-Type": mime.get(extType)}); 
+				var expires = new Date();
+				expires.setTime( expires.getTime() + (conf.expires || 0) );
+				resp.writeHead(200, {
+					"Content-Type": mime.get(extType),
+					"Expires": expires
+				}); 
 				fs.readFile(pathname,function (err,data){ 
 					var rs = data.toString();
                     if( conf.less && extType === "less" && req.data.less !== "false" ){	//LESS
