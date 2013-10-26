@@ -84,7 +84,7 @@ function start(conf){
                             resp.writeHead(500, {"Content-Type": "text/html"});
                             resp.end( e + "" );
                         }
-                    }else if(  conf.handle && mime.isTXT(extType) && req.data.handle !== "false" ){	//handle
+                    }else if(  conf.handle && mime.isTXT(extType) && !( /[\.\-]min\.(js|css)$/.test(pathurl) ) && req.data.handle !== "false" ){	//handle
                     	handle.execute(req,resp,root,rs, mini.get(extType) ,_DEBUG) 
                     }else{
                     	resp.end( data )
