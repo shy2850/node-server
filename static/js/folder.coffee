@@ -30,7 +30,7 @@ require ["bootstrap","frameupload"], ()->
     if localStorge
        ($ "#list-container").addClass localStorge.iconStyle
 
-    ($ "body").fadeIn()
+    ($ "body").fadeIn(50)
 
     ($ ".txt").on "click", ()->
       if (confirm "使用高亮工具查看文档？\n确定：工具查看文件；\n取消：直接打开。")
@@ -48,7 +48,7 @@ require ["bootstrap","frameupload"], ()->
          this.innerHTML = "上传成功"
          setTimeout ()->
             window.location.reload()
-         ,1200
+         ,1000
       ,
       begin   : ()->
          this.innerHTML = "正在上传..."
