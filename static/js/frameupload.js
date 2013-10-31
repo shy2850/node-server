@@ -63,7 +63,11 @@
                 var d = this.contentDocument || document.frames["ajaxFrame"].document;
 
                 if( typeof options.success  === "function" ){
-                    options.success.call(dom,new Function("return " + d.body.innerHTML )(), this.contentDocument);
+                    try{
+                        options.success.call(dom,new Function("return " + d.body.innerHTML )(), this.contentDocument);
+                    }catch(e){
+                        //
+                    }
                 }
             };
 
