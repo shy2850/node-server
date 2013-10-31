@@ -62,7 +62,7 @@
 		$("#getXuanID").css({color:"#ccc",cursor:"default"}).off();
 		if( $("#register_name").is(":disabled") )return;
 		$.ajax({
-			url : "/profile/xuanid.do?",
+			url : "/agent?http://login.home.news.cn/profile/xuanid.do?",
 			data: {o:$("[name='o']").val()},
 			dataType:"json",
 			success:function(data){
@@ -140,7 +140,7 @@
     		validFun:function(v){
     			var vR = {errorInfo:""};
     			$.ajax({
-    				url: agent+"http://login.home.news.cn//profile/passportCheck.do?",
+    				url: agent+"http://login.home.news.cn/profile/passportCheck.do?",
     				data:{name:"userName",value:v,type:"json",t:new Date().getTime()},
     				dataType:"json",
     				success:function(data){
@@ -159,7 +159,7 @@
     		validFun:function(v){
     			var vR = {errorInfo:""};
     			$.ajax({
-    				url: agent+"http://login.home.news.cn//profile/passportCheck.do?",
+    				url: agent+"http://login.home.news.cn/profile/passportCheck.do?",
     				data:{name:"nickName",value:v,type:"json",t:new Date().getTime()},
     				dataType:"json",
     				success:function(data){
