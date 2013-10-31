@@ -2,7 +2,7 @@
  *  基本配置参数
  **/
 exports.CONF = {
-    root:"f:\\doc",
+    root:"",
 //    root: "D:\\WORK\\web\\webDevelop\\space\\trunk",       //服务器索引的根目录，可配置为任意本地地址
     welcome: "",    //使用欢迎页面的文件名，为空时，表示不使用欢迎页面
     notFound: __dirname + "/../html/404.html",      //访问的资源不存在是，跳转的页面配置
@@ -15,7 +15,7 @@ exports.CONF = {
     port: 80,           //服务器监听端口
     maxConnections: 1000,    //并发处理的最大连接数
     runJs : true,
-    expires : 1000*60*60*24     //服务端缓存时间设置
+    expires : 0     //服务端缓存时间设置
 };
 
 exports.staticConf = {          //不要修改
@@ -29,22 +29,6 @@ exports.staticConf = {          //不要修改
     debug: false,
     fs_mod: true,
     port: 2850,
-    maxConnections: 1000,    //并发处理的最大连接数
-    runJs : true,
-    expires : 1000*60*60*24     //服务端缓存时间设置
-};
-
-exports.conf1 = {          //不要修改
-    root: "f:\\",
-    welcome: "",
-    notFound: __dirname + "/../html/404.html",
-    folder: __dirname + "/../html/folder.html",
-    handle: true,
-    coffee: true,
-    less: true,
-    debug: true,
-    fs_mod: true,
-    port: 1000,
     maxConnections: 1000,    //并发处理的最大连接数
     runJs : true,
     expires : 1000*60*60*24     //服务端缓存时间设置

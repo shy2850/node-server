@@ -2,89 +2,153 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="cn">
 <head>
     <meta charset="utf-8"/>
-    <title>炫空间登录</title>
-    <link rel="stylesheet" href="css/login.css"/>
-    <link rel="stylesheet" href="css/base.css"/>
+    <title>炫空间通行证</title>
+    <link rel="stylesheet" href="http://login.home.news.cn/login/css/login.css"/>
+    <link rel="stylesheet" href="http://login.home.news.cn/login/css/base.css"/>
+    <script type="text/javascript">
+        if(window.parent != window){
+            window.top.location.href = window.location.href;
+        }
+    </script>
+    <script type="text/javascript" src="http://login.home.news.cn/login/js/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="http://login.home.news.cn/login/css/login-css3.css" />
 </head>
 
 <body>
 <div id="bodybg">
-    <img class="loginbg" src="images/loginbg.jpg"/>
+    <img class="loginbg" src="http://tmisc.home.news.cn/login/images/loginbg1.png" id="loginbg"/>
+
     <div class="weatherbg"></div>
-    <div class="weather">
-        <span>北京</span><span class="weather-bid"><img class="weather-bid-img" src="images/weather1.png"/></span><span>晴</span><span>15℃-28℃</span>
+    <div class="weather"><span>北京</span><span class="weather-bid"><img class="weather-bid-img" src="http://tmisc.home.news.cn/login/images/weather1.png"/></span><span>晴</span><span>15℃-28℃</span>
     </div>
-    <div class="xuan-login">
+    <div class="xuan-login" id="xuan-login">
         <div class="xuan-register" id="xuan-register">
-            <div class="register-head">
-                <div class="register-h"></div>
-            </div>
+            <div class="register-head">注册炫空间通行证</div>
             <div class="register-con">
-                <form name="register-form" id="register-form" method="post" action="login.html">
+                <form name="register-form" id="register-form" method="post" action="/profile/register.do">
+                    <input type="hidden" name="o" value="3f4e8458fbd84ae7a65023caf22a5812" />
+                    <input type="hidden" name="hrn" />
                     <div class="login-rcon-m"><span class="title">用户名:</span>
-                        <input type="text" class="detail" name="register_name" id="register_name"/>
+                        <input type="text" class="detail" name="register_name" id="register_name" tabindex="1" value=""/>
                         <span class="tips"></span>
+                        <a href="javascript:void(0);" id="getXuanID" class="aid">快速获取炫ID作为用户名</a>
                     </div>
+                    <div class="login-rcon-m"><span class="title">昵称:</span>
+                        <input type="text" class="detail" name="nick_name" id="nick_name" tabindex="2" onchange="" value="" />
+                        <span class="tips"></span>
+                        <a href="javascript:void(0);" id="niccXuanID" class="aid">以炫ID作为昵称</a>
+                    </div>
+                    <div style="margin-left:90px" id="nnListDiv"></div>
                     <div class="login-rcon-m"><span class="title">密码:</span>
-                        <input type="password" class="detail" id="register_pass" name="register_pass"/>
+                        <input type="password" class="detail" id="register_pass" name="register_pass" tabindex="3"/>
                         <span class="tips"></span>
                     </div>
                     <div class="login-rcon-m"><span class="title">确认密码:</span>
-                        <input type="password" class="detail" id="register_pass1" name="register_pass1"/>
+                        <input type="password" class="detail" id="register_pass1" name="register_pass1" tabindex="4"/>
                         <span class="tips"></span>
                     </div>
                     <div class="login-rcon-m"><span class="title">E-mail:</span>
-                        <input type="email" class="detail" name="register_email" id="register_email"/>
+                        <input type="email" class="detail" name="register_email" id="register_email" tabindex="5" value=""/>
                         <span class="tips"></span>
                     </div>
-                    <div class="login-rcon-m">
-                        <input class="auto-input" type="checkbox" id="agree_input" value="1"/><label for="agree_input">我同意新华网</label>
+                    <div class="login-rcon-m"><span class="title" >密码提示问题:</span>
+                        <select name="register_qu" id="register_qu" class="detail" tabindex="6">
+                            <option value="我的座右铭是？">我的座右铭是？</option>
+                            <option value="我父亲的生日？">我父亲的生日？</option>
+                            <option value="我母亲的生日？">我母亲的生日？</option>
+                            <option value="我手机号码的后四位？">我手机号码的后四位？</option>
+                            <option value="我身份证号的最后四位？">我身份证号的最后四位？</option>
+                            <option value="我高考时所得的总分？">我高考时所得的总分？</option>
+                            <option value="我去过的最远的地方？">我去过的最远的地方？</option>
+                            <option value="我最好的朋友是谁？">我最好的朋友是谁？</option>
+                            <option value="我小学班主任老师的名字？">我小学班主任老师的名字？</option>
+                            <option value="我中学校名全称是什么？">我中学校名全称是什么？</option>
+                            <option value="我小时候会唱的第一首歌？">我小时候会唱的第一首歌？</option>
+                            <option value="我学会的第一个成语是什么？">我学会的第一个成语是什么？</option>
+                            <option value="我家的祖籍在是哪里？">我家的祖籍在是哪里？</option>
+                            <option value="给我印象最深刻的一本书是？">给我印象最深刻的一本书是？</option>
+                            <option value="我最想去的地方是哪里？">我最想去的地方是哪里？</option>
+                        </select>
+                        <span class="tips"></span>
+                    </div>
+                    <div class="login-rcon-m"><span class="title">密码提示答案:</span>
+                        <input type="text" class="detail" name="register_ans" id="register_ans" tabindex="7">
+                        <span class="tips"></span>
+                    </div>
+                    <div class="login-rcon-m"><span class="title">验证码:</span>
+                        <input type="text" class="detail identify-code" name="register_code" id="register_code" tabindex="8"/>
+                        <span class="tips"></span>
+                        <img class="identify-img" src="" id="register_identify"/>
+                        <a href="javascript:void(0);" id="change_register_identify" >换一张</a>
                     </div>
                     <div class="login-rcon-m">
-                        <input class="btn register-confirm" type="submit" value="立即注册"/>
+                        <input class="auto-input" type="checkbox" id="agree_input" value="1" checked="true"/><label for="agree_input">我同意新华网炫空间用户协议</label>
+                        <a href="javascript:;" id="toggleNotice" onclick="window.open('http://login.home.news.cn/agreement.htm','newwindow','height=362,width=520,top=100,left='+(document.body.clientWidth/2-260)+',toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no, status=no');">查看</a>
+                    </div>
+                    <div class="login-rcon-m">
+                        <input class="btn register-confirm" id="register_ok" type="submit" value="立即注册"/>
                         <input class="btn register-cancel" type="reset" id="register-cancel" value="取消"/>
                     </div>
                 </form>
             </div>
         </div>
         <div class="login-l" id="login-l">
-            <div class="login-logo"></div>
-            <p class="login-tips">如果您还没有新华社区通行证请您<a class="login-register" id="login-register" href="javascript:void(0);">立即注册</a></p>
+            <div class="login-logo">
+                <a class="i-xuan" href="javascript:void(0);">
+                    <img src="http://tmisc.home.news.cn/login/images/logo-xuan.png" alt="炫"/>
+                </a>
+            </div>
+            <p class="login-tips">如果您还没有炫空间通行证请您<a class="login-register" id="login-register" href="javascript:void(0);">立即注册</a></p>
         </div>
         <div class="login-r" id="login-r">
             <div class="login-rcon">
                 <form name="login-form" id="login-form" method="post" action="login.htm">
+
+                    <!--隐藏域-->
+                    <input type="hidden" name="select" value="userName" id="selectOpt"/>
+                    <input type='hidden' name='coSessionId' value=''>
+                    <input type='hidden' name='coAppName' value=''>
+                    <input type='hidden' name='surl' value=''>
+                    <input type='hidden' name='cookieTime' value='1'/>  <!--cookie-->
+                    <!--隐藏域-->
+
                     <div class="login-rcon-h"></div>
-                    <div class="login-rcon-m"><span class="title">账号</span>
-                        <input type="text" class="detail account" name="user_name" id="user_name"/>
-                        <a class="account-bid">用户名</a>
+                    <div class="login-rcon-m" style="z-index: 2;"><span class="title">账号</span>
+                        <input type="text" class="detail account" name="loginID" id="user_name" tabIndex="9" value=""/>
+                        <a class="account-bid" id="account-bid">用户名</a>
+                        <ul class="account-list" id="account-list">
+                            <li><a class="select" href="javascript:void(0);" data-value="userName">用户名</a></li>
+                            <li><a href="javascript:void(0);" data-value="mail">邮箱</a></li>
+                            <li><a href="javascript:void(0);" data-value="xinhuaId">炫ID</a></li>
+                        </ul>
                     </div>
                     <div class="login-rcon-m"><span class="title">密码</span>
-                        <input type="password" class="detail" name="pass" id="pass"/>
+                        <input type="password" class="detail" name="password" id="pass" tabIndex="10"/>
                     </div>
                     <div class="login-rcon-m"><span class="title">验证码</span>
-                        <input type="text" class="detail identify-code" name="identify" id="identify"/>
-                        <span class="identify-imgcon"><img class="identify-img" src="images/temp1.png"/></span>
-                        <a class="identify-change">换一张</a>
+                        <input type="text" class="detail identify-code" name="vefifycode" id="code" tabIndex="11"/>
+                        <img class="identify-img" src="" id="identify"/>
+                        <a class="identify-change" href="javascript:void(0);">换一张</a>
                     </div>
                     <div class="login-rcon-m">
                         <span class="auto-panel">
-                            <input class="auto-input" type="checkbox" id="auto-input" name="auto_input" value="1"/><label for="auto-input">自动登录</label>
+                            <input class="auto-input" type="checkbox" id="auto-input" name="al" value="checkbox"/><label for="auto-input">自动登录</label>
+                            <input class="auto-input" type="checkbox" name="ishidden" id="ishidden" value="checkbox" /><label for="ishidden">隐身登录</label>
                         </span>
-                        <a class="find-password">忘记密码?</a>
+                        <a class="find-password" href="getPwd.jsp" target="_blank">忘记密码?</a>
                     </div>
                     <div class="login-rcon-m">
                         <input class="btn login-btn" type="submit" value="登录"/>
-                        <a class="passer" id="passer" href="javascript:void(0);">注册新华网通行证</a>
+                        <a class="passer" id="passer" href="javascript:void(0);">注册炫空间通行证</a>
                     </div>
                     <div class="cooperate">
                         <div class="cooperate-h">使用合作网站账号登录</div>
                         <div class="cooperate-bid">
                             <ul>
-                                <li><a><img src="images/login-qq.png"/></a></li>
-                                <li><a><img src="images/login-sina.png"/></a></li>
-                                <li><a><img src="images/login-163.png"/></a></li>
-                                <li><a><img src="images/login-souhu.png"/></a></li>
+                                <li><a href="javascript:void(0)"><img src="http://tmisc.home.news.cn/login/images/login-qq.png"/><br/>腾讯</a></li>
+                                <li><a href="javascript:void(0)"><img src="http://tmisc.home.news.cn/login/images/login-sina.png" /><br/>新浪</a></li>
+                                <li><a href="javascript:void(0)"><img src="http://tmisc.home.news.cn/login/images/login-163.png" style="height: 24px; width: 24px;"/><br/>网易</a></li>
+                                <li><a href="javascript:void(0)"><img src="http://tmisc.home.news.cn/login/images/login-sohu.png"/><br/>搜狐</a></li>
                             </ul>
                         </div>
                     </div>
@@ -93,110 +157,14 @@
         </div>
     </div>
 </div>
-<div class="login-news">
-    <div class="news-show">
-        <div class="news-title">斯诺登未登机赴古巴飞机载大批记者起飞</div>
-        <div class="news-refresh"><a class=" refresh"></a><span class="publish-time">3分钟前</span></div>
-    </div>
-    <div class="news-show">
-        <div class="news-title">斯诺登未登机赴古巴飞机载大批记者起飞</div>
-        <div class="news-refresh"><a class=" refresh"></a><span class="publish-time">3分钟前</span></div>
-    </div>
-    <div class="news-show">
-        <div class="news-title">斯诺登未登机赴古巴飞机载大批记者起飞</div>
-        <div class="news-refresh"><a class=" refresh"></a><span class="publish-time">3分钟前</span></div>
-    </div>
-</div>
-<script type="text/javascript">
-    
-    (function ($) {
-        var reg = $("xuan-register"),
-                toReg1 = $("login-register"),
-                toReg2 = $("passer"),
-                cancel = $("register-cancel");
 
-        toReg1.onclick = toReg2.onclick = function() {
-            reg.style.display = "block";
-            $("register_name").focus();
-        };
+<footer id="footer">
+    <p>Copyright © 2000-2013 xinhuanet.com, All Rights Reserved</p>
+    <p>本网站所刊登的新华社及新华网各种新闻﹑信息和各种专题专栏资料，均为新华网版权所有，未经协议授权，禁止下载使用。</p>
+</footer>
 
-        cancel.onclick = function(){
-            reg.style.display = "none";
-            $("user_name").focus();
-        };
+<script src="http://login.home.news.cn/login/js/valid.js"></script>
+<script src="js/script.js"></script>
 
-        $("login-form").valid({
-            "user_name":{ t:"用户名需要填写!" },
-            "pass":{ t:"密码需要填写!" },
-            "identify":{ t:"验证码需要填写!" }
-        },function(o){
-            this.valid = function(){
-                if( !this.value ){
-                    alert( o.t );
-                    return false;
-                }return true;
-            };
-        });
-
-        $("register-form").valid({
-            "register_name":{ defaultTip:"输入一个账号英文和数字组成6-26位。", reg:/^[\d\w]{6,26}$/},
-            "register_pass":{ defaultTip:"密码6到16个字符，区分大小写。", reg:/^.{6,16}$/},
-            "register_pass1":{ defaultTip:"再次输入你设置的密码。", equalTo:"register_pass", equalTip:"两次输入密码不一致。"},
-            "register_email":{ defaultTip:"填写邮箱用于召回密码等服务。", reg:/^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/ },
-            "agree_input":{ wornTip:"需要同意新华网协议才能注册。" }
-        },function(o){
-            if(o.defaultTip){       
-                var next = this.nextSibling.nextSibling;    //空白字符产生TextNode
-                next.innerHTML = o.defaultTip;
-                this.onfocus = function(){ 
-                    next.innerHTML = o.defaultTip; 
-                    next.className = "tips";
-                };
-                this.valid = this.onblur = function(){
-                    var isOK = true;
-                    if( o.reg ){ 
-                        isOK = o.reg.test(this.value);
-                    }
-                    if( o.equalTo ){  
-                        isOK = ($(o.equalTo).value === this.value);
-                    }
-                    next.className = isOK ? "tips ok" : "tips err";
-                    next.innerHTML = isOK ? "&nbsp;" : o.equalTip || o.defaultTip;
-                    return isOK;
-                };
-            }
-            if( o.wornTip ){
-                this.valid = function(){
-                    this.checked || alert( o.wornTip );
-                    return !!this.checked;
-                }
-            }
-        });
-
-
-
-    })(function (id) {
-        var p = document.getElementById(id);
-        if( p.tagName.toUpperCase() == 'FORM' ){
-            p.valid = function(valids,exec){
-                exec = exec || new Function();
-                for(k in valids){
-                    var o = valids[k];
-                    var d = document.getElementById(k);
-                    exec.call(d,o);
-                }
-                p.onsubmit = function(){
-                    for(k in valids){
-                        if(document.getElementById(k).valid() === false){
-                            return false;
-                        }
-                    }
-                };
-            };
-
-        }
-        return p;
-    });
-</script>
 </body>
 </html>
