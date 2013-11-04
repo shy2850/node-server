@@ -107,27 +107,13 @@
 </html>
 <script type="nodejs/javascript">
 <%
-    var query = function(str){
-        var o={},t = str.split("&");
-        for(var i = 0; i < t.length; i++){
-            o[t[i].split("=")[0]] = t[i].split("=")[1];
-        }
-        return o;
-    };
     _o_ = function(){
-        var postData = "";
-        request.setEncoding("utf-8");
-        request.addListener("data", function(d) {
-            postData += d;
-        });
-        request.addListener("end", function() {
-            if(postData){
-                response.writeHead(200, {"Content-Type": "application/octet-stream"});
-                response.end(  decodeURIComponent( query(postData).zen ).replace(/\+/g," ") );
-            }else{
-                response.end( _output_+"</script>" );
-            }
-        });
+        if(request.post){
+            response.writeHead(200, {"Content-Type": "application/octet-stream"});
+            response.end(  request.post.zen.replace(/\+/g," ") );
+        }else{
+            response.end( _output_+"</script>" );
+        }
     };
 %>
 </script>
