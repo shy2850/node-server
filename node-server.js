@@ -2,6 +2,7 @@ var conf = require("./nodeLib/config/conf"),	//综合配置
 	staticConf = conf.staticConf,				//静态文件服务器配置
 	handle = require("./nodeLib/common/handle"),//文本文件的模板操作
 	module = require("./nodeLib/common/module"),//支持的插件配置
+	intercepter = require("./nodeLib/common/intercepter"),//支持的过滤配置
 	mime = require("mime"),						//MIME类型
     less = require("less"),						//LESS支持
     coffee = require("coffee-script").CoffeeScript,	//coffeeScript支持
@@ -51,14 +52,26 @@ function start(conf){
 
         var _DEBUG = req.data.debug == "true" || conf.debug;
 
+        if( intercepter.has(pathurl) ){		// 前置 过滤 
+        	intercepter.has(pathurl).execute(req,resp,root,mini);
+        	return;
+        }
+
 		fs.stat(pathname,function(error,stats){
 			if(stats && stats.isFile && stats.isFile()){  //如果url对应的资源文件存在，根据后缀名写入MIME类型
 				var expires = new Date();
 				expires.setTime( expires.getTime() + (conf.expires || 0) );
 				resp.writeHead(200, {
 					"Content-Type": mime.get(extType),
-					"Expires": expires
+					"Expires": (req.method==="GET")?expires:undefined
 				}); 
+
+				if( req.method === "POST" ){	// POST请求 添加target参数以后, 使用 upload 插件进行解析。
+					req.data.target = pathurl;
+					module.get("upload").execute(req,resp,root,handle,mini.__);
+					return;
+				}
+
 				fs.readFile(pathname,function (err,data){ 
 					var rs = data.toString();
                     if( conf.less && extType === "less" && req.data.less !== "false" ){	//LESS
