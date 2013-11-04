@@ -16,46 +16,36 @@ exports.execute = function(req,resp,root,handle,f){
         });
     }
     try{
-        form.uploadDir = req.data.uploadUrl ? ( root + "/" + req.data.uploadUrl + "/" ) : ( __dirname + "/../../_upload/" ); //上传路径
-        uploadModel = req.data.target ? ( root + "/" + req.data.target ) : uploadModel;
+        form.uploadDir = req.data.uploadUrl ? ( root + "/" + req.data.uploadUrl + "/" ) : ( __dirname + "/../../static/" ); //上传路径
+        uploadModel = req.data.target ? (root + "/" + req.data.target) : uploadModel;
 
         form.on('field', function(field, value) {
             fields[field] = value;
         })
-        .on('file', function(field, file) {
-            files.push({name: field, file:file});
-        })
-        .on('end', function() {
-            for (var i = 0; i < files.length; i++) {
-                var f = files[i].file;
-                fs.rename(f.path, form.uploadDir+f.name, function (err) {
+            .on('file', function(field, file) {
+                files.push({name: field, file:file});
+            })
+            .on('end', function() {
+                for (var i = 0; i < files.length; i++) {
+                    var f = files[i].file;
+                    fs.rename(f.path, form.uploadDir+f.name, function (err) {
+                        if (err) throw err;
+                    });
+                };
+
+                req.post = fields;
+                req.files = files;
+
+                fs.readFile(uploadModel,function (err,data){
                     if(err){
-                        resp.writeHead(500, {"Content-Type": "text/html"});
-                        resp.end( err.toString().replace(/\n/g,"<br>") );
-                        return;
+                        console.log(err);
                     }
+                    resp.writeHead(200, {'content-type': mime.get("html")});
+                    req.forward = true;
+                    handle.execute(req,resp,root,data.toString(),f,true);
                 });
-            };
 
-            var $ = req.$;
-            $.info = {
-                fields:fields,
-                files: files,
-                code: 200
-            };
-
-            fs.readFile(uploadModel,function (err,data){
-                if(err){
-                    resp.writeHead(500, {"Content-Type": "text/html"});
-                    resp.end( err.toString().replace(/\n/g,"<br>") );
-                    return;
-                }
-                resp.writeHead(200, {'content-type': mime.get("html")});
-                req.forward = true;
-                handle.execute(req,resp,root,data.toString(),f,true);
             });
-
-        });
         form.parse(req);
     }catch(e){
         resp.writeHead(500, {"Content-Type": "text/html"});
