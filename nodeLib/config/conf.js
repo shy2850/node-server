@@ -12,7 +12,7 @@ exports.CONF = {
     less: true,         //是否支持less动态解析
     debug: true,        //是否对js以及css文件进行简单压缩，debug:true表示不压缩
     fs_mod: true,       //是否支持文件夹列表展示
-    port: 80,           //服务器监听端口
+    port: 8080,           //服务器监听端口
     maxConnections: 1000,    //并发处理的最大连接数
     runJs : true,
     expires : 0     //服务端缓存时间设置

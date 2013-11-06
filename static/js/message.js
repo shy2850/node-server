@@ -26,11 +26,12 @@ require(["jquery","preFix"],function(){
                                 $('#container').addClass('fly_away');
                                 setTimeout(function(){
                                     $.ajax({
-                                        url:"/upload",
+                                        url:"/message",
                                         data:{
-                                            message: $("#words").val()
+                                            message: $("#words").val(),
+                                            t: new Date().getTime()
                                         },
-                                        type:"post",
+                                        type:"get",
                                         success: function(data){
                                             window.opener.sendOK();
                                         }
