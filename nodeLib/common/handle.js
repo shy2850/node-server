@@ -30,7 +30,7 @@ exports.execute = function(req,resp,root,str,mini,debug){
 			for (var i = 0; i < strs.length; i++) {		//偶数为HTML片段，奇数为js代码片段，分别处理转义符和换行
 				x += (i%2 === 0) ? strs[i].replace(/\\/g,"\\\\").replace(/[']/g,"\\'") : "<%"+strs[i].replace(/[\n\r]/g," ").replace(/echo/g,'_output_+=')+"%>";
 			};
-			str = x.replace(/<%=/g,"'; _output_ += ").replace(/<%/g,"';").replace(/%>/g,"; _output_+='").replace(/[\n\r]/g,"\\n");
+			str = x.replace(/<%=/g,"'; _output_ += ").replace(/<%/g,"';").replace(/%>/g,"; _output_+='").replace(/[\n\r]+/g,"\\n");
 			//以上语句通过替换关键标识符，获得js执行片段。
 			
 			//拼装function并且执行，以获取结果。如果结果不是function，当作string输出，否则，执行function，参见demo中的login.htm。
