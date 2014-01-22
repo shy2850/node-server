@@ -169,7 +169,7 @@ a nodejs based file-system-server with easy-template-engine and several F2E-util
 						</span>
 						支持ECMAScript核心API，
 						<span style="font-family: 微软雅黑, 'Microsoft YaHei'; color: rgb(255, 0, 0);">
-							不支持nodejs-require
+							支持nodejs-require
 						</span>
 						。
 					</span>
