@@ -2,29 +2,20 @@ var fs = require("fs"),
 	querystring = require("querystring");
 exports.execute = function(req,resp,root,str,mini,debug){
 	var belong = "$[placeholder]";
-	var h = /(\$belong\[(\S+)\])/.exec(str);
-	if(h){
-		try{
-			belong = fs.readFileSync( root + "/" + h[2],'utf-8');	//读取belong文本
-		}catch(e){
-			resp.end(e.stack.toString().replace(/\n/g,"<br>") );
-		}
-		str = str.replace(h[1], "" );  			//替换关键字
-		str = belong.replace("$[placeholder]",str);
-	}  
-
-	while( ( temp = /(\$include\[(\S+)\])/.exec(str) ) != null){
-		var vm = "";
-		try{
-			vm = fs.readFileSync( root + "/" + temp[2],'utf-8');	//读取include文本
-		}catch(e){
-			resp.end(e.stack.toString().replace(/\n/g,"<br>") );
-		}
-		str = str.replace( temp[1] , vm );  			//替换关键字
-	}
-
-	var result = str;
+	var h = /\$belong\[(\S+)\]/.exec(str);
 	try{
+		if(h){
+			belong = fs.readFileSync( root + "/" + h[1],'utf-8');	//读取belong文本
+			str = str.replace(h[0], "" );  			//替换关键字
+			str = belong.replace("$[placeholder]",str);
+		}  
+
+		str = str.replace(/\$include\[(\S+)\]/g,function(match,key){
+			return fs.readFileSync( root + "/" + key,'utf-8');	 //读取include文本
+		});
+
+		var result = str;
+	
 		if(exports.conf.runJs){
 			var x = "", strs = str.split(/<%|%>/);
 			for (var i = 0; i < strs.length; i++) {		//偶数为HTML片段，奇数为js代码片段，分别处理转义符和换行
