@@ -1,6 +1,6 @@
 var http = require('http'),
 	url = require('url'),
-	mime = require('mime'),
+	mime = require('../module/mime'),
 	fs = require('fs');
 exports.execute = function(req,resp,root,mini){
 	var output = "", type, _url = url.parse( req.url );

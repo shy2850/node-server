@@ -1,5 +1,5 @@
 var favicon = __dirname + "/../../static/img/favicon.ico",
-    mime = require('mime'),
+    mime = require('../module/mime'),
     fs = require('fs');
 exports.execute = function(req,resp,root,handle,f){
     console.log( "call for favicon.ico" );

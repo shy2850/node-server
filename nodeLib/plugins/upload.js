@@ -1,6 +1,6 @@
 var http = require('http'),
     util = require('util'),
-    mime = require('mime'),
+    mime = require('../module/mime'),
     fs = require('fs'),
     uploadBase = __dirname + "/../html/upload.html",
     uploadModel = __dirname + "/../html/uploadOK.html",
