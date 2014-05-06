@@ -19,6 +19,17 @@ a nodejs based file-system-server with easy-template-engine and several F2E-util
 			&nbsp;
 		</span>
 	</p>
+	<p>
+		<span style="font-family: 微软雅黑, 'Microsoft YaHei';">
+			npm:&nbsp;
+		</span>
+		<span style="font-family: 微软雅黑, 'Microsoft YaHei';">
+			npm install f2e-node-server
+		</span>
+		<span style="font-family: 微软雅黑, 'Microsoft YaHei';">
+			&nbsp;
+		</span>
+	</p>
 	<h1>
 		<span style="font-family: 微软雅黑, 'Microsoft YaHei';">
 			why
