@@ -3,7 +3,7 @@ var conf = require("./nodeLib/config/conf"),	//综合配置
 	handle = require("./nodeLib/common/handle"),//文本文件的模板操作
 	module = require("./nodeLib/common/module"),//支持的插件配置
 	intercepter = require("./nodeLib/common/intercepter"),//支持的过滤配置
-	mime = require("mime"),						//MIME类型
+	mime = require("./nodeLib/module/mime"),						//MIME类型
     less = require("less"),						//LESS支持
     coffee = require("coffee-script").CoffeeScript,	//coffeeScript支持
 	http = require("http"),						
@@ -12,7 +12,6 @@ var conf = require("./nodeLib/config/conf"),	//综合配置
     fs   = require("fs"),
     querystring = require("querystring"),
 	mini = {
-		_jsmin_ : require("jsmin").jsmin,
 		_cssmin_: require("cssmin"),
  		js 	: function(str,resp){ 
  			var jsp = require("uglify-js").parser;

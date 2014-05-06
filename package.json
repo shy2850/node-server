@@ -1,0 +1,30 @@
+{
+  "name": "node-server",
+  "version": "0.0.8",
+  "description": "a nodejs based file-system-server with easy-template-engine and several F2E-utils",
+  "main": "node-server.js",
+  "dependencies": {
+    "less":"1.4.2",
+    "coffee-script":"1.*.*",
+    "formidable":"1.*.*",
+    "uglify-js":"2.4.*",
+    "cssmin":"0.4.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node node-server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shy2850/node-server.git"
+  },
+  "keywords": [
+    "node-server"
+  ],
+  "author": "shy2850",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shy2850/node-server/issues"
+  },
+  "homepage": "https://github.com/shy2850/node-server"
+}
