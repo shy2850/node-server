@@ -5,24 +5,18 @@ var conf = require("./nodeLib/config/conf"),	//综合配置
 	intercepter = require("./nodeLib/common/intercepter"),//支持的过滤配置
 	mime = require("./nodeLib/module/mime"),						//MIME类型
     less = require("less"),						//LESS支持
-    coffee = require("coffee-script").CoffeeScript,	//coffeeScript支持
+    coffee = require("coffee-script"),				//coffeeScript支持
 	http = require("http"),						
     url  = require("url"), 
     path = require("path"), 
     fs   = require("fs"),
+    uglify = require("uglify-js"),
     querystring = require("querystring"),
 	mini = {
 		_cssmin_: require("cssmin"),
  		js 	: function(str,resp){ 
- 			var jsp = require("uglify-js").parser;
-			var pro = require("uglify-js").uglify;
-
-			var ast = jsp.parse(str); // 解析代码返回初始的AST
-			ast = pro.ast_mangle(ast); // 获取变量名称打乱的AST
-			ast = pro.ast_squeeze(ast); // 获取经过压缩优化的AST
-			var final_code = pro.gen_code(ast); // 压缩后的代码
-
-			resp.end( final_code );
+ 			var resu = uglify.minify(str,{fromString: true});
+			resp.end( resu.code );
  			//resp.end( mini._jsmin_(str) ) 
  		},
 		css : function(str,resp){ resp.end( mini._cssmin_(str)) },
@@ -94,6 +88,7 @@ function start(conf){
 
                         }catch(e){
                             resp.writeHead(500, {"Content-Type": "text/html"});
+                            console.log(e);
                             resp.end( e + "" );
                         }
                     }else if(  conf.handle && mime.isTXT(extType) && !( /[\.\-]min\.(js|css)$/.test(pathurl) ) && req.data.handle !== "false" ){	//handle
