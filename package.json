@@ -5,7 +5,7 @@
   "main": "node-server.js",
   "dependencies": {
     "less": "1.4.2",
-    "coffee-script": "1.*.*",
+    "coffee-script": "*",
     "formidable": "1.*.*",
     "uglify-js": "2.4.*",
     "cssmin": "0.4.1"
