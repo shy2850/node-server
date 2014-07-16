@@ -3,9 +3,10 @@ var base = __dirname + "/../plugins/",
 		"favicon.ico" : "favicon",
 		agent : "agent",
 		upload: "upload",
-        message: "message",
+        	message: "message",
 		prettify: "prettify",
-        psd: "psd"
+        	psd: "psd",
+        	build: "build"
 	};
 
 exports.get = function(moduleName){
