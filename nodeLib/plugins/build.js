@@ -43,6 +43,12 @@ exports.execute = function(req,resp,root,handle,mini,conf){
 					info: 'command windows only'
 				}));
 			});
+		}else{
+			resp.end(JSON.stringify({
+				error:'目录不存在: '_root,
+				command: 'xcopy '+root.replace(/(.*?)[\\\/]$/,'$1')+' '+_root+' /e/d/s',
+				info: 'command windows only'
+			}));
 		}
 	});
 		
