@@ -28,7 +28,6 @@ var conf = require("./nodeLib/config/conf"),	//综合配置
 	};
 
 function start(conf){
-	handle.conf = conf;
 	var server = http.createServer(function (req, resp) { try{
 		var root = conf.root || __dirname;
 		var pathurl = "";
@@ -61,7 +60,7 @@ function start(conf){
 
 				if( req.method === "POST" ){	// POST请求 添加target参数以后, 使用 upload 插件进行解析。
 					req.data.target = pathurl;
-					module.get("upload").execute(req,resp,root,handle,mini.__);
+					module.get("upload").execute(req,resp,root,handle,mini.__,conf);
 					return;
 				}
 
@@ -92,7 +91,7 @@ function start(conf){
                             resp.end( e + "" );
                         }
                     }else if(  conf.handle && mime.isTXT(extType) && !( /[\.\-]min\.(js|css)$/.test(pathurl) ) && req.data.handle !== "false" ){	//handle
-                    	handle.execute(req,resp,root,rs, mini.get(extType) ,_DEBUG) 
+                    	handle.execute(req,resp,root,rs, mini.get(extType) ,_DEBUG, conf) 
                     }else{
                     	resp.end( data )
                     }
@@ -118,14 +117,14 @@ function start(conf){
 					}
 	        		fs.readFile(conf.folder,function (err,data){ 
 	        			if(err)console.log(err);
-	                    handle.execute(req,resp,root,data.toString(),mini.get(extType)  ,_DEBUG);
+	                    handle.execute(req,resp,root,data.toString(),mini.get(extType)  ,_DEBUG, conf);
 		            });
 	        	});
 	        } else{
 	        	var m = module.get( pathurl.replace('/','') );
 	        	if(m){
                     try{
-                        m.execute(req,resp,root,handle,mini.__);
+                        m.execute(req,resp,root,handle,mini.__, conf);
                     }catch(e){
                         resp.writeHead(500, {"Content-Type": "text/html"});
                         resp.end( e.stack.toString().replace(/\n/g,"<br>") );

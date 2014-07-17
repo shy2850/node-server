@@ -5,14 +5,14 @@ var http = require('http'),
     uploadBase = __dirname + "/../html/upload.html",
     uploadModel = __dirname + "/../html/uploadOK.html",
     formidable = require('formidable');
-exports.execute = function(req,resp,root,handle,f){
+exports.execute = function(req,resp,root,handle,f,conf){
 	var form = new formidable.IncomingForm(),
         files = [],
         fields = {};
     if(req.method === "GET"){
         fs.readFile(uploadBase,function (err,data){
             resp.writeHead(200, {'content-type': mime.get("html")});
-            handle.execute(req,resp,root,data.toString(),f,true);
+            handle.execute(req,resp,root,data.toString(),f,true,conf);
         });
     }
     try{
@@ -42,7 +42,7 @@ exports.execute = function(req,resp,root,handle,f){
                     }
                     resp.writeHead(200, {'content-type': mime.get("html")});
                     req.forward = true;
-                    handle.execute(req,resp,root,data.toString(),f,true);
+                    handle.execute(req,resp,root,data.toString(),f,true,conf);
                 });
 
             });

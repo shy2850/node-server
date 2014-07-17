@@ -41,7 +41,16 @@ require ["bootstrap","frameupload"], ()->
       newWin = open url,"newwindow","height=640,width=1000,top=60,left=#{document.body.clientWidth / 2 - 500 },toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no, status=no"
       window.sendOK = ()->
         newWin.close()
-
+    ($ "#output").on "click", ()->
+      $.ajax {
+        url: '/build',
+        dataType: 'json',
+        success: (res)->
+          if res.error
+            alert '输出失败'
+          else 
+            alert '成功：'+res.command
+      }
 
     window.ajaxUpload  document.getElementById("ajaxUpload"),{
       success : (info,doc)->

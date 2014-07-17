@@ -1,6 +1,6 @@
 var fs = require("fs"),
 	querystring = require("querystring");
-exports.execute = function(req,resp,root,str,mini,debug){
+exports.execute = function(req,resp,root,str,mini,debug,conf){
 	var belong = "$[placeholder]";
 	var h = /\$belong\[(\S+)\]/.exec(str);
 	try{
@@ -16,7 +16,7 @@ exports.execute = function(req,resp,root,str,mini,debug){
 
 		var result = str;
 	
-		if(exports.conf.runJs){
+		if(conf.runJs){
 			var x = "", strs = str.split(/<%|%>/);
 			for (var i = 0; i < strs.length; i++) {		//偶数为HTML片段，奇数为js代码片段，分别处理转义符和换行
 				x += (i%2 === 0) ? strs[i].replace(/\\/g,"\\\\").replace(/[']/g,"\\'") : "<%"+strs[i].replace(/[\n\r]/g," ").replace(/echo/g,'_output_+=')+"%>";
