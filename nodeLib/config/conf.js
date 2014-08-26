@@ -11,11 +11,12 @@ exports.CONF = {
     less: true,         //是否支持less动态解析
     debug: true,        //是否对js以及css文件进行简单压缩，debug:true表示不压缩
     fs_mod: true,       //是否支持文件夹列表展示
-    port: 80,           //服务器监听端口
+    port: 81,           //服务器监听端口
     maxConnections: 1000,    //并发处理的最大连接数
     runJs : true,
     output: "c:\\output\\",
     expires : 0     //服务端缓存时间设置
+    
 };
 
 exports.staticConf = {          //不要修改
@@ -49,7 +50,20 @@ exports.conf1 = {          //不要修改
     maxConnections: 1000,    //并发处理的最大连接数
     runJs : true,
     output: "c:\\output\\",
-    expires : 1000*60*60*24     //服务端缓存时间设置
+    proxy : {
+        port: 80,
+        map:[
+            {   
+                reg : /\/json|\/jsondata/,
+                host:'172.18.11.129',
+                port:8080,
+                path:function(p){
+                    return '/xhmedia/'+p;
+                }
+            }
+        ]
+    },
+    expires : 1000*60*60*24    //服务端缓存时间设置
 };
 
 exports.conf2 = {          //不要修改
@@ -64,6 +78,23 @@ exports.conf2 = {          //不要修改
     fs_mod: true,
     port: 404,
     maxConnections: 1000,    //并发处理的最大连接数
+    runJs : true,
+    output: "c:\\output\\",
+    expires : 1000*60*60*24     //服务端缓存时间设置
+};
+
+exports.conf3 = {          //不要修改
+    root: "D:\\WORK\\XhcmsProject\\Tomcat\\webapps\\xhcms\\echarts\\",       
+    welcome: "",
+    notFound: __dirname + "/../html/404.html",
+    folder: __dirname + "/../html/folder.html",
+    handle: true,
+    coffee: true,
+    less: true,
+    debug: false,
+    fs_mod: true,
+    port: 500,
+    maxConnections: 500,    //并发处理的最大连接数
     runJs : true,
     output: "c:\\output\\",
     expires : 1000*60*60*24     //服务端缓存时间设置
