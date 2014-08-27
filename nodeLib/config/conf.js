@@ -56,8 +56,8 @@ exports.staticConf = {          //不要修改
         reg : /baidu/,
         host: 'www.baidu.com',
         port: 80,
-        path: function(p){
-            return p.replace(/\/baidu/,'');
+        path: function(url){
+            return url.path.replace(/\/baidu/,'');
         }
     },
     expires : 1000*60*60*24     //服务端缓存时间设置
