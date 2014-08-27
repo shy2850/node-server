@@ -89,7 +89,7 @@ exports.execute = function(local_port,map,defaultPort){
 
                     var info = _r ? {
                         method: arr[1],
-                        host: _r.host,
+                        host: _p[0],
                         port:_r.port,
                         path:_r.path(arr[2]),
                         httpVersion:arr[3]

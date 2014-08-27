@@ -43,7 +43,11 @@ function start(conf){
         req.$ = { title:pathurl, staticServer:"http://"+req.headers.host.split(":")[0]+":"+staticConf.port+"/", fileList:[] }; 
  
         var _DEBUG = req.data.debug == "true" || conf.debug; 
- 
+        
+        if(conf.agent && conf.agent.reg.test(pathurl)){   // 代理过滤
+            require('./nodeLib/common/agent').execute(req,resp,conf.agent,req.url); 
+            return;
+        }
         if( intercepter.has(pathurl) ){        // 前置 过滤 
             intercepter.has(pathurl).execute(req,resp,root,mini); 
             return; 

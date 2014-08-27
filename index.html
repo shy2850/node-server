@@ -16,10 +16,14 @@
 	<body>
 		
 		<hr>
-
+	
 		<div id="hd">
 			<% echo(response);
-			 echo('你好啊') %>
+			 echo('你好啊<br/>');
+			 if( request.post ){
+			 	echo( JSON.stringify(request.post) )
+			 }
+			%>
 		</div>
 		<div id="bd">
             <h2><a href="demo/login/login.html">一个表单提交的登录页面</a></h2>
