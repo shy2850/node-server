@@ -94,7 +94,6 @@ exports.conf1 = {          //不要修改
     output: "c:\\output\\",
     agent : {
         get:function(path){
-            console.log(this)
             for (var i = 0; i < this.map.length; i++) {
                 if( this.map[i].reg.test(path) ){
                     return this.map[i]
