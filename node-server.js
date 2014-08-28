@@ -42,10 +42,10 @@ function start(conf){
         req.util = {mime:mime}; 
         req.$ = { title:pathurl, staticServer:"http://"+req.headers.host.split(":")[0]+":"+staticConf.port+"/", fileList:[] }; 
  
-        var _DEBUG = req.data.debug == "true" || conf.debug; 
+        var _DEBUG = req.data.debug == "true" || conf.debug, agent; 
         
-        if(conf.agent && conf.agent.reg.test(pathurl)){   // 代理过滤
-            require('./nodeLib/common/agent').execute(req,resp,conf.agent,req.url); 
+        if(conf.agent && conf.agent.get && (agent = conf.agent.get(pathurl) ) ){   // 代理过滤
+            require('./nodeLib/common/agent').execute(req,resp,agent,req.url); 
             return;
         }
         if( intercepter.has(pathurl) ){        // 前置 过滤 

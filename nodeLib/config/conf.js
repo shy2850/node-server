@@ -28,12 +28,23 @@ exports.CONF = {
         ]
     },
     agent : {
-        reg : /static/,
-        host: 'localhost',
-        port: 2850,
-        path: function(url){
-            return '/index.html';
-        }
+        get:function(path){
+            for (var i = 0; i < this.map.length; i++) {
+                if( this.map[i].reg.test(path) ){
+                    return this.map[i]
+                } 
+            }
+        },
+        map:[
+            {
+                reg : /static/,
+                host: 'localhost',
+                port: 2850,
+                path: function(url){
+                    return '/index.html';
+                }
+            }
+        ]
     },
     expires : 0     //服务端缓存时间设置
 };
@@ -53,11 +64,15 @@ exports.staticConf = {          //不要修改
     runJs : true,
     output: "c:\\output\\",
     agent : {
-        reg : /baidu/,
-        host: 'www.baidu.com',
-        port: 80,
-        path: function(url){
-            return url.path.replace(/\/baidu/,'');
+        get:function(path){
+            return /baidu/.test(path) ?{
+                reg : /baidu/,
+                host: 'www.baidu.com',
+                port: 80,
+                path: function(url){
+                    return url.path.replace(/\/baidu/,'');
+                }
+            } : undefined
         }
     },
     expires : 1000*60*60*24     //服务端缓存时间设置
@@ -78,12 +93,24 @@ exports.conf1 = {          //不要修改
     runJs : true,
     output: "c:\\output\\",
     agent : {
-        reg : /\/json\/|\/jsondata\//,
-        host: '172.18.11.129',
-        port: 8080,
-        path: function(url){
-            return url.path.replace(/front/,'xhmedia');
-        }
+        get:function(path){
+            console.log(this)
+            for (var i = 0; i < this.map.length; i++) {
+                if( this.map[i].reg.test(path) ){
+                    return this.map[i]
+                } 
+            }
+        },
+        map:[
+            {
+                reg : /\/json\/|\/jsondata\//,
+                host: '172.18.11.129',
+                port: 8080,
+                path: function(url){
+                    return url.path.replace(/front/,'xhmedia');
+                }
+            }
+        ]         
     },
     expires : 1000*60*60*24    //服务端缓存时间设置
 };
@@ -119,5 +146,24 @@ exports.conf3 = {          //不要修改
     maxConnections: 500,    //并发处理的最大连接数
     runJs : true,
     output: "c:\\output\\",
+    agent : {
+        get:function(path){
+            for (var i = 0; i < this.map.length; i++) {
+                if( this.map[i].reg.test(path) ){
+                    return this.map[i]
+                } 
+            }
+        },
+        map:[
+            {
+                reg : /xuan/,
+                host: 'my.xuan.news.cn',
+                port: 80,
+                path: function(url){
+                    return '';
+                }
+            }
+        ]
+    },
     expires : 1000*60*60*24     //服务端缓存时间设置
 };
