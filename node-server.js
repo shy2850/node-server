@@ -149,10 +149,7 @@ function start(conf){
 } 
 for(var k in conf){ 
     (function(c){ 
-        start(c); 
-        if(c.proxy){
-            require('./nodeLib/common/proxy').execute(c.proxy.port,c.proxy.map,c.port);
-        }
+        start(c);
     })(conf[k]) 
 } 
 

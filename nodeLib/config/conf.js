@@ -15,18 +15,6 @@ exports.CONF = {
     maxConnections: 1000,    //并发处理的最大连接数
     runJs : true,
     output: "c:\\output\\",
-    proxy : {           // 代理本地多组服务
-        port: 81,
-        map:[
-            {   
-                reg : /static/,
-                port:2850,
-                path:function(p){
-                    return p.replace(/static\//,'');
-                }
-            }
-        ]
-    },
     agent : {
         get:function(path){
             for (var i = 0; i < this.map.length; i++) {
@@ -132,7 +120,7 @@ exports.conf2 = {          //不要修改
 };
 
 exports.conf3 = {          //不要修改
-    root: "D:\\WORK\\XhcmsProject\\Tomcat\\webapps\\xhcms\\echarts\\",       
+    root: "C:\\Users\\SHY2850\\Desktop\\temp\\12306\\12306_cn\\source\\",       
     welcome: "",
     notFound: __dirname + "/../html/404.html",
     folder: __dirname + "/../html/folder.html",
