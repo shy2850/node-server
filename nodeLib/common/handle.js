@@ -25,7 +25,11 @@ exports.execute = function(req,resp,root,str,mini,debug,conf){
 			//以上语句通过替换关键标识符，获得js执行片段。
 			
 			//拼装function并且执行，以获取结果。如果结果不是function，当作string输出，否则，执行function，参见demo中的login.htm。
-			result = new Function("request","response","require", "var _o_ = null, _output_='" + str + "'; return _o_ || _output_;")(req,resp,require);
+			try{
+				result = new Function("request","response","require", "var _o_ = null, _output_='" + str + "'; return _o_ || _output_;")(req,resp,require);
+			}catch(ex){
+				console.log( req.$.title + '模板执行异常！' );
+			}
 		}
 
 		switch(typeof result){
