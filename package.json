@@ -1,14 +1,14 @@
 {
   "name": "f2e-node-server",
-  "version": "0.8.4",
+  "version": "0.8.8",
   "description": "a nodejs based file-system-server with easy-template-engine and several F2E-utils",
   "main": "node-server.js",
   "dependencies": {
-    "less": "1.4.2",
+    "less": "*",
     "coffee-script": "*",
-    "formidable": "1.*.*",
-    "uglify-js": "2.4.*",
-    "cssmin": "0.4.1"
+    "formidable": "*",
+    "uglify-js": "*",
+    "cssmin": "*"
   },
   "devDependencies": {},
   "scripts": {
