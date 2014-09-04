@@ -90,7 +90,7 @@ exports.conf1 = {          //不要修改
         },
         map:[
             {
-                reg : /\/json\/|\/jsondata\//,
+                reg : /front\/json\/|front\/jsondata\//,
                 host: '172.18.11.129',
                 port: 8080,
                 path: function(url){
