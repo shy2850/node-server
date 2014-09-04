@@ -19,7 +19,7 @@ exports.execute = function(req,resp,root,str,mini,debug,conf){
 		if(conf.runJs){
 			var x = "", strs = str.split(/<%|%>/);
 			for (var i = 0; i < strs.length; i++) {		//偶数为HTML片段，奇数为js代码片段，分别处理转义符和换行
-				x += (i%2 === 0) ? strs[i].replace(/(\/\/.*?)/g,'').replace(/\\/g,"\\\\").replace(/[']/g,"\\'") : "<%"+strs[i].replace(/[\n\r]/g," ").replace(/echo/g,'_output_+=')+"%>";
+				x += (i%2 === 0) ? strs[i].replace(/\\/g,"\\\\").replace(/[']/g,"\\'") : "<%"+strs[i].replace(/[\n\r]/g," ").replace(/echo/g,'_output_+=')+"%>";
 			};
 			str = x.replace(/<%=/g,"'; _output_ += ").replace(/<%/g,"';").replace(/%>/g,"; _output_+='").replace(/[\n\r]+/g,"\\n");
 			//以上语句通过替换关键标识符，获得js执行片段。
