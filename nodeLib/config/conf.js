@@ -31,6 +31,14 @@ exports.CONF = {
                 path: function(url){
                     return '/index.html';
                 }
+            },
+            {
+                reg:/.+/,
+                host:'mail.news.cn',
+                port:80,
+                path:function(url){
+                    return url.path;
+                }
             }
         ]
     },
@@ -90,12 +98,13 @@ exports.conf1 = {          //不要修改
         },
         map:[
             {
-                reg : /front\/json\/|front\/jsondata\//,
+                reg : /front\/json\/|front\/jsondata\/|xhmedia/,
                 host: '172.18.11.129',
                 port: 8080,
                 path: function(url){
                     return url.path.replace(/front/,'xhmedia');
-                }
+                },
+                cookie:'username=shiyangyang2013'
             }
         ]         
     },
@@ -143,11 +152,11 @@ exports.conf3 = {          //不要修改
         },
         map:[
             {
-                reg : /xuan/,
+                reg : /.*/,
                 host: 'my.xuan.news.cn',
                 port: 80,
                 path: function(url){
-                    return '';
+                    return url.path;
                 }
             }
         ]
