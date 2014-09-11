@@ -9,12 +9,13 @@ exports.CONF = {
     handle: true,       //是否使用服务器模板引擎
     coffee: true,       //是否支持coffee-script动态解析
     less: true,         //是否支持less动态解析
-    debug: true,        //是否对js以及css文件进行简单压缩，debug:true表示不压缩
+    debug: false,        //是否对js以及css文件进行简单压缩，debug:true表示不压缩
     fs_mod: true,       //是否支持文件夹列表展示
     port: 80,           //服务器监听端口
     maxConnections: 1000,    //并发处理的最大连接数
     runJs : true,
     output: "c:\\output\\",
+    'nginx-http-concat':true,
     agent : {
         get:function(path){
             for (var i = 0; i < this.map.length; i++) {
@@ -33,7 +34,7 @@ exports.CONF = {
                 }
             },
             {
-                reg:/.+/,
+                reg:/news.+/,
                 host:'mail.news.cn',
                 port:80,
                 path:function(url){
@@ -125,41 +126,5 @@ exports.conf2 = {          //不要修改
     maxConnections: 1000,    //并发处理的最大连接数
     runJs : true,
     output: "c:\\output\\",
-    expires : 1000*60*60*24     //服务端缓存时间设置
-};
-
-exports.conf3 = {          //不要修改
-    root: "C:\\Users\\SHY2850\\Desktop\\temp\\12306\\12306_cn\\source\\",       
-    welcome: "",
-    notFound: __dirname + "/../html/404.html",
-    folder: __dirname + "/../html/folder.html",
-    handle: true,
-    coffee: true,
-    less: true,
-    debug: false,
-    fs_mod: true,
-    port: 500,
-    maxConnections: 500,    //并发处理的最大连接数
-    runJs : true,
-    output: "c:\\output\\",
-    agent : {
-        get:function(path){
-            for (var i = 0; i < this.map.length; i++) {
-                if( this.map[i].reg.test(path) ){
-                    return this.map[i]
-                } 
-            }
-        },
-        map:[
-            {
-                reg : /.*/,
-                host: 'my.xuan.news.cn',
-                port: 80,
-                path: function(url){
-                    return url.path;
-                }
-            }
-        ]
-    },
     expires : 1000*60*60*24     //服务端缓存时间设置
 };

@@ -2,8 +2,7 @@ var conf = require("./nodeLib/config/conf"),    //综合配置
     staticConf = conf.staticConf,                //静态文件服务器配置 
     handle = require("./nodeLib/common/handle"),//文本文件的模板操作 
     module = require("./nodeLib/common/module"),//支持的插件配置 
-    intercepter = require("./nodeLib/common/intercepter"),//支持的过滤配置 
-    mime = require("./nodeLib/module/mime"),                        //MIME类型 
+    mime = require("./nodeLib/module/mime"),    //MIME类型 
     less = require("less"),                        //LESS支持 
     coffee = require("coffee-script"),                //coffeeScript支持 
     http = require("http"),                         
@@ -48,8 +47,8 @@ function start(conf){
             require('./nodeLib/common/agent').execute(req,resp,agent,req.url); 
             return;
         }
-        if( intercepter.has(pathurl) ){        // 前置 过滤 
-            intercepter.has(pathurl).execute(req,resp,root,mini); 
+        if( conf['nginx-http-concat'] && req.url.match(/\?\?/) ){        // nginx-http-concat 资源合并 
+            require('./nodeLib/common/nginx-http-concat').execute(req,resp,root,mini,conf); 
             return; 
         } 
  
