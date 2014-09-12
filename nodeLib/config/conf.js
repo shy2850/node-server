@@ -7,9 +7,9 @@ exports.CONF = {
     notFound: __dirname + "/../html/404.html",      //访问的资源不存在是，跳转的页面配置
     folder: __dirname + "/../html/folder.html",     //显示文件夹列表时候的配置页面
     handle: true,       //是否使用服务器模板引擎
-    coffee: true,       //是否支持coffee-script动态解析
-    less: true,         //是否支持less动态解析
-    debug: false,        //是否对js以及css文件进行简单压缩，debug:true表示不压缩
+    coffee: false,       //是否支持coffee-script动态解析
+    less: false,         //是否支持less动态解析
+    debug: true,        //是否对js以及css文件进行简单压缩，debug:true表示不压缩
     fs_mod: true,       //是否支持文件夹列表展示
     port: 80,           //服务器监听端口
     maxConnections: 1000,    //并发处理的最大连接数
@@ -30,15 +30,15 @@ exports.CONF = {
                 host: 'localhost',
                 port: 2850,
                 path: function(url){
-                    return '/index.html';
+                    return url.path;
                 }
             },
             {
-                reg:/news.+/,
-                host:'mail.news.cn',
+                reg:/xuan/,
+                host:'xuan.news.cn',
                 port:80,
                 path:function(url){
-                    return url.path;
+                    return '';
                 }
             }
         ]
@@ -67,7 +67,7 @@ exports.staticConf = {          //不要修改
                 host: 'www.baidu.com',
                 port: 80,
                 path: function(url){
-                    return url.path.replace(/\/baidu/,'');
+                    return '';
                 }
             } : undefined
         }

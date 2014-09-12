@@ -3,21 +3,17 @@ var conf = require("./nodeLib/config/conf"),    //综合配置
     handle = require("./nodeLib/common/handle"),//文本文件的模板操作 
     module = require("./nodeLib/common/module"),//支持的插件配置 
     mime = require("./nodeLib/module/mime"),    //MIME类型 
-    less = require("less"),                        //LESS支持 
-    coffee = require("coffee-script"),                //coffeeScript支持 
     http = require("http"),                         
     url  = require("url"), 
     path = require("path"), 
     fs   = require("fs"), 
-    uglify = require("uglify-js"), 
     querystring = require("querystring"), 
     mini = { 
         _cssmin_: require("cssmin"), 
-         js     : function(str,resp){ 
-             var resu = uglify.minify(str,{fromString: true}); 
+        js  : function(str,resp){ 
+            var resu = require("uglify-js").minify(str,{fromString: true}); 
             resp.end( resu.code ); 
-             //resp.end( mini._jsmin_(str) ) 
-         }, 
+        }, 
         css : function(str,resp){ resp.end( mini._cssmin_(str)) }, 
         htm : function(str,resp){ resp.end( (str).replace(/\s+/g," ") ) }, 
         __  : function(str,resp){ resp.end( str ) }, 
@@ -71,7 +67,7 @@ function start(conf){
                     var rs = data.toString(); 
                     if( conf.less && extType === "less" && req.data.less !== "false" ){    //LESS 
                         try{ 
-                            new(less.Parser)({ 
+                            new(require("./nodeLib/module/less").Parser)({ 
                                 paths:[ pathname.replace(/(\/[^\/]+?)$/,"") ] 
                             }).parse(rs, function (err, tree) { 
                                 if (err) { return console.error(err) } 
@@ -85,7 +81,7 @@ function start(conf){
                         } 
                     }else if(conf.coffee && extType === "coffee" && req.data.coffee !== "false" ){ 
                         try{ 
-                            var scriptStr = coffee.compile( rs ); 
+                            var scriptStr = require("coffee-script").compile( rs ); 
                             _DEBUG ? resp.end( scriptStr ) : mini.js(scriptStr,resp) ; 
  
                         }catch(e){ 

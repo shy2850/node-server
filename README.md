@@ -1,4 +1,4 @@
-node-server
+f2e-server
 ===========
 基于nodejs平台的文件服务器，提供了基本的模板引擎以及常用的前端工具。
 <br/>
@@ -24,7 +24,7 @@ a nodejs based file-system-server with easy-template-engine and several F2E-util
 			npm:&nbsp;
 		</span>
 		<span style="font-family: 微软雅黑, 'Microsoft YaHei';">
-			npm install f2e-node-server
+			npm install f2e-server
 		</span>
 		<span style="font-family: 微软雅黑, 'Microsoft YaHei';">
 			&nbsp;
@@ -95,9 +95,9 @@ a nodejs based file-system-server with easy-template-engine and several F2E-util
 		<ol class=" list-paddingleft-2" style="list-style-type: lower-alpha;">
 			<li>
 				<pre class="brush:js;toolbar:false">
-					&lt;%&nbsp;for(var&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;4;&nbsp;i++)&nbsp;{%&gt;
-					&nbsp;&nbsp;&nbsp;&nbsp;&lt;h2&gt;&lt;%&nbsp;if(i%2==0){&nbsp;%&gt;Welcome&nbsp;&lt;%}&nbsp;else{%&gt;YOU&lt;%}&nbsp;%&gt;&lt;/h2&gt;
-					&lt;%&nbsp;}&nbsp;%&gt;
+	&lt;%&nbsp;for(var&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;4;&nbsp;i++)&nbsp;{%&gt;
+	&nbsp;&nbsp;&nbsp;&nbsp;&lt;h2&gt;&lt;%&nbsp;if(i%2==0){&nbsp;%&gt;Welcome&nbsp;&lt;%}&nbsp;else{%&gt;YOU&lt;%}&nbsp;%&gt;&lt;/h2&gt;
+	&lt;%&nbsp;}&nbsp;%&gt;
 				</pre>
 				<p>
 					转换后的HTML文本
@@ -105,8 +105,8 @@ a nodejs based file-system-server with easy-template-engine and several F2E-util
 			</li>
 			<li>
 				<pre class="brush:html;toolbar:false;">
-					&lt;h2&gt;Welcome&nbsp;&lt;/h2&gt;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h2&gt;YOU&lt;/h2&gt;&nbsp;&nbsp;&nbsp;&nbsp;
-					&lt;h2&gt;Welcome&nbsp;&lt;/h2&gt;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h2&gt;YOU&lt;/h2&gt;
+	&lt;h2&gt;Welcome&nbsp;&lt;/h2&gt;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h2&gt;YOU&lt;/h2&gt;&nbsp;&nbsp;&nbsp;&nbsp;
+	&lt;h2&gt;Welcome&nbsp;&lt;/h2&gt;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h2&gt;YOU&lt;/h2&gt;
 				</pre>
 			</li>
 		</ol>
@@ -126,8 +126,8 @@ a nodejs based file-system-server with easy-template-engine and several F2E-util
   <ol class=" list-paddingleft-2" style="list-style-type: lower-alpha;">
 			<li>
 	<pre class="brush:html;toolbar:false">
-		&lt;div&nbsp;id="hd"&gt; &nbsp;&nbsp;&nbsp;&nbsp;&lt;%&nbsp;echo(&nbsp;new&nbsp;Date()&nbsp;)&nbsp;%&gt;&nbsp;&lt;%=&nbsp;"hello&nbsp;world!"%&gt;
-		&lt;/div&gt;
+	&lt;div&nbsp;id="hd"&gt; &nbsp;&nbsp;&nbsp;&nbsp;&lt;%&nbsp;echo(&nbsp;new&nbsp;Date()&nbsp;)&nbsp;%&gt;&nbsp;&lt;%=&nbsp;"hello&nbsp;world!"%&gt;
+	&lt;/div&gt;
 	</pre>
   	</li>
 		</ol>
