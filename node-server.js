@@ -39,21 +39,17 @@ function start(conf){
  
         var _DEBUG = req.data.debug == "true" || conf.debug, agent; 
         
-        if(conf.agent && conf.agent.get && (agent = conf.agent.get(pathurl) ) ){   // 代理过滤
-            require('./nodeLib/common/agent').execute(req,resp,agent,req.url); 
-            return;
-        }
         if( conf['nginx-http-concat'] && req.url.match(/\?\?/) ){        // nginx-http-concat 资源合并 
             require('./nodeLib/common/nginx-http-concat').execute(req,resp,root,mini,conf); 
             return; 
-        } 
+        }
  
         fs.stat(pathname,function(error,stats){ 
             if(stats && stats.isFile && stats.isFile()){  //如果url对应的资源文件存在，根据后缀名写入MIME类型 
                 var expires = new Date(); 
                 expires.setTime( expires.getTime() + (conf.expires || 0) ); 
                 resp.writeHead(200, { 
-                    "Content-Type": mime.get(extType), 
+                    "Content-Type": mime.get(extType) || 'text/html', 
                     "Expires": (req.method==="GET")?expires:undefined 
                 }); 
  
@@ -128,6 +124,9 @@ function start(conf){
                         resp.writeHead(500, {"Content-Type": "text/html"}); 
                         resp.end( e.stack.toString().replace(/\n/g,"<br>") ); 
                     } 
+                }else if(conf.agent && conf.agent.get && (agent = conf.agent.get(pathurl) ) ){   // 代理过滤
+                    require('./nodeLib/common/agent').execute(req,resp,agent,req.url); 
+                    return;
                 }else{ 
                     resp.writeHead(404, {"Content-Type": "text/html"}); 
                     resp.end( fs.readFileSync( conf.notFound,'utf-8') ); 

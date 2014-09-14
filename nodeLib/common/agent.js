@@ -25,14 +25,14 @@ function doRequest(request,response,option,path){
   return http.request({    // 处理转发参数   
         reg  : option.reg,
         host : option.host,
-        port : option.port,
-        path : option.path(location),
+        port : option.port || 80,
+        path : option.path ? option.path(location) : location.path,
       method : request.method,
      headers : {          //拼接headers数据，只处理必要的
         "user-agent":request.headers["user-agent"],
         "content-type":request.headers["content-type"],
         cookie: option.cookie || request.headers.cookie,   //很多站点都是通过cookie进行SSO认证,可以自己在浏览器模拟
-        host: option.host+':'+option.port,
+        host: option.host+':'+(option.port || 80),
         accept: request.headers.accept
       }
     },function(res){

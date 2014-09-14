@@ -2,7 +2,7 @@
  *  基本配置参数
  **/
 exports.CONF = {
-    root :"D:\\WORK\\XhcmsProject\\Tomcat\\webapps\\xhcms\\xhcms_2014\\", //服务器索引的根目录，可配置为任意本地地址
+    root :"D:\\", //服务器索引的根目录，可配置为任意本地地址
     welcome: "",    //使用欢迎页面的文件名，为空时，表示不使用欢迎页面
     notFound: __dirname + "/../html/404.html",      //访问的资源不存在是，跳转的页面配置
     folder: __dirname + "/../html/folder.html",     //显示文件夹列表时候的配置页面
@@ -36,7 +36,6 @@ exports.CONF = {
             {
                 reg:/xuan/,
                 host:'xuan.news.cn',
-                port:80,
                 path:function(url){
                     return '';
                 }

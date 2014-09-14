@@ -86,7 +86,7 @@ Mime.prototype.extension = function(mimeType) {
  * 
 **/
 Mime.prototype.get = function(extType){
-  return this.lookup(extType) || "";
+  return this.lookup(extType,'text/html') || "";
 };
 Mime.prototype.isTXT = function(extType){
     return !!{
