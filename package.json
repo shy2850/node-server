@@ -1,6 +1,6 @@
 {
   "name": "f2e-server",
-  "version": "0.9.8",
+  "version": "0.9.9",
   "description": "a nodejs based file-system-server with easy-template-engine and several F2E-utils",
   "main": "node-server.js",
   "dependencies": {
@@ -30,6 +30,6 @@
   "homepage": "https://github.com/shy2850/node-server",
   "readme": "README.md",
   "readmeFilename": "README.html",
-  "_id": "f2e-server@0.9.8",
-  "_from": "f2e-server@0.9.8"
+  "_id": "f2e-server@0.9.9",
+  "_from": "f2e-server@0.9.9"
 }

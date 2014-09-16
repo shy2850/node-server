@@ -37,12 +37,6 @@ function doRequest(request,response,option,path){
       }
     },function(res){
         response.writeHead(res.statusCode, res.headers);
-        res.on('data', function (chunk) {
-            data += chunk
-        }).on('end',function(){
-            response.end( data );
-        }).on('error',function(e){
-            console.log(e)
-        });
+        res.pipe(response);
     });
 }
