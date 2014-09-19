@@ -98,7 +98,7 @@ Mime.prototype.isTXT = function(extType){
         "php"   :   1,
         "coffee":   1
 
-    }[extType] || ( this.get(extType).indexOf("text/")==0 );
+    }[extType] || ( this.lookup(extType,'unknown').indexOf("text/")==0 );
 };
 
 

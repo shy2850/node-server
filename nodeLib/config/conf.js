@@ -34,7 +34,7 @@ exports.CONF = {
                 }
             },
             {
-                reg:/xuan/,
+                reg:/xuan/, //路径中若含有xuan字段且映射不到内容，获取远程数据
                 host:'xuan.news.cn',
                 path:function(url){
                     return '';

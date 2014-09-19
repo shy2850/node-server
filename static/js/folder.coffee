@@ -29,10 +29,6 @@ require ["bootstrap","frameupload"], ()->
 
     ($ "body").fadeIn(50)
 
-    ($ ".txt").on "contextmenu", ()->
-      if (confirm "使用高亮工具查看文档？\n确定：工具查看文件；\n取消：直接打开。")
-        open "/prettify?#{this.href}?handle=false"
-        false
     ($ "#output").on "click", ()->
       $.ajax {
         url: '/build',

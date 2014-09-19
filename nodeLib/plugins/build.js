@@ -2,8 +2,17 @@ var _path = require('path'),
     fs = require('fs'), 
     http = require('http'), 
     exec = require('child_process').exec; 
+var pathMap = function(path){
+    if( path.match(/(.+?\.)(css|js)$/) && !path.match(/(\bmin\.)(css|js)$/) ){
+        return path.replace(/(.+?\.)(css|js)$/,'$1min.$2');
+    }else{
+        return path
+    }
+};    
 exports.execute = function(req,resp,root,handle,mini,conf){ 
-    var _root = conf.output, mime = req.util.mime, host = "http://"+req.headers.host.split(":")[0]+":"+conf.port+"/"; 
+    var _root = conf.output, mime = req.util.mime, 
+        host = "http://"+req.headers.host.split(":")[0]+":"+conf.port+"/";
+    
     var build = function( path ){ 
         var extType = _path.extname(path).substring(1); 
         fs.stat(root+path,function(error,stats){ 
@@ -15,10 +24,10 @@ exports.execute = function(req,resp,root,handle,mini,conf){
                     }); 
                     res.on('end',function(data){ 
                         switch(extType){ 
-                            case 'less' : path = path.replace(/(.+?)less$/,'$1css'); break; 
-                            case 'coffee' : path = path.replace(/(.+?)coffee$/,'$1js'); break; 
+                            case 'less' : path = path.replace(/(.+?\.)less$/,'$1css'); break; 
+                            case 'coffee' : path = path.replace(/(.+?\.)coffee$/,'$1js'); break; 
                         } 
-                        fs.writeFile(_root+path, info, function (err) {}); 
+                        fs.writeFile( _root + ( conf.debug? path:pathMap(path) ), info, function (err) {}); 
                     }); 
                 }); 
             }else if(stats && stats.isDirectory && stats.isDirectory()){ 

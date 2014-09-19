@@ -95,7 +95,7 @@ function start(conf){
                 }); 
            } else if(conf.fs_mod && stats && stats.isDirectory && stats.isDirectory()){  //如果当前url被成功映射到服务器的文件夹，创建一段列表字符串写出 
                 pathurl = pathurl.lastIndexOf('/') == pathurl.length-1 ? pathurl : pathurl+"/"; 
-                resp.writeHead(200, {"Content-Type": "text/html"}); 
+                resp.writeHead(200, {"Content-Type": mime.get(req.data.type||'html')}); 
                 fs.readdir(pathname,function(error,files){ 
                     var urlSplit = pathurl.split("/"); 
                         (urlSplit.length > 1) ? (urlSplit.length -= 2) : (urlSplit[0] = ".."); 
@@ -110,10 +110,26 @@ function start(conf){
                             name: files[i] 
                         }); 
                     } 
-                    fs.readFile(conf.folder,function (err,data){ 
-                        if(err)console.log(err); 
-                        handle.execute(req,resp,root,data.toString(),mini.get(extType)  ,_DEBUG, conf); 
-                    }); 
+
+                    switch(req.data.type){
+                        case 'json':resp.end( JSON.stringify( files ) ); break;
+                        case 'jsonp':resp.end( (req.data.callback||'callback') + '(' + JSON.stringify( files ) + ')' );break;
+                        case undefined:
+                            fs.readFile(conf.folder,function (err,data){ 
+                                if(err){
+                                    console.log(err);
+                                }else{
+                                    handle.execute(req,resp,root,data.toString(),mini.get(extType),_DEBUG, conf); 
+                                    return;
+                                }
+                            });
+                        case 'xml': 
+                            var list = [];
+                            req.$.fileList.map(function(item,i){
+                                list.push( '<p><a href="'+item.href+'">'+item.name+'</a></p>' );
+                            }); 
+                            resp.end( '<div>'+list.join('')+'</div>' );
+                    }
                 }); 
             } else{ 
                 var m = module.get( pathurl.replace('/','') ); 
@@ -129,7 +145,14 @@ function start(conf){
                     return;
                 }else{ 
                     resp.writeHead(404, {"Content-Type": "text/html"}); 
-                    resp.end( fs.readFileSync( conf.notFound,'utf-8') ); 
+                    fs.readFile(conf.notFound, function (err,data){ 
+                        if(err){
+                            console.log(err);
+                            resp.end( '<h1 style="font-size:200px;text-align:center;">404</h1>' )
+                        }else{
+                            resp.end( data );
+                        }
+                    }); 
                 } 
             } 
         }); 
