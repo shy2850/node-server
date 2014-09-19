@@ -115,14 +115,13 @@ function start(conf){
                         case 'json':resp.end( JSON.stringify( files ) ); break;
                         case 'jsonp':resp.end( (req.data.callback||'callback') + '(' + JSON.stringify( files ) + ')' );break;
                         case undefined:
-                            fs.readFile(conf.folder,function (err,data){ 
-                                if(err){
-                                    console.log(err);
-                                }else{
-                                    handle.execute(req,resp,root,data.toString(),mini.get(extType),_DEBUG, conf); 
-                                    return;
-                                }
-                            });
+                            try{
+                                var data = fs.readFileSync( conf.folder,'utf-8');
+                                handle.execute(req,resp,root,data.toString(),mini.get(extType),_DEBUG, conf); 
+                            }catch(e){
+                                console.log(e);
+                            }
+                            if(conf.folder)break;
                         case 'xml': 
                             var list = [];
                             req.$.fileList.map(function(item,i){
