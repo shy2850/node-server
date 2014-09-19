@@ -4,29 +4,15 @@
 <head>
 	<meta charset="UTF-8">
 	<title><%=$.title%></title>
-	<link rel="stylesheet" href="<%=$.staticServer%>static/css/bootstrap.min.css">
 	<link rel="stylesheet" href="<%=$.staticServer%>static/css/prettify.less">
-	<script data-main="<%=$.staticServer%>static/js/prettify.js" src="<%=$.staticServer%>static/js/require-min.js"></script>
+	<script src="<%=$.staticServer%>static/js/jquery-min.js"></script>
+	<script src="<%=$.staticServer%>static/js/prettify-min.js"></script>
 </head>
 <body>
 <div id="main">
 	<pre id="holder" class="prettyprint linenums:1" data-url="/agent?<%=$.title%>"></pre>
 </div>
 <script>
-require.config({
-	paths: {
-		"jquery": "jquery-min.js",
-		"bootstrap": "bootstrap-min.js",
-		"pretty": "prettify-min.js?handle=false"
-	},
-	shim : {
-		"bootstrap":{
-			deps:["jquery"]
-		}
-	}
-});
-require(["bootstrap","pretty"],function(){
-	
 	(function($){
 		var c = $("#holder");
 		$.ajax({
@@ -45,7 +31,6 @@ require(["bootstrap","pretty"],function(){
 		
 
 	})(jQuery);
-});
 </script>
 </body>
 </html>
