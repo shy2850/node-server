@@ -8,36 +8,22 @@ var conf = require("./nodeLib/config/conf"),    //综合配置
     path = require("path"), 
     fs   = require("fs"), 
     querystring = require("querystring"), 
-    mini = { 
-        _cssmin_: require("cssmin"), 
-        js  : function(str,resp){ 
-            var resu = require("uglify-js").minify(str,{fromString: true}); 
-            resp.end( resu.code ); 
-        }, 
-        css : function(str,resp){ resp.end( mini._cssmin_(str)) }, 
-        htm : function(str,resp){ resp.end( (str).replace(/\s+/g," ") ) }, 
-        __  : function(str,resp){ resp.end( str ) }, 
-        get : function(extType){ 
-            return mini[extType] || mini.__; 
-        } 
-    }; 
+    middleware =  require("./nodeLib/common/middleware"),
+    mini = middleware.mini;
  
 function start(conf){ 
     var server = http.createServer(function (req, resp) { try{ 
         var root = conf.root || __dirname; 
-        var pathurl = ""; 
-            try{ 
-                pathurl = decodeURI(url.parse(req.url).pathname); 
-            }catch(e){ 
-                pathurl = req.url; 
-            } 
+        var pathurl;    try{pathurl = decodeURI(url.parse(req.url).pathname); }catch(e){ pathurl = req.url; } 
         var pathname= (pathurl === '/') ? (root+conf.welcome) :  root + pathurl;  //根目录时，追加welcome页面 
         var extType = path.extname(pathname).substring(1);    //获取资源后缀 
-        req.data = querystring.parse( url.parse(req.url).query ); //包装request查询参数 
+
+        //包装request功能 
+        req.data = querystring.parse( url.parse(req.url).query ); 
         req.util = {mime:mime}; 
         req.$ = { title:pathurl, staticServer:"http://"+req.headers.host.split(":")[0]+":"+staticConf.port+"/", fileList:[] }; 
  
-        var _DEBUG = req.data.debug == "true" || conf.debug, agent; 
+        var _DEBUG = req.data.debug == "true" || conf.debug; //DEBUG模式判断
         
         if( conf['nginx-http-concat'] && req.url.match(/\?\?/) ){        // nginx-http-concat 资源合并 
             require('./nodeLib/common/nginx-http-concat').execute(req,resp,root,mini,conf); 
@@ -60,38 +46,14 @@ function start(conf){
                 } 
  
                 fs.readFile(pathname,function (err,data){ 
-                    var rs = data.toString(); 
-                    if( conf.less && extType === "less" && req.data.less !== "false" ){    //LESS 
-                        try{ 
-                            new(require("./nodeLib/module/less").Parser)({ 
-                                paths:[ pathname.replace(/(\/[^\/]+?)$/,"") ] 
-                            }).parse(rs, function (err, tree) { 
-                                if (err) { return console.error(err) } 
-                                else{ 
-                                    _DEBUG ? resp.end( tree.toCSS() ) : mini.css(tree.toCSS(),resp) ; 
-                                } 
-                            }); 
-                        }catch(e){ 
-                            resp.writeHead(500, {"Content-Type": "text/html"}); 
-                            resp.end( e + "" ); 
-                        } 
-                    }else if(conf.coffee && extType === "coffee" && req.data.coffee !== "false" ){ 
-                        try{ 
-                            var scriptStr = require("coffee-script").compile( rs ); 
-                            _DEBUG ? resp.end( scriptStr ) : mini.js(scriptStr,resp) ; 
- 
-                        }catch(e){ 
-                            resp.writeHead(500, {"Content-Type": "text/html"}); 
-                            console.log(e); 
-                            resp.end( e + "" ); 
-                        } 
-                   }else if(  conf.handle && mime.isTXT(extType) && !( /[\.\-]min\.(js|css)$/.test(pathurl) ) && req.data.handle !== "false" ){    //handle 
+                    var rs = data.toString(), ware; 
+                    if( conf[extType] && ("false" !== req.data[extType]) && (ware = middleware.get(extType)) ){  //中间件处理, MIME需要mime.type中修改
+                         ware(req,resp,rs,pathname,_DEBUG)
+                    }else if(  conf.handle && mime.isTXT(extType) && !( /[\.\-]min\.(js|css)$/.test(pathurl) ) && req.data.handle !== "false" ){    //handle 
                         handle.execute(req,resp,root,rs, mini.get(extType) ,_DEBUG, conf) 
                     }else{ 
                         resp.end( data ) 
                     } 
-                        
-                    
                 }); 
            } else if(conf.fs_mod && stats && stats.isDirectory && stats.isDirectory()){  //如果当前url被成功映射到服务器的文件夹，创建一段列表字符串写出 
                 pathurl = pathurl.lastIndexOf('/') == pathurl.length-1 ? pathurl : pathurl+"/"; 
@@ -119,7 +81,7 @@ function start(conf){
                                 var data = fs.readFileSync( conf.folder,'utf-8');
                                 handle.execute(req,resp,root,data.toString(),mini.get(extType),_DEBUG, conf); 
                             }catch(e){
-                                console.log(e);
+                                conf.folder && console.log(e);
                             }
                             if(conf.folder)break;
                         case 'xml': 
@@ -133,20 +95,15 @@ function start(conf){
             } else{ 
                 var m = module.get( pathurl.replace('/','') ); 
                 if(m){ 
-                    try{ 
-                        m.execute(req,resp,root,handle,mini.__, conf); 
-                    }catch(e){ 
-                        resp.writeHead(500, {"Content-Type": "text/html"}); 
-                        resp.end( e.stack.toString().replace(/\n/g,"<br>") ); 
-                    } 
+                    m.execute(req,resp,root,handle,mini.__, conf); 
                 }else if(conf.agent && conf.agent.get && (agent = conf.agent.get(pathurl) ) ){   // 代理过滤
                     require('./nodeLib/common/agent').execute(req,resp,agent,req.url); 
                     return;
                 }else{ 
                     resp.writeHead(404, {"Content-Type": "text/html"}); 
-                    fs.readFile(conf.notFound, function (err,data){ 
+                    fs.readFile(conf.notFound||'', function (err,data){ 
                         if(err){
-                            console.log(err);
+                            conf.notFound && console.log(err);
                             resp.end( '<h1 style="font-size:200px;text-align:center;">404</h1>' )
                         }else{
                             resp.end( data );
@@ -157,6 +114,8 @@ function start(conf){
         }); 
     }catch(err){ 
         console.log(err.stack); 
+        resp.writeHead(500, {"Content-Type": "text/html"}); 
+        resp.end( e.stack.toString().replace(/\n/g,"<br>") ); 
     }}); 
  
     server.maxConnections = conf.maxConnections;  
