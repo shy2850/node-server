@@ -1,1 +1,0 @@
-npm install ./ & echo install finished ! & pause

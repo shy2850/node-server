@@ -17,15 +17,15 @@ exports.execute = function(req,resp,root,handle,mini,conf){
         var extType = _path.extname(path).substring(1); 
         fs.stat(root+path,function(error,stats){ 
             if(stats && stats.isFile && stats.isFile() && mime.isTXT(extType)){ 
-                var info = ""; 
+                var info = "";
                 http.get(host+path, function(res) { 
+                    var type = res.headers['middleware-type']; 
                     res.on('data',function(data){ 
                        info += data; 
                     }); 
                     res.on('end',function(data){ 
-                        switch(extType){ 
-                            case 'less' : path = path.replace(/(.+?\.)less$/,'$1css'); break; 
-                            case 'coffee' : path = path.replace(/(.+?\.)coffee$/,'$1js'); break; 
+                        if(type){ 
+                            path = path.replace(/[^\.]+$/,type);     //对应 middleware 里面的type
                         } 
                         fs.writeFile( _root + ( conf.debug? path:pathMap(path) ), info, function (err) {}); 
                     }); 

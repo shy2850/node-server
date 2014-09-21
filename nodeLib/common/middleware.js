@@ -19,6 +19,7 @@ var middleware = {
 	coffee: function(req,resp,rs,pathname,_DEBUG){
 		try{ 
             var scriptStr = require("coffee-script").compile( rs ); 
+            resp.writeHead(200,{"middleware-type":'js'});   //用以build输出时转换后缀名
             _DEBUG ? resp.end( scriptStr ) : mini.js(scriptStr,resp) ; 
 
         }catch(e){ 
@@ -34,6 +35,7 @@ var middleware = {
             }).parse(rs, function (err, tree) { 
                 if (err) { return console.error(err) } 
                 else{ 
+                    resp.writeHead(200,{"middleware-type":'css'});
                     _DEBUG ? resp.end( tree.toCSS() ) : mini.css(tree.toCSS(),resp) ; 
                 } 
             }); 
@@ -47,8 +49,6 @@ var middleware = {
 exports.get = function(extType){
 	return middleware[extType]
 };
-
-
 
 exports.mini = mini;
 
