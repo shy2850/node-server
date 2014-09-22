@@ -47,8 +47,8 @@ function start(conf){
  
                 fs.readFile(pathname,function (err,data){ 
                     var rs = data.toString(), ware; 
-                    if( conf[extType] && ("false" !== req.data[extType]) && (ware = middleware.get(extType)) ){  //中间件处理, MIME需要mime.type中修改
-                         ware(req,resp,rs,pathname,_DEBUG)
+                    if( conf.middleware && ("false" !== req.data[extType]) && (ware = middleware.get(extType)) ){  //中间件处理, MIME需要mime.type中修改
+                        ware(req,resp,rs,pathname,_DEBUG)
                     }else if(  conf.handle && mime.isTXT(extType) && !( /[\.\-]min\.(js|css)$/.test(pathurl) ) && req.data.handle !== "false" ){    //handle 
                         handle.execute(req,resp,root,rs, mini.get(extType) ,_DEBUG, conf) 
                     }else{ 
