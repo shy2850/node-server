@@ -1,5 +1,5 @@
-var conf = require("./nodeLib/config/conf"),    //综合配置 
-    staticConf = conf.staticConf,                //静态文件服务器配置 
+var CONF = require("./nodeLib/config/conf"),    //综合配置 
+    staticConf = CONF.staticConf,                //静态文件服务器配置 
     handle = require("./nodeLib/common/handle"),//文本文件的模板操作 
     module = require("./nodeLib/common/module"),//支持的插件配置 
     mime = require("./nodeLib/module/mime"),    //MIME类型 
@@ -13,15 +13,19 @@ var conf = require("./nodeLib/config/conf"),    //综合配置
  
 function start(conf){ 
     var server = http.createServer(function (req, resp) { try{ 
-        var root = conf.root || __dirname; 
-        var pathurl;    try{pathurl = decodeURI(url.parse(req.url).pathname); }catch(e){ pathurl = req.url; } 
+        var host = (req.headers.host+':80').split(':'), 
+            pathurl,  
+            hostConf = CONF[ host[0] ],
+            root = (hostConf&&host[1]==hostConf.port) ? hostConf.root : conf.root || __dirname;  //域名识别
+        
+        try{pathurl = decodeURI(url.parse(req.url).pathname); }catch(e){ pathurl = req.url; } 
         var pathname= (pathurl === '/') ? (root+conf.welcome) :  root + pathurl;  //根目录时，追加welcome页面 
         var extType = path.extname(pathname).substring(1);    //获取资源后缀 
 
         //包装request功能 
         req.data = querystring.parse( url.parse(req.url).query ); 
         req.util = {mime:mime}; 
-        req.$ = { title:pathurl, staticServer:"http://"+req.headers.host.split(":")[0]+":"+staticConf.port+"/", fileList:[] }; 
+        req.$ = { title:pathurl, staticServer:"http://"+host[0]+":"+staticConf.port+"/", fileList:[] }; 
  
         var _DEBUG = req.data.debug == "true" || conf.debug; //DEBUG模式判断
         
@@ -120,11 +124,24 @@ function start(conf){
  
     server.maxConnections = conf.maxConnections;  
     server.listen(conf.port); 
-    console.log("Server running at http://127.0.0.1:"+conf.port); 
+    console.log("Server running at http://127.0.0.1:"+conf.port);
 } 
-for(var k in conf){ 
+var ports = {}, hosts = [];
+for(var k in CONF){ 
+    hosts.push( k );
     (function(c){ 
+        if(ports[c.port])return;
+        ports[c.port] = true;
         start(c);
-    })(conf[k]) 
+    })(CONF[k]) 
 } 
+//hosts写入, 可能需要管理员权限
+var hostsString = '127.0.0.1  ' + hosts.join(' '); 
+fs.writeFile( 'C:\\Windows\\System32\\drivers\\etc\\hosts', hostsString, function (err) {
+    if(err){
+        console.log(err);
+        fs.writeFile( '/etc/hosts', hostsString, function (err) {});
+    }
+}); 
+         
 
