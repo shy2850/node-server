@@ -9,4 +9,8 @@
 --2014/9/26 版本1.0.8
 	#重新整理conf.js代码, 通过简单的对象属性扩展支持多组服务器配置复用
 	#根据conf.js的所有属性名 重置hosts文件, 用于方便支持本地不同域名访问获取不同服务。[重置hosts不可恢复，有必要的话，请手工备份]
+--2014/9/28 版本1.0.9
+	#修改hosts动态修改策略, 提供修改和恢复hosts文件工具。
+	#附加bash命令处理 node node_modules/f2e-server explorer http://localhost:2850 [从浏览器打开URL]
+
 

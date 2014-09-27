@@ -16,8 +16,7 @@ function start(conf){
         var host = (req.headers.host+':80').split(':'), 
             pathurl,  
             hostConf = CONF[ host[0] ],
-            root = (hostConf&&host[1]==hostConf.port) ? hostConf.root : conf.root || __dirname;  //域名识别
-        
+            root = (hostConf&&host[1]==hostConf.port) ? hostConf.root : (conf.root || __dirname);  //域名识别
         try{pathurl = decodeURI(url.parse(req.url).pathname); }catch(e){ pathurl = req.url; } 
         var pathname= (pathurl === '/') ? (root+conf.welcome) :  root + pathurl;  //根目录时，追加welcome页面 
         var extType = path.extname(pathname).substring(1);    //获取资源后缀 
@@ -124,24 +123,18 @@ function start(conf){
  
     server.maxConnections = conf.maxConnections;  
     server.listen(conf.port); 
-    console.log("Server running at http://127.0.0.1:"+conf.port);
 } 
-var ports = {}, hosts = [];
+var ports = {}, extCmd = ([]).slice.call( process.argv, 2 ).join(' ');
+if(extCmd)require('child_process').exec( extCmd );
 for(var k in CONF){ 
-    hosts.push( k );
+    console.log("Server running at http://127.0.0.1:"+CONF[k].port+'\t['+k+']');
     (function(c){ 
         if(ports[c.port])return;
         ports[c.port] = true;
         start(c);
     })(CONF[k]) 
 } 
-//hosts写入, 可能需要管理员权限
-var hostsString = '127.0.0.1  ' + hosts.join(' '); 
-fs.writeFile( 'C:\\Windows\\System32\\drivers\\etc\\hosts', hostsString, function (err) {
-    if(err){
-        console.log(err);
-        fs.writeFile( '/etc/hosts', hostsString, function (err) {});
-    }
-}); 
+
+
          
 

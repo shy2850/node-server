@@ -7,8 +7,10 @@ a nodejs based http-server with easy-template-engine and several F2E-utils
 <p>github: <a href="https://github.com/shy2850/node-server.git">https://github.com/shy2850/node-server.git</a></p>
 <br>
 <p><strong>NPM: npm install f2e-server</strong></p>
-<p><strong>RUN: node node_modules/f2e-server</strong></p>
-<p><strong>CONF: vim node_modules/nodeLib/config/conf.js</strong></p>
+<p><strong>修改hosts[windows]: node host </strong></p>
+<p><strong>运行: node node_modules/f2e-server [explorer http://localhost:2850]</strong></p>
+<p><strong>恢复hosts[windows]: node hosts reset </strong></p>
+<p><strong>项目配置: f2e-server/nodeLib/config/conf.js</strong></p>
 
 conf.js 配置
 ===========
