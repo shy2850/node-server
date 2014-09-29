@@ -4,12 +4,11 @@
 	<meta charset="UTF-8">
 	<title><%=$.title%></title>
 	<link rel="stylesheet" href="<%=$.staticServer%>static/css/bootstrap.min.css" data-noprefix>
-	<link rel="stylesheet" href="<%=$.staticServer%>static/css/folder.less" data-noprefix>
+	<link rel="stylesheet" href="<%=$.staticServer%>static/css/folder.css" data-noprefix>
 	<script data-main="<%=$.staticServer%>static/js/folder.coffee" src="<%=$.staticServer%>static/js/require-min.js"></script>
 </head>
 <body>
 <div class="fixed-line">
-	<a class="btn btn-primary" href="javascript:void(0);" id="switch-icon">切换图标</a>
 	<a href="javascript:void(0)" class="btn btn-warning" id="ajaxUpload" title="点击选择文件将上传到当前文件夹">上传文件</a>
 	<a class="btn btn-danger" href="javascript:void(0);" id="output" title="点击将当前项目输出到指定文件夹">项目输出</a>
 	<iframe src="/upload?iframe=true&uploadUrl=<%=$.title%>" frameborder="0" id="ajaxFrame"></iframe>
@@ -27,10 +26,9 @@
     <div id="clock" data-clock="<%=$.staticServer%>static/img/clock.gif"></div>
 </div>
 <ul id="list-container">
-<% var all_ico={"/":1,"3gp":1,"7z":1,"apk":1,"asp":1,"aspx":1,"avi":1,"bat":1,"bmp":1,"c":1,"chm":1,"css":1,"db":1,"dll":1,"doc":1,"docx":1,"dwf":1,"exe":1,"fla":1,"flv":1,"folder":1,"gif":1,"h":1,"htm":1,"html":1,"img":1,"ini":1,"iso":1,"java":1,"jpeg":1,"jpg":1,"js":1,"jsp":1,"lnk":1,"log":1,"mdb":1,"mov":1,"mp3":1,"mp4":1,"mpg":1,"note":1,"notesort":1,"pdf":1,"php":1,"png":1,"pps":1,"ppt":1,"pptx":1,"psd":1,"qt":1,"quicktime":1,"rar":1,"reg":1,"rm":1,"rmvb":1,"rtf":1,"shtml":1,"swf":1,"tb":1,"tif":1,"torrent":1,"txt":1,"unknown":1,"vbs":1,"video":1,"vsd":1,"wav":1,"wma":1,"wmv":1,"xls":1,"xlsx":1,"xml":1,"xsl":1,"zip":1};
-for(var i=0; i<$.fileList.length; i++){ 
+<%for(var i=0; i<$.fileList.length; i++){ 
 	var t = $.fileList[i], temp = t.name.match(/\.([^\.\/]+)$/), type = temp ? temp[1] : "folder";
-%><li><a href="<%=t.href%>" <% if( mime.isTXT(type) ){%>class="txt" target="_blank"<%}%>><img src="<%=$.staticServer%>static/img/fileicon/<%=all_ico[type] ? type : 'unknown'%>.png" alt="<%=type%>.png"><%=t.name%></a> <% if( mime.isTXT(type) ){%><a href="/prettify?<%=t.href%>?handle=false&coffee=false&less=false" target="_blank" class="see-to-source">源</a><%}%><%if( type == "psd" ){%><a href="/psd?<%=t.href%>" target="_blank" class="see-to-source">稿</a><%}%> </li>
+%><li class="<%=type%>" ><a href="<%=t.href%>" <% if( mime.isTXT(type) ){%>target="_blank"<%}%>><%=t.name%></a> <% if( mime.isTXT(type) ){%><a href="/prettify?<%=t.href%>?handle=false&coffee=false&less=false" target="_blank" class="see-to-source">源</a><%}%><%if( type == "psd" ){%><a href="/psd?<%=t.href%>" target="_blank" class="see-to-source">稿</a><%}%> </li>
 <%}%>	
 </ul>
 </body>

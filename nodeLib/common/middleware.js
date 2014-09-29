@@ -5,11 +5,12 @@ var fs = require("fs"),
 var mini = { 
     _cssmin_: require("cssmin"), 
     js  : function(str,resp){ 
-        var resu = require("uglify-js").minify(str,{fromString: true}); 
+        var resu = require("uglify-js").minify(str,{fromString: true});
+        resp.writeHead(200, {"Content-Type": mime.get('js')}); 
         resp.end( resu.code ); 
     }, 
-    css : function(str,resp){ resp.end( mini._cssmin_(str)) }, 
-    htm : function(str,resp){ resp.end( (str).replace(/\s+/g," ") ) }, 
+    css : function(str,resp){ resp.writeHead(200, {"Content-Type": mime.get('css')});  resp.end( mini._cssmin_(str)) }, 
+    htm : function(str,resp){ resp.writeHead(200, {"Content-Type": mime.get('htm')});  resp.end( (str).replace(/\s+/g," ") ) }, 
     __  : function(str,resp){ resp.end( str ) }, 
     get : function(extType){ 
         return mini[extType] || mini.__; 

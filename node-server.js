@@ -24,7 +24,7 @@ function start(conf){
         //包装request功能 
         req.data = querystring.parse( url.parse(req.url).query ); 
         req.util = {mime:mime}; 
-        req.$ = { title:pathurl, staticServer:"http://"+host[0]+":"+staticConf.port+"/", fileList:[] }; 
+        req.$ = { title:pathurl, root:root, staticServer:"http://"+host[0]+":"+staticConf.port+"/", fileList:[] }; 
  
         var _DEBUG = req.data.debug == "true" || conf.debug; //DEBUG模式判断
         

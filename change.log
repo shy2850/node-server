@@ -12,5 +12,9 @@
 --2014/9/28 版本1.0.9
 	#修改hosts动态修改策略, 提供修改和恢复hosts文件工具。
 	#附加bash命令处理 node node_modules/f2e-server explorer http://localhost:2850 [从浏览器打开URL]
+--2014/9/29 版本1.1.0
+	#修改文件展示套图为小图
+	#修改中间件导致的mime-type异常
+	#修改folder中有关图标样式规则,支持动态添加gif文件支持更多扩展后缀名文件显示
 
 

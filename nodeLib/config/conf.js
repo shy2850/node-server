@@ -1,5 +1,5 @@
 var conf = {
-    root :"D:\\", //服务器索引的根目录，可配置为任意本地地址
+    root :"D:\\WORK\\web\\webDevelop\\炫阅读器\\", //服务器索引的根目录，可配置为任意本地地址
     welcome: "",    //使用欢迎页面的文件名，为空时，表示不使用欢迎页面
     notFound: __dirname + "/../html/404.html",      //访问的资源不存在是，跳转的页面配置
     folder: __dirname + "/../html/folder.html",     //显示文件夹列表时候的配置页面
@@ -22,9 +22,8 @@ var conf = {
         },
         map:[
             {
-                reg : /xuan/,
-                host: 'xuan.news.cn',
-                path: function(url){return ''}
+                reg:/cloudnews|cloudapi|xhCNS|cloudc|adComment\.do/, //路径中若符合正则且映射不到内容，获取远程数据
+                host:'xuan.news.cn'
             }
         ]
     },
@@ -44,9 +43,22 @@ exports['test.abc.com'] = extend({  //跟模型配置相同端口时候支持根
     root :"D:\\doc\\"
 });
 
-exports.staticConf = extend({
+exports.staticConf = extend({ //不要删除或者修改这个服务
     root: "",
     debug: false,
     port: 2850,
+    agent: {
+        get: function(path){
+            if( /^\/static\/img\/fileicon\/.+\.gif/.test(path) ){
+                return {
+                    host:'127.0.0.1',
+                    port:2850,
+                    path:function(){
+                        return '/static/img/fileicon/unknown.gif'
+                    }
+                }
+            }
+        }
+    },
     expires : 1000*60*60*24
 });

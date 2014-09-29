@@ -16,16 +16,8 @@ require.config {
     }
 }
 
-localStorge = @.localStorage
 require ["bootstrap","frameupload"], ()->
   (($)->
-    ($ "#switch-icon").on "click", ()->
-      ($ "#list-container").toggleClass "big"
-      if localStorge
-        localStorge.iconStyle = ($ "#list-container").attr("class")
-
-    if localStorge
-       ($ "#list-container").addClass localStorge.iconStyle
 
     ($ "body").fadeIn(50)
 
