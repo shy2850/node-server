@@ -50,12 +50,12 @@ body {
   margin: 1px .2em;
 }
 <%
-    var fs = require("fs");
-    
-    _o_ = function(){
+    return function(){
+        var fs = require("fs");
+        
         fs.readdir(request.$.root+"/static/img/fileicon/",function(error,files){ 
             if(error){
-                response.end(  _output_ );
+                response.end(  __p );
             }else{
                 var expires = new Date(); 
                 expires.setTime( expires.getTime() + 1000*60*60*24 );
@@ -64,10 +64,10 @@ body {
                 
                 files.map(function(file){
                   file = file.replace('.gif','');
-                  _output_ += "#list-container  ."+file+"\{background: url(../img/fileicon/"+file+".gif) no-repeat left center;\}\n"
+                  __p += "#list-container  ."+file+"\{background: url(../img/fileicon/"+file+".gif) no-repeat left center;\}\n"
                 });
 
-                response.end(  _output_ );
+                response.end(  __p );
             }
         });
     };

@@ -40,8 +40,8 @@
     var el = document.getElementById('ajaxUpload');
     new FrameUpload({
       el: el,
-      src: "/upload",
-      action: "/upload?iframe=true&uploadUrl="+document.title,
+      src: "/upload?iframe=true&_"+ +new Date,
+      action: "/upload?uploadUrl="+document.title,
       onchange: function(){
         el.innerHTML = '上传中...';
         this.submit();
@@ -49,7 +49,10 @@
       afterUpload: function(data){
         if(data.length){
           alert( '上传成功' );
-          window.location.reload();
+          el.innerHTML = '上传文件';
+        }else{
+          alert( '上传失败' );
+          el.innerHTML = '重新上传';
         }
       },
       ready: function(){

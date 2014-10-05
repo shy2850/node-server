@@ -53,9 +53,9 @@
     <![endif]-->
 
     <link rel="stylesheet" href="../css/prettify.css">
-    <script type="text/javascript" src="../js/prettify-min.js?handle=false"></script>
-    <script type="text/javascript" src="../js/zen_textarea-min.js"></script>
-    <script type="text/javascript" src="../js/jquery-min.js"></script>
+    <script type="text/javascript" src="../js/prettify.min.js?handle=false"></script>
+    <script type="text/javascript" src="../js/zen_textarea.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
     <script type="text/javascript">
         var onresize = function(){
             var o = {
@@ -105,15 +105,13 @@
 
 </body>
 </html>
-<script type="nodejs/javascript">
 <%
-    _o_ = function(){
+    return function(){
         if(request.post){
             response.writeHead(200, {"Content-Type": "application/octet-stream"});
             response.end(  request.post.zen.replace(/\+/g," ") );
         }else{
-            response.end( _output_+"</script>" );
+            response.end( __p );
         }
     };
 %>
-</script>

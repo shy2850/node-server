@@ -2,18 +2,16 @@ var http = require('http'),
     util = require('util'),
     mime = require('../module/mime'),
     fs = require('fs'),
-    uploadBase = __dirname + "/../html/upload.html",
+    uploadBase = fs.readFileSync( __dirname + "/../html/upload.html",'utf-8'),
     uploadModel = __dirname + "/../html/uploadOK.html",
     formidable = require('formidable');
 exports.execute = function(req,resp,root,handle,f,conf){
 	var form = new formidable.IncomingForm(),
         files = [],
         fields = {};
-    if(req.method === "GET"){
-        fs.readFile(uploadBase,function (err,data){
-            resp.writeHead(200, {'content-type': mime.get("html")});
-            handle.execute(req,resp,root,data.toString(),f,true,conf);
-        });
+    if(req.type=='GET' || req.data.iframe){
+        resp.writeHead(200, {'content-type': mime.get("html")});
+        resp.end(uploadBase);
     }
     try{
         form.uploadDir = req.data.uploadUrl ? ( root + "/" + req.data.uploadUrl + "/" ) : ( __dirname + "/../../static/" ); //上传路径

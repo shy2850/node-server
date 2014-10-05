@@ -22,4 +22,8 @@
 	#修改前台使用的requirejs版本为官方版本[不支持.coffee后缀,故同时修改folder.coffee]
 	#使用xhcms_2014库中的frame-upload插件进行文件上传
 	#修改文件夹中关于特殊文件类型,查看图标的显示逻辑
+--2014/10/05 版本1.1.6
+	☆增加underscore依赖, 模板引擎平滑过渡到underscore.js内置的template, 增加相应的demo修改
+	#upload插件修改get请求获取数据的判断, 避免并发引起判断错误
+	#修改npm版本依赖, 按照目前调试使用的最高版本进行设置。
 
