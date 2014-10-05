@@ -1,5 +1,5 @@
 var conf = {
-    root :"D:\\WORK\\web\\webDevelop\\炫阅读器\\", //服务器索引的根目录，可配置为任意本地地址
+    root :"D:\\", //服务器索引的根目录，可配置为任意本地地址
     welcome: "",    //使用欢迎页面的文件名，为空时，表示不使用欢迎页面
     notFound: __dirname + "/../html/404.html",      //访问的资源不存在是，跳转的页面配置
     folder: __dirname + "/../html/folder.html",     //显示文件夹列表时候的配置页面
@@ -40,25 +40,12 @@ var extend = function(ext){
 exports.localhost = conf;
 
 exports['test.abc.com'] = extend({  //跟模型配置相同端口时候支持根据hosts域名使用新配置。
-    root :"D:\\doc\\"
+    root :"C:\\"
 });
 
 exports.staticConf = extend({ //不要删除或者修改这个服务
     root: "",
     debug: false,
     port: 2850,
-    agent: {
-        get: function(path){
-            if( /^\/static\/img\/fileicon\/.+\.gif/.test(path) ){
-                return {
-                    host:'127.0.0.1',
-                    port:2850,
-                    path:function(){
-                        return '/static/img/fileicon/unknown.gif'
-                    }
-                }
-            }
-        }
-    },
     expires : 1000*60*60*24
 });

@@ -5,13 +5,12 @@
 	<title><%=$.title%></title>
 	<link rel="stylesheet" href="<%=$.staticServer%>static/css/bootstrap.min.css" data-noprefix>
 	<link rel="stylesheet" href="<%=$.staticServer%>static/css/folder.css" data-noprefix>
-	<script data-main="<%=$.staticServer%>static/js/folder.coffee" src="<%=$.staticServer%>static/js/require-min.js"></script>
+	<script data-main="<%=$.staticServer%>static/js/folder.js?debug=true" src="<%=$.staticServer%>static/js/require.min.js"></script>
 </head>
 <body>
 <div class="fixed-line">
 	<a href="javascript:void(0)" class="btn btn-warning" id="ajaxUpload" title="点击选择文件将上传到当前文件夹">上传文件</a>
 	<a class="btn btn-danger" href="javascript:void(0);" id="output" title="点击将当前项目输出到指定文件夹">项目输出</a>
-	<iframe src="/upload?iframe=true&uploadUrl=<%=$.title%>" frameborder="0" id="ajaxFrame"></iframe>
 	<div class="dropdown">
 		<a id="dLabel" class="btn btn-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			Useful API
@@ -27,8 +26,15 @@
 </div>
 <ul id="list-container">
 <%for(var i=0; i<$.fileList.length; i++){ 
-	var t = $.fileList[i], temp = t.name.match(/\.([^\.\/]+)$/), type = temp ? temp[1] : "folder";
-%><li class="<%=type%>" ><a href="<%=t.href%>" <% if( mime.isTXT(type) ){%>target="_blank"<%}%>><%=t.name%></a> <% if( mime.isTXT(type) ){%><a href="/prettify?<%=t.href%>?handle=false&coffee=false&less=false" target="_blank" class="see-to-source">源</a><%}%><%if( type == "psd" ){%><a href="/psd?<%=t.href%>" target="_blank" class="see-to-source">稿</a><%}%> </li>
+	var t = $.fileList[i], 
+		temp = t.name.match(/\.([^\.\/]+)$/), 
+		type = temp ? temp[1] : "folder",
+		_blank = mime.isTXT(type) ? 'target="_blank"' : '',
+		_icon = mime.isTXT(type) ? '<a href="/prettify?'+t.href+'?handle=false&middleware=false&debug=true" target="_blank" class="see-to-source">源</a>' : '';
+
+		_icon = type == 'psd' ? '<a href="/psd?'+t.href+'" target="_blank" class="see-to-source">稿</a>' : _icon;
+
+%><li class="<%=type%>" ><a href="<%=t.href%>" <%=_blank%> ><%=t.name%></a> <%=_icon%></li>
 <%}%>	
 </ul>
 </body>

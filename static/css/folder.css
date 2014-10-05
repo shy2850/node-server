@@ -2,7 +2,6 @@
 body {
   padding: 120px 20px 60px;
   background: #fff;
-  display: none;
 }
 .fixed-line {
   position: fixed;
@@ -20,7 +19,7 @@ body {
   right: 30px;
   top: 0px;
 }
-li {
+#list-container li {
   line-height: 20px;
   height: 20px;
   margin: 4px 0;
@@ -41,7 +40,6 @@ li {
 }
 .dropdown-menu {
   line-height: 26px;
-  padding: 0 0 8px;
 }
 .see-to-source,
 .see-to-source:hover {
@@ -59,11 +57,14 @@ li {
             if(error){
                 response.end(  _output_ );
             }else{
-                response.writeHead(200, {"Content-Type": "text/css"});
+                var expires = new Date(); 
+                expires.setTime( expires.getTime() + 1000*60*60*24 );
+
+                response.writeHead(200, {"Content-Type": "text/css",Expires:expires});
                 
                 files.map(function(file){
                   file = file.replace('.gif','');
-                  _output_ += "."+file+"\{background: url(../img/fileicon/"+file+".gif) no-repeat left center;\}\n"
+                  _output_ += "#list-container  ."+file+"\{background: url(../img/fileicon/"+file+".gif) no-repeat left center;\}\n"
                 });
 
                 response.end(  _output_ );

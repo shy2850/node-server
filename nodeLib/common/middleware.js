@@ -6,21 +6,26 @@ var mini = {
     _cssmin_: require("cssmin"), 
     js  : function(str,resp){ 
         var resu = require("uglify-js").minify(str,{fromString: true});
-        resp.writeHead(200, {"Content-Type": mime.get('js')}); 
         resp.end( resu.code ); 
     }, 
-    css : function(str,resp){ resp.writeHead(200, {"Content-Type": mime.get('css')});  resp.end( mini._cssmin_(str)) }, 
-    htm : function(str,resp){ resp.writeHead(200, {"Content-Type": mime.get('htm')});  resp.end( (str).replace(/\s+/g," ") ) }, 
-    __  : function(str,resp){ resp.end( str ) }, 
+    css : function(str,resp){ resp.end( mini._cssmin_(str)) }, 
+    htm : function(str,resp){ resp.end( (str).replace(/\s+/g," ") ) }, 
     get : function(extType){ 
-        return mini[extType] || mini.__; 
+        return function(str,resp){
+            var m = mini[extType];
+            if(m){
+                m(str,resp);
+            }else{
+                resp.end( str );
+            }
+        }; 
     } 
 };
 
 var middleware = {
 	coffee: function(req,resp,rs,pathname,_DEBUG){
         var scriptStr = require("coffee-script").compile( rs ); 
-        resp.writeHead(200,{"middleware-type":'js'});   //用以build输出时转换后缀名
+        resp.writeHead(200,{"middleware-type":'js',"Content-Type": mime.get('js')});   //用以build输出时转换后缀名
         _DEBUG ? resp.end( scriptStr ) : mini.js(scriptStr,resp) ; 
 	},
 	less: function(req,resp,rs,pathname,_DEBUG){
@@ -29,13 +34,13 @@ var middleware = {
         }).parse(rs, function (err, tree) { 
             if (err) { throw err } 
             else{ 
-                resp.writeHead(200,{"middleware-type":'css'});
+                resp.writeHead(200,{"middleware-type":'css',"Content-Type": mime.get('css')});
                 _DEBUG ? resp.end( tree.toCSS() ) : mini.css(tree.toCSS(),resp) ; 
             } 
         }); 
 	},
     jade: function(req,resp,rs,pathname,_DEBUG){
-        resp.writeHead(200,{"middleware-type":'html',"Content-Type":"text/html"});
+        resp.writeHead(200,{"middleware-type":'html',"Content-Type": mime.get('html')});
         var output = require('jade').render(rs); 
         _DEBUG ? resp.end( output ) : mini.htm(output,resp) ;
     }
