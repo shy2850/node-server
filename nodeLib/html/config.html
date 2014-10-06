@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>服务器配置</title>
+</head>
+<body>
+<script>
+<%
+var confs = require('../config/conf'),
+	p,
+	conf = confs[ request.data.host || 'localhost' ] || confs.localhost;
+
+if( p = request.post ){
+	var items = ['welcome','notFound','fs_mod','folder','middleware','debug','output','nginx-http-concat'];
+	items.map(function(item,i){
+		conf[item] = p[item]||''
+	});
+}
+
+%>
+</script>
+<form action="" method="post">
+	<table>
+		<tr><th>项目</th><th>配置</th></tr>
+		<tr>
+			<td>根目录:</td>
+			<td><input type="text" name="root" value="<%=conf.root%>"></td>
+		</tr>
+		<tr>
+			<td>欢迎页面:</td>
+			<td><input type="text" name="welcome" value="<%=conf.welcome%>"></td>
+		</tr>
+		<tr>
+			<td>404页面:</td>
+			<td><input type="text" name="notFound" value="<%=conf.notFound%>"></td>
+		</tr>
+		<tr>
+			<td>开启文件列表:</td>
+			<td><input type="checkbox" name="fs_mod" <%if(conf.fs_mod){%>checked="checked"<%}%> ></td>
+		</tr>
+		<tr>
+			<td>文件列表页面:</td>
+			<td><input type="text" name="folder" value="<%=conf.folder%>"></td>
+		</tr>
+		<tr>
+			<td>中间件支持:</td>
+			<td><input type="checkbox" name="middleware" <%if(conf.middleware){%>checked="checked"<%}%> ></td>
+		</tr>
+		<tr>
+			<td>开发模式(不压缩):</td>
+			<td><input type="checkbox" name="debug" <%if(conf.debug){%>checked="checked"<%}%> ></td>
+		</tr>
+		<tr>
+			<td>输出文件夹:</td>
+			<td><input type="text" name="output" value="<%=conf.output%>"></td>
+		</tr>
+		<tr>
+			<td>开启nginx合并:</td>
+			<td><input type="checkbox" name="nginx-http-concat" <%if(conf['nginx-http-concat']){%>checked="checked"<%}%> ></td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td><input type="submit" value="提交"></td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

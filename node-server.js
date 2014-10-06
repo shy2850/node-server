@@ -16,15 +16,19 @@ function start(conf){
         var host = (req.headers.host+':80').split(':'), 
             pathurl,  
             hostConf = CONF[ host[0] ],
-            root = (hostConf&&host[1]==hostConf.port) ? hostConf.root : (conf.root || __dirname);  //域名识别
+            root; 
+        if( hostConf&&host[1]==hostConf.port ){ //域名识别
+            conf = hostConf
+        }
+        root = (conf.root || __dirname);  
         try{pathurl = decodeURI(url.parse(req.url).pathname); }catch(e){ pathurl = req.url; } 
         var pathname= (pathurl === '/') ? (root+conf.welcome) :  root + pathurl;  //根目录时，追加welcome页面 
         var extType = path.extname(pathname).substring(1);    //获取资源后缀 
 
         //包装request功能 
         req.data = querystring.parse( url.parse(req.url).query ); 
-        req.util = {mime:mime}; 
-        req.$ = { title:pathurl, root:root, staticServer:"http://"+host[0]+":"+staticConf.port+"/", fileList:[] }; 
+        req.util = {mime:mime,conf:conf}; 
+        req.$ = { title:pathurl, host:host[0], root:root, staticServer:"http://"+host[0]+":"+staticConf.port+"/", fileList:[] }; 
  
         var _DEBUG = req.data.debug == "true" || conf.debug; //DEBUG模式判断
         
