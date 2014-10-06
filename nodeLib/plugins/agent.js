@@ -15,7 +15,7 @@ exports.execute = function(req,resp,root,handle,f,conf){
 	}else{
 		fs.readFile(root+query.split('?')[0],function (err,data){
 	        if(err)console.log(err);
-	        handle.execute(req,resp,root,data.toString(),f,true,conf);
+	        new handle.execute(req,resp,root,data.toString(),f,true,conf);
 	    });
 	}
 		

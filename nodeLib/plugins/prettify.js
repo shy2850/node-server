@@ -10,6 +10,6 @@ exports.execute = function(req,resp,root,handle,f,conf){
 	$.title = query;
 	fs.readFile(prettifyModel,function (err,data){
 		if(err)console.log(err);
-	    handle.execute(req,resp,root,data.toString(),f,true,conf);
+	    new handle.execute(req,resp,root,data.toString(),f,true,conf);
 	});
 }

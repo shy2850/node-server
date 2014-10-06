@@ -40,7 +40,7 @@ exports.execute = function(req,resp,root,handle,f,conf){
                     }
                     resp.writeHead(200, {'content-type': mime.get("html")});
                     req.forward = true;
-                    handle.execute(req,resp,root,data.toString(),f,true,conf);
+                    new handle.execute(req,resp,root,data.toString(),f,true,conf);
                 });
 
             });
