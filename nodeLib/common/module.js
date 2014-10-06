@@ -1,14 +1,9 @@
-var base = __dirname + "/../plugins/",
-	MODULE = {
-		"favicon.ico" : "favicon",
-		agent : "agent",
-		upload: "upload",
-		prettify: "prettify",
-    	psd: "psd",
-    	build: "build"
-	};
+var base = __dirname + "/../plugins/";
 
 exports.get = function(moduleName){
-	var t = MODULE[moduleName];
-	return  t ? require(base+t) : null;
+	try{
+		return require(base+moduleName);
+	}catch(e){
+		return null;
+	}
 };

@@ -1,5 +1,5 @@
 var CONF = require("./nodeLib/config/conf"),    //综合配置 
-    staticConf = CONF.staticConf,                //静态文件服务器配置 
+    staticConf = CONF.staticconf,                //静态文件服务器配置 
     handle = require("./nodeLib/common/handle"),//文本文件的模板操作 
     module = require("./nodeLib/common/module"),//支持的插件配置 
     mime = require("./nodeLib/module/mime"),    //MIME类型 

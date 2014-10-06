@@ -43,7 +43,7 @@ exports['test.abc.com'] = extend({  //跟模型配置相同端口时候支持根
     root :"C:\\"
 });
 
-exports.staticConf = extend({ //不要删除或者修改这个服务
+exports.staticconf = extend({ //不要删除或者修改这个服务
     root: "",
     debug: false,
     port: 2850,
