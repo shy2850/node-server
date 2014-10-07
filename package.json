@@ -16,7 +16,7 @@
     "highlight":"0.2.3"
   },
   "scripts": {
-    "test": "node node-server.js"
+    "start": "node node-server.js"
   },
   "repository": {
     "type": "git",
