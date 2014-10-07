@@ -24,7 +24,7 @@ function doRequest(request,response,option,path){
   var location = url.parse(path), data = '';
   return http.request({    // 处理转发参数   
         reg  : option.reg,
-        host : option.host,
+        host : option.host || req.$.host,
         port : option.port || 80,
         path : option.path ? option.path(location) : location.path,
       method : request.method,
