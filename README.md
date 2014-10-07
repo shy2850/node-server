@@ -51,8 +51,8 @@ conf.js 配置
 			<td>可以在GET请求参数中增加handle=false,查看源文件</td>
 		</tr>
 		<tr>
-			<td>coffee/less</td>
-			<td>中间件相关配置</td>
+			<td>middleware</td>
+			<td>中间件相关配置(coffee/less/jade)</td>
 			<td>true</td>
 			<td>nodeLib/common/middleware.js</td>
 		</tr>
