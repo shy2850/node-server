@@ -1,11 +1,23 @@
 var http = require('http'),
 	url = require('url'),
     fs = require('fs'),
-    highlight = require('highlight').Highlight;
+    highlight, 
+    error;
+
 var _style = 'default',	 //可选项:ascetic,brown_paper,dark,default,far,github,idea,ir_black,magula,school_book,sunburst,vs,zenburn
-	style = fs.readFileSync( "node_modules/highlight/lib/vendor/highlight.js/styles/"+_style+".css",'utf-8');
+	style;
+
+	try{
+		highlight = require('highlight').Highlight;
+		style = fs.readFileSync( "node_modules/highlight/lib/vendor/highlight.js/styles/"+_style+".css",'utf-8');
+	}catch(e){
+		error = e;
+		highlight = function(){return '<h1>hightlight is required! </h1>'};
+		style = 'h1{text-align:center}';
+	}
 
 exports.execute = function(req,resp,root,handle,f,conf){
+	
 	var query = decodeURI( url.parse( req.url ).query), data = '',
 		_url = /.*(http[s]?[:])/.test(query)? query.replace(/.*(http[s]?[:])/,"$1") : 'http://'+req.headers.host+query;
 

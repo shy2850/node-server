@@ -29,7 +29,7 @@ var middleware = {
         _DEBUG ? resp.end( scriptStr ) : mini.js(scriptStr,resp) ; 
 	},
 	less: function(req,resp,rs,pathname,_DEBUG){
-        new(require("../module/less").Parser)({ 
+        new(require("less").Parser)({ 
             paths:[ pathname.replace(/(\/[^\/]+?)$/,"") ] 
         }).parse(rs, function (err, tree) { 
             if (err) { throw err } 

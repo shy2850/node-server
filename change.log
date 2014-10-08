@@ -38,3 +38,7 @@
 	.BUG修复:handle.execute方法在异步事件中因闭包导致数据错乱, +new, 让所有的闭包参数对应
 --2014/10/07 版本1.1.10
 	#prettify插件修改成服务端的highlight实现, 去除客户端支持方案, [不设置发布环境依赖, 需要手工安装highlight~0.2.3]
+
+--2014/10/08 版本1.2.0
+	#修改模块依赖, 所有middleware插件均使用devDependencies需要使用 npm install 手工安装
+	#修改psd, prettify插件的错误提示, psd直接抛出500, prettify提示 require highlight
