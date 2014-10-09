@@ -9,9 +9,9 @@ a nodejs based http-server with easy-template-engine and several F2E-utils
 <p><strong>安装 f2e-server : $ npm install f2e-server</strong></p>
 <p><strong>进入服务器根目录: $ cd node_modules/f2e-server</strong></p>
 <p><strong>修改hosts[windows]:$ node host </strong></p>
-<p><strong>启动f2e-server服务:$ node node-server.js [explorer http://localhost:2850]</strong></p>
+<p><strong>启动f2e-server服务:$ npm start</strong></p>
 <p><strong>恢复hosts[windows]:$ node hosts reset </strong></p>
-<p><strong>项目配置: vim(notepad for windows) nodeLib/config/conf.js</strong></p>
+<p><strong>项目配置: nodeLib/config/conf.js</strong></p>
 
 conf.js 配置
 ===========

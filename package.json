@@ -1,6 +1,6 @@
 {
   "name": "f2e-server",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "a nodejs based file-system-server with easy-template-engine and several F2E-utils",
   "main": "node-server.js",
   "dependencies": {
@@ -17,7 +17,8 @@
     "psd":">=1.0.2"
   },
   "scripts": {
-    "start": "node node-server.js explorer http://localhost"
+    "start": "node node-server.js explorer http://localhost",
+    "lint": "eslint -c eslint.json *.js nodeLib/*/*.js --no-ignore"
   },
   "repository": {
     "type": "git",

@@ -1,7 +1,9 @@
-var favicon = __dirname + "/../../static/img/favicon.ico",
+"use strict";
+var path = require('path'),
     mime = require('../module/mime'),
     fs = require('fs');
-exports.execute = function(req,resp,root,handle,f){
+var favicon = path.join( __dirname , "/../../static/img/favicon.ico" );
+exports.execute = function(req,resp){
     console.log( "call for favicon.ico" );
     fs.readFile(favicon,function (err,data){
         if(err){

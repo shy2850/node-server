@@ -10,14 +10,12 @@
 var confs = require('../config/conf'),
 	p,
 	conf = confs[ request.data.host || 'localhost' ] || confs.localhost;
-
 if( p = request.post ){
-	var items = ['welcome','notFound','fs_mod','folder','middleware','debug','output','nginx-http-concat'];
+	var items = ['root','welcome','notFound','fs_mod','folder','middleware','debug','output','nginx-http-concat'];
 	items.map(function(item,i){
 		conf[item] = p[item]||''
 	});
 }
-
 %>
 </script>
 <form action="" method="post">
