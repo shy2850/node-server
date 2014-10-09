@@ -1,14 +1,13 @@
 "use strict";
 var CONF = require("./nodeLib/config/conf"),    //综合配置
     handle = require("./nodeLib/common/handle"),//文本文件的模板操作
+    middleware =  require("./nodeLib/common/middleware"),//支持中间件
     modules = require("./nodeLib/common/modules"),//支持的插件配置
-    mime = require("./nodeLib/module/mime"),    //MIME类型
+    querystring = require("querystring"),
+    mime = require("mime"),    //MIME类型
     http = require("http"),
     url  = require("url"),
-    path = require("path"),
-    fs   = require("fs"),
-    querystring = require("querystring"),
-    middleware =  require("./nodeLib/common/middleware");
+    fs   = require("fs");
 var staticConf = CONF.staticconf,                //静态文件服务器配置
     mini = middleware.mini;
 function start(conf){
@@ -24,7 +23,6 @@ function start(conf){
         root = (conf.root || __dirname);
         try{pathurl = decodeURI(url.parse(req.url).pathname); }catch(e){ pathurl = req.url; }
         var pathname = (pathurl === '/') ? (root + conf.welcome) :  root + pathurl;  //根目录时，追加welcome页面
-        var extType = path.extname(pathname).substring(1);    //获取资源后缀
         //包装request功能
         req.data = querystring.parse( url.parse(req.url).query );
         req.util = {mime:mime,conf:conf};
@@ -45,7 +43,7 @@ function start(conf){
                     var expires = new Date();
                     expires.setTime( expires.getTime() + (conf.expires || 0) );
                     resp.writeHead(200, {
-                        "Content-Type": mime.get(extType) || 'text/html',
+                        "Content-Type": mime.get(pathname) || 'text/html',
                         "Expires":expires
                     });
                     fs.readFile(pathname,function (err,data){
@@ -56,10 +54,10 @@ function start(conf){
                             return;
                         }
                         var rs = data.toString(), ware;
-                        if( conf.middleware && (req.data.middleware !== "false") && (ware = middleware.get(extType)) ){  //中间件处理, MIME需要mime.type中修改
+                        if( conf.middleware && (req.data.middleware !== "false") && (ware = middleware.get(pathname)) ){  //中间件处理, MIME需要mime.type中修改
                             ware(req,resp,rs,pathname,DEBUG);
-                        }else if(  conf.handle && mime.isTXT(extType) && !( /[\.\-]min\.(js|css)$/.test(pathurl) ) && req.data.handle !== "false" ){    //handle
-                            handle.execute(req,resp,root,rs, mini.get(extType) ,DEBUG, conf);
+                        }else if(  conf.handle && mime.isTXT(pathname) && !( /[\.\-]min\.(js|css)$/.test(pathurl) ) && req.data.handle !== "false" ){    //handle
+                            handle.execute(req,resp,root,rs, mini.get(pathname) ,DEBUG, conf);
                         }else{
                             resp.end( data );
                         }
@@ -86,7 +84,7 @@ function start(conf){
                             case undefined:
                                 try{
                                     var data = fs.readFileSync( conf.folder,'utf-8');
-                                    handle.execute(req,resp,root,data.toString(),mini.get(extType),DEBUG, conf);
+                                    handle.execute(req,resp,root,data.toString(),mini.get(pathname),DEBUG, conf);
                                     return;
                                 }catch(e){
                                     if(conf.folder){console.log(e);}else{

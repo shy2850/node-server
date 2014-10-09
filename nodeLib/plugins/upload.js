@@ -1,5 +1,5 @@
 "use strict";
-var mime = require('../module/mime'),
+var mime = require('mime'),
     fs = require('fs'),
     path = require('path'),
     formidable = require('formidable'),

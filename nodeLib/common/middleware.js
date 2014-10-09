@@ -1,5 +1,5 @@
 "use strict";
-var mime = require("../module/mime"),
+var mime = require("mime"),
     cssmin = require("cssmin");
 var mini = {
     js  : function(str,resp){
@@ -66,3 +66,14 @@ exports.get = function(extType){
     };
 };
 exports.mini = mini;
+
+mime.get = function(path, fallback){
+    if( /\bdo$/.test(path) ){
+        return this.lookup(path, fallback || "text/html");
+    }else{
+        return this.lookup(path, fallback);
+    }
+};
+mime.isTXT = function(path, fallback){
+    return  /\b(php|jsp|asp|less|coffee|jade)$/.test(path) || /\b(text|xml|javascript|json)\b/.test( this.get(path, fallback) );
+};
