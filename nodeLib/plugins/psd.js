@@ -1,6 +1,6 @@
 "use strict";
 var url = require('url'),
-    mime = require('../module/mime'),
+    mime = require('mime'),
     fs = require('fs');
 exports.execute = function(req,resp,root){
     var path = root + decodeURI( url.parse( req.url ).query),

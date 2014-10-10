@@ -17,7 +17,7 @@ function start(conf){
             hostConf = CONF[ host[0] ],
             root,
             agent;
-        if( hostConf && host[1] === hostConf.port ){ //域名识别
+        if( hostConf && (host[1] | 0) === (hostConf.port | 0) ){ //域名识别
             conf = hostConf;
         }
         root = (conf.root || __dirname);

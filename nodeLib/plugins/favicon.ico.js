@@ -1,6 +1,6 @@
 "use strict";
 var path = require('path'),
-    mime = require('../module/mime'),
+    mime = require('mime'),
     fs = require('fs');
 var favicon = path.join( __dirname , "/../../static/img/favicon.ico" );
 exports.execute = function(req,resp){
