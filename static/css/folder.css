@@ -52,8 +52,7 @@ body {
 <%
     return function(){
         var fs = require("fs");
-        
-        fs.readdir(request.$.root+"/static/img/fileicon/",function(error,files){ 
+        fs.readdir(request.util.conf.root+"/static/img/fileicon/",function(error,files){ 
             if(error){
                 response.end(  __p );
             }else{

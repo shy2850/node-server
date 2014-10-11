@@ -25,6 +25,10 @@ var conf = {
         },
         map:[
             {
+                reg:/\b(js|icons)\b/, //路径中若符合正则且映射不到内容，获取远程数据
+                host:'shy2850.sturgeon.mopaas.com'
+            },
+            {
                 reg:/\.js$/,
                 path:function(url){
                     return url.path.replace(/(.*?)(\.min)?\.js$/,'$1.coffee');
@@ -41,10 +45,6 @@ var conf = {
                 path:function(url){
                     return url.path.replace(/(.*?)\.html$/,'$1.jade');
                 }
-            },
-            {
-                reg:/^cloudnews\//, //路径中若符合正则且映射不到内容，获取远程数据
-                host:'xuan.news.cn'
             }
         ]
     },

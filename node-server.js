@@ -20,13 +20,13 @@ function start(conf){
         if( hostConf && (host[1] | 0) === (hostConf.port | 0) ){ //域名识别
             conf = hostConf;
         }
-        root = (conf.root || __dirname);
+        root = (conf.root || __dirname); conf.root = root;
         try{pathurl = decodeURI(url.parse(req.url).pathname); }catch(e){ pathurl = req.url; }
         var pathname = (pathurl === '/') ? (root + conf.welcome) :  root + pathurl;  //根目录时，追加welcome页面
         //包装request功能
         req.data = querystring.parse( url.parse(req.url).query );
-        req.util = {mime:mime,conf:conf};
-        req.$ = { title:pathurl, host:host[0], root:root, staticServer:"http://" + host[0] + ":" + staticConf.port + "/", fileList:[] };
+        req.util = {mime:mime,conf:conf,staticServer:"http://" + host[0] + ":" + staticConf.port + "/"};
+        req.$ = { title:pathurl, host:host, fileList:[] };
         var DEBUG = req.data.debug === "true" || conf.debug; //DEBUG模式判断
         if( conf['nginx-http-concat'] && req.url.match(/\?\?/) ){        // nginx-http-concat 资源合并
             require('./nodeLib/common/nginx-http-concat').execute(req,resp,root,mini,conf);
@@ -78,7 +78,7 @@ function start(conf){
                                 name: files[i]
                             });
                         }
-                        switch(req.data.type){
+                        switch(conf.runJs ? req.data.type : 'xml'){
                             case 'json':resp.end( JSON.stringify( files ) ); break;
                             case 'jsonp':resp.end( (req.data.callback || 'callback') + '(' + JSON.stringify( files ) + ')' );break;
                             case undefined:

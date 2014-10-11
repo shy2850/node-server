@@ -1,15 +1,15 @@
 <!doctype html>
 <html lang="en">
-<head><%var $ = request.$, mime = request.util.mime;%>
+<head><%var $ = request.$, mime = request.util.mime, staticServer = request.util.staticServer;%>
 	<meta charset="UTF-8">
 	<title><%=$.title%></title>
-	<link rel="stylesheet" href="<%=$.staticServer%>static/css/bootstrap.min.css" data-noprefix>
-	<link rel="stylesheet" href="<%=$.staticServer%>static/css/folder.css" data-noprefix>
-	<script data-main="<%=$.staticServer%>static/js/folder.js?debug=true" src="<%=$.staticServer%>static/js/require.min.js"></script>
+	<link rel="stylesheet" href="<%=staticServer%>static/css/bootstrap.min.css">
+	<link rel="stylesheet" href="<%=staticServer%>static/css/folder.css">
+	<script data-main="<%=staticServer%>static/js/folder.js" src="<%=staticServer%>static/js/require.min.js"></script>
 </head>
 <body>
 <div class="fixed-line">
-	<a href="<%=$.staticServer%>nodeLib/html/config.html?host=<%=$.host%>" class="btn btn-primary" title="配置" target="_blank">动态配置</a>
+	<a href="<%=staticServer%>nodeLib/html/config.html?host=<%=$.host%>" class="btn btn-primary" title="配置" target="_blank">动态配置</a>
 	<a href="javascript:void(0)" class="btn btn-warning" id="ajaxUpload" title="点击选择文件将上传到当前文件夹">上传文件</a>
 	<a class="btn btn-danger" href="javascript:void(0);" id="output" title="点击将当前项目输出到指定文件夹">项目输出</a>
 	<div class="dropdown">
@@ -24,7 +24,7 @@
 			<li role="presentation"><a href="http://echarts.baidu.com/doc/doc.html" target="_blank" class="btn">Echarts</a></li>
 		</ul>
 	</div>
-    <div id="clock" data-clock="<%=$.staticServer%>static/img/clock.gif"></div>
+    <div id="clock" data-clock="<%=staticServer%>static/img/clock.gif"></div>
 </div>
 <ul id="list-container">
 <%for(var i=0; i<$.fileList.length; i++){ 

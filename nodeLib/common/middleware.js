@@ -8,7 +8,8 @@ var mini = {
     },
     css : function(str,resp){ resp.end( cssmin(str)); },
     htm : function(str,resp){ resp.end( str.replace(/\s+/g," ") ); },
-    get : function(extType){
+    get : function(pathname){
+        var extType = pathname.split('.').pop();
         return function(str,resp){
             var m = mini[extType];
             if(m){
@@ -44,18 +45,20 @@ var middleware = {
             }
         });
 	},
-    jade: function(req,resp,rs,pathname,DEBUG){
+    jade: function(req,resp,rs){
         resp.writeHead(200,{"middleware-type":'html',"Content-Type": mime.get('html')});
         var output = require('jade').render(rs);
-        if(DEBUG){
-            resp.end( output );
-        }else{
-            mini.htm(output,resp);
-        }
+        resp.end( output );
+    },
+    md: function(req,resp,rs){
+        resp.writeHead(200,{"middleware-type":'html',"Content-Type": mime.get('html')});
+        var output = require( "markdown" ).markdown.toHTML(rs + '');
+        resp.end( '<style>code{padding:2px 8px;background:#eee;}</style>' + output );
     }
 };
-exports.get = function(extType){
-	var fn = middleware[extType];
+exports.get = function(pathname){
+    var extType = pathname.split('.').pop(),
+        fn = middleware[extType];
     return !fn ? !1 : function(req,resp){
         try{
             fn.apply(middleware,arguments);

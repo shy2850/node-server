@@ -14,7 +14,7 @@ function doRequest(request,response,option,path){
         "user-agent":request.headers["user-agent"],
         "content-type":request.headers["content-type"],
         cookie: option.cookie || request.headers.cookie,   //很多站点都是通过cookie进行SSO认证,可以自己在浏览器模拟
-        host: option.host + ':' + (option.port || 80),
+        host: option.host,
         accept: request.headers.accept
       }
     },function(res){
