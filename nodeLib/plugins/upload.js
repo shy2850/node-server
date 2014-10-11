@@ -6,7 +6,7 @@ var mime = require('mime'),
     mini = require("./../common/middleware").mini;
 var uploadBase = fs.readFileSync( path.join( __dirname, "/../html/upload.html" ),'utf-8'),
     uploadModel = path.join( __dirname, "/../html/uploadOK.html");
-exports.execute = function(req,resp,root,handle,conf){
+exports.execute = function(req,resp,root,handle,conf,modelPath){
 	var form = new formidable.IncomingForm(),
         files = [],
         fields = {};
@@ -16,7 +16,7 @@ exports.execute = function(req,resp,root,handle,conf){
     }
     try{
         form.uploadDir = req.data.uploadUrl ? ( root + "/" + req.data.uploadUrl + "/" ) : path.join( __dirname, "/../../static/" ); //上传路径
-        uploadModel = req.data.target ? (root + "/" + req.data.target) : uploadModel;
+        uploadModel = req.data.target ? (root + "/" + req.data.target) : (modelPath || uploadModel);
         form.on('field', function(field, value) {
             fields[field] = value;
         })

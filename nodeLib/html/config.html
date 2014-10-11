@@ -2,19 +2,22 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta http-equiv="pragma" content="no-cache">
 	<title>服务器配置</title>
 </head>
 <body>
 <script>
 <%
-var confs = require('../config/conf'),
-	p,
-	conf = confs[ request.data.host || 'localhost' ] || confs.localhost;
+var conf = request.util.conf,
+	p;
 if( p = request.post ){
 	var items = ['root','welcome','notFound','fs_mod','folder','middleware','debug','output','nginx-http-concat'];
 	items.map(function(item,i){
-		conf[item] = p[item]||''
+		if(typeof p[item] !== 'undefined'){
+			request.util.conf[item] = p[item];
+		}
 	});
+	print(';window.close();');
 }
 %>
 </script>

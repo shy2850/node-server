@@ -25,8 +25,8 @@ function start(conf){
         var pathname = (pathurl === '/') ? (root + conf.welcome) :  root + pathurl;  //根目录时，追加welcome页面
         //包装request功能
         req.data = querystring.parse( url.parse(req.url).query );
-        req.util = {mime:mime,conf:conf,staticServer:"http://" + host[0] + ":" + staticConf.port + "/"};
-        req.$ = { title:pathurl, host:host, fileList:[] };
+        req.util = {mime:mime,conf:conf,host:host[0],staticServer:"http://" + host[0] + ":" + staticConf.port + "/",};
+        req.$ = { title:pathurl, fileList:[] };
         var DEBUG = req.data.debug === "true" || conf.debug; //DEBUG模式判断
         if( conf['nginx-http-concat'] && req.url.match(/\?\?/) ){        // nginx-http-concat 资源合并
             require('./nodeLib/common/nginx-http-concat').execute(req,resp,root,mini,conf);
@@ -78,7 +78,7 @@ function start(conf){
                                 name: files[i]
                             });
                         }
-                        switch(conf.runJs ? req.data.type : 'xml'){
+                        switch(req.data.type){
                             case 'json':resp.end( JSON.stringify( files ) ); break;
                             case 'jsonp':resp.end( (req.data.callback || 'callback') + '(' + JSON.stringify( files ) + ')' );break;
                             case undefined:

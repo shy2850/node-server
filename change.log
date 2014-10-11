@@ -58,3 +58,6 @@
 	#引入markdown中间件,匹配 *.md路径后缀
 	#修改request运行时变量
 	#修改readme.md
+--2014/10/11 v1.2.6
+	#修改config为插件模式, 同时修复config插件功能的引起的项目输出的BUG
+	#修改README.md

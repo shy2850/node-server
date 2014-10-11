@@ -1,0 +1,28 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'c:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'c:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'start' ]
+2 info using npm@1.4.23
+3 info using node@v0.10.31
+4 verbose run-script [ 'prestart', 'start', 'poststart' ]
+5 info prestart f2e-server@1.2.5
+6 info start f2e-server@1.2.5
+7 verbose unsafe-perm in lifecycle true
+8 info f2e-server@1.2.5 Failed to exec start script
+9 error f2e-server@1.2.5 start: `node node-server.js explorer http://localhost`
+9 error Exit status 8
+10 error Failed at the f2e-server@1.2.5 start script.
+10 error This is most likely a problem with the f2e-server package,
+10 error not with npm itself.
+10 error Tell the author that this fails on your system:
+10 error     node node-server.js explorer http://localhost
+10 error You can get their info via:
+10 error     npm owner ls f2e-server
+10 error There is likely additional logging output above.
+11 error System Windows_NT 6.1.7601
+12 error command "c:\\Program Files\\nodejs\\node.exe" "c:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "start"
+13 error cwd d:\doc\node
+14 error node -v v0.10.31
+15 error npm -v 1.4.23
+16 error code ELIFECYCLE
+17 verbose exit [ 1, true ]

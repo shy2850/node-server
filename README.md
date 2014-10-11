@@ -47,7 +47,7 @@ f2e-server 默认使用underscore模板, 参见 [nodeLib/common/handle.js#L18](n
 * 模板运行时环境变量:
 	* request: 包转完成的当前请求
 		* request.data: GET请求参数包装, 如 ``request.data.type`` 表示GET请求参数type的值
-		* request.post: POST请求参数包装, 获取方式同GET, ** 注:GET请求时, ``request.post === null`` ** 
+		* request.post: POST请求参数包装, 获取方式同GET, __ 注:GET请求时, request.post === null __ 
 		* request.util: 
 			* request.util.mime: f2e-server扩展mime模块
 			* request.util.conf: 当前服务配置
@@ -96,7 +96,7 @@ f2e-server采用中间件的动态解析模式, 参见
 
 ## 服务器host转发功能
 
-f2e-server 支持本地环境通过不用的hosts域名分别请求不同的项目
+f2e-server 支持本地环境通过不同的hosts域名分别请求不同的项目
 
 * [nodeLib/config/conf.js](nodeLib/config/conf.js) 中所有返回key都被认为是一组本地域名类型 (如：localhost / test.abc.com / test.xuan.news.cn)
 * 如果多组配置使用了相同的端口号, 将需要使用指定域名访问(需要修改hosts文件)
@@ -121,6 +121,7 @@ f2e-server 提供了一些有用的插件, 提倡开发者扩展
 
 * [agent](nodeLib/plugins/agent.js): 快速代理跨域请求如 ``/agent?http://news.cn``
 * [build](nodeLib/plugins/build.js): 即[项目输出](#项目输出)
+* [config](nodeLib/plugins/config.js): 临时修改当前服务配置项[Beta版]
 * [favicon.ico](nodeLib/plugins/favicon.ico.js): 单独进行favicon.ico实现
 * [prettify](nodeLib/plugins/prettify.js): 代码的服务端highlight实现, 支持远程请求同agent插件 ``/prettify?http://news.cn``
 * [psd](nodeLib/plugins/psd.js): 读取服务器目录下的psd文件并且实时转化成png, 展示到浏览器中
