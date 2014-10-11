@@ -14,6 +14,9 @@ var conf = {
     maxConnections: 1000,    //并发处理的最大连接数
     runJs : true,       //是否使用服务器模板引擎
     output: "c:\\output\\",
+    buildFilder: function(filePath){
+        return !/\bnode_modules\b/.test( filePath );
+    },
     'nginx-http-concat':true,
     agent : {
         get:function(path){

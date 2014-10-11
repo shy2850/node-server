@@ -25,7 +25,7 @@ function start(conf){
         var pathname = (pathurl === '/') ? (root + conf.welcome) :  root + pathurl;  //根目录时，追加welcome页面
         //包装request功能
         req.data = querystring.parse( url.parse(req.url).query );
-        req.util = {mime:mime,conf:conf,host:host[0],staticServer:"http://" + host[0] + ":" + staticConf.port + "/",};
+        req.util = {mime:mime,conf:conf,host:host[0],staticServer:"http://" + host[0] + ":" + staticConf.port + "/"};
         req.$ = { title:pathurl, fileList:[] };
         var DEBUG = req.data.debug === "true" || conf.debug; //DEBUG模式判断
         if( conf['nginx-http-concat'] && req.url.match(/\?\?/) ){        // nginx-http-concat 资源合并

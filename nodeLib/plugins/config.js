@@ -1,7 +1,5 @@
 "use strict";
 var fs = require('fs'),
-    http = require('http'),
-    url = require('url'),
     path = require('path'),
     upload = require('./upload');
 
@@ -9,8 +7,7 @@ var configPath = path.join( __dirname, "/../html/config.html" );
 
 exports.execute = function(req,resp,root,handle,conf){
 
-    if( req.method === "POST" ){ 
-        console.log( 'config' );
+    if( req.method === "POST" ){
         upload.execute(req,resp,root,handle,conf,configPath);
     }else{
         resp.writeHead(200, {'content-type': 'text/html'});

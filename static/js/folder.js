@@ -22,17 +22,21 @@
   require(["bootstrap"], function() {
     var $ = jQuery;
     $("#output").on("click", function() {
-      return $.ajax({
-        url: '/build',
-        dataType: 'json',
-        success: function(res) {
-          if (res.error) {
-            return alert('输出失败');
-          } else {
-            return alert('成功：' + res.command);
+      if( !window.confirm('项目输出将首先复制所有当前根目录文件到目标目录\n请确保磁盘空间充足!') ){
+        return;
+      }else{
+        $.ajax({
+          url: '/build',
+          dataType: 'json',
+          success: function(res) {
+            if (res.error) {
+              return alert('输出失败');
+            } else {
+              return alert('成功：' + res.command);
+            }
           }
-        }
-      });
+        });
+      }
     });
   });
 
