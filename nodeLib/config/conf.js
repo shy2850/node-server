@@ -71,7 +71,7 @@ exports['test.xuan.news.cn'] = conf.extend({
         get:function(){
             return {
                 host:'xuan.news.cn'
-            } 
+            };
         }
     }
 });
@@ -80,7 +80,7 @@ exports['demo.cn'] = conf.extend({  //跟模型配置相同端口时候支持根
         get:function(){
             return {
                 host:'shy2850.sturgeon.mopaas.com'
-            } 
+            };
         }
     }
 });
@@ -92,7 +92,7 @@ exports['reader.news.cn'] = conf.extend({
         get:function(){
             return {
                 host:'xuan.news.cn'
-            } 
+            };
         }
     }
 });

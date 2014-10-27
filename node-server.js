@@ -19,6 +19,8 @@ function start(conf){
             agent;
         if( hostConf && (host[1] | 0) === (hostConf.port | 0) ){ //域名识别
             conf = hostConf;
+        }else if( (host[1] | 0) === 80 ){
+            conf = CONF.localhost;
         }
         root = (conf.root || __dirname); conf.root = root;
         try{pathurl = decodeURI(url.parse(req.url).pathname); }catch(e){ pathurl = req.url; }
