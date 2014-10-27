@@ -70,7 +70,8 @@ exports['test.xuan.news.cn'] = conf.extend({
     agent:{
         get:function(){
             return {
-                host:'xuan.news.cn'
+                host:'172.18.11.201',
+                port: 8081
             };
         }
     }
