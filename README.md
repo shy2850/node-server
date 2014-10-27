@@ -2,7 +2,8 @@
 
 f2e-server
 ==========
-
+![f2e-server](http://pub.idqqimg.com/qconn/wpa/button/button_old_41.gif)
+[点击链接加入群【f2e-server】：](http://jq.qq.com/?_wv=1027&k=MqC52t)
 
 基于nodejs平台的HTTP服务器，提供了基本的模板引擎以及常用的前端工具。
 
@@ -16,7 +17,7 @@ github: <https://github.com/shy2850/node-server.git/>
 * 进入服务器根目录: $ 
 	``cd node_modules/f2e-server``
 * 修改hosts[windows]:$ 
-	``node host`` 
+	``node hosts`` 
 * 启动f2e-server服务:$ 
 	``npm start``
 * 恢复hosts[windows]:$ 
@@ -40,7 +41,7 @@ f2e-server 默认使用underscore模板, 参见 [nodeLib/common/handle.js#L18](n
 
 * 默认开启模板引擎 【__runJs__】 以及依赖的配置 【__handle__】
 * 关闭后很多插件功能将失效
-* 支持模板的引用和包含 <http://www.w3cfuns.com/blog-5443978-5399247.html/> 
+* 支持模板的引用和包含[http://www.w3cfuns.com/blog-5443978-5399247.html](http://www.w3cfuns.com/blog-5443978-5399247.html)
 	* $include[_引用片段路径_]
 	* $belong[_当前片段被包含母版路径_]
 	* $[placeholder] 包含母版中标记引入片段位置
