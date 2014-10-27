@@ -56,16 +56,50 @@ var conf = {
     },
     expires : 0     //服务端缓存时间设置
 };
-exports.localhost = conf.extend();
-exports['test.abc.com'] = conf.extend({  //跟模型配置相同端口时候支持根据hosts域名使用新配置。
-    root :"C:\\"
+exports.localhost = conf.extend({
+    root:'E:\\新闻聚合\\',
+    welcome:'index.html'
+});
+exports['cardistry.cn'] = conf.extend({  //跟模型配置相同端口时候支持根据hosts域名使用新配置。
+    root :"E:\\cardistry\\",
+    // debug: false,
+    expires : 1000 * 60 * 60 * 24
 });
 exports['test.xuan.news.cn'] = conf.extend({
-    root: "E:\\"
+    root: "E:\\",
+    agent:{
+        get:function(){
+            return {
+                host:'xuan.news.cn'
+            } 
+        }
+    }
 });
+exports['demo.cn'] = conf.extend({  //跟模型配置相同端口时候支持根据hosts域名使用新配置。
+    agent:{
+        get:function(){
+            return {
+                host:'shy2850.sturgeon.mopaas.com'
+            } 
+        }
+    }
+});
+exports['reader.news.cn'] = conf.extend({
+    root: "D:\\WORK\\web\\webDevelop\\炫阅读器\\",
+    debug:false,
+    output: "c:\\reader\\",
+    agent:{
+        get:function(){
+            return {
+                host:'xuan.news.cn'
+            } 
+        }
+    }
+});
+
 exports.staticconf = conf.extend({ //不要删除或者修改这个服务
     root: "",
-    debug: false,
     port: 2850,
+    debug: false,
     expires : 1000 * 60 * 60 * 24
 });

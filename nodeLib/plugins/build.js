@@ -6,11 +6,12 @@ var $path = require('path'),
     exec = require('child_process').exec;
 var building = 0,
     pathMap = function(path){
-    if( path.match(/(.+?\.)(css|js)$/) && !path.match(/(\bmin\.)(css|js)$/) ){
-        return path.replace(/(.+?\.)(css|js)$/,'$1min.$2');
-    }else{
-        return path;
-    }
+    // if( path.match(/(.+?\.)(css|js)$/) && !path.match(/(\bmin\.)(css|js)$/) ){
+    //     return path.replace(/(.+?\.)(css|js)$/,'$1min.$2');
+    // }else{
+    //     return path;
+    // }
+    return path;
 };
 //两秒内没有新的build,则build finished
 var i = 0, builded = false, l = [0,0,0,0,0,0,0,0,0,0];

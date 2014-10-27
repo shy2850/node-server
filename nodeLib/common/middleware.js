@@ -73,6 +73,8 @@ exports.mini = mini;
 mime.get = function(path, fallback){
     if( /\bdo$/.test(path) ){
         return this.lookup(path, fallback || "text/html");
+    }else if( /\bcur$/.test(path) ){
+        return "";
     }else{
         return this.lookup(path, fallback);
     }
