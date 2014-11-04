@@ -41,7 +41,7 @@ exports.execute = function(req,resp,root,handle,conf){
             if(stats && stats.isFile && stats.isFile() && mime.isTXT(extType) && buildFilder(path) ){
                 var info = "";
                 building = 1;
-                http.get(host + path, function(res) {
+                http.get(host + path + '?_build_=true', function(res) {
                     var type = res.headers['middleware-type'];
                     res.on('data',function(data){
                        building = 1;

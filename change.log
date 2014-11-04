@@ -68,3 +68,8 @@
 --2014/10/27 v1.2.7.*
 	#修复通过IP访问地址变换的问题，让每次IP获取的配置等于localhost
 	#去除modules的日志打印
+--2014/11/04 v1.2.9
+	#增加在build状态下的GET参数处理，方便在build时修改构建结果
+	#agent增加异常捕获，避免服务器代理超时崩溃
+	#支持f2e-server外部引入conf.js配置文件，附加于nodeLib/config/conf.js（更新f2e-server不重新配置文件）
+

@@ -1,6 +1,5 @@
 "use strict";
-var path = require('path'),
-    _ = require('underscore');
+var path = require('path');
 var conf = {
     root :"D:\\", //服务器索引的根目录，可配置为任意本地地址
     welcome: "", //使用欢迎页面的文件名，为空时，表示不使用欢迎页面
@@ -52,13 +51,19 @@ var conf = {
         ]
     },
     extend: function(o){
-        return _.extend( _.clone(this), o);
+        var res = {};
+        for( var i in this ){
+            res[i] = this[i];
+        }
+        for( var i in o ){
+            res[i] = o[i];
+        }
+        return res;
     },
     expires : 0     //服务端缓存时间设置
 };
 exports.localhost = conf.extend({
-    root:'E:\\新闻聚合\\',
-    welcome:'index.html'
+    root:'C:\\'
 });
 exports['cardistry.cn'] = conf.extend({  //跟模型配置相同端口时候支持根据hosts域名使用新配置。
     root :"E:\\cardistry\\",
@@ -104,3 +109,11 @@ exports.staticconf = conf.extend({ //不要删除或者修改这个服务
     debug: false,
     expires : 1000 * 60 * 60 * 24
 });
+try{
+    var _conf = require('../../../conf.js');
+    for(var i in _conf){
+        exports[i] = conf.extend( _conf[i] );
+    }
+}catch(e){
+
+}
