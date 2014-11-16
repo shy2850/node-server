@@ -6,7 +6,7 @@ var mime = require('mime'),
     mini = require("./../common/middleware").mini;
 var uploadBase = fs.readFileSync( path.join( __dirname, "/../html/upload.html" ),'utf-8'),
     uploadModel = path.join( __dirname, "/../html/uploadOK.html");
-exports.execute = function(req,resp,root,handle,conf,modelPath){
+exports.execute = function(req, resp, root, handle, conf, modelPath){
 	var form = new formidable.IncomingForm(),
         files = [],
         fields = {};
@@ -21,7 +21,7 @@ exports.execute = function(req,resp,root,handle,conf,modelPath){
             fields[field] = value;
         })
             .on('file', function(field, file) {
-                files.push({name: field, file:file});
+                files.push({name: field, file: file});
             })
             .on('end', function() {
                 files.map(function(file){
@@ -32,7 +32,7 @@ exports.execute = function(req,resp,root,handle,conf,modelPath){
                 req.post = fields;
                 req.files = files;
                 var extType = path.extname(uploadModel).substring(1);
-                fs.readFile(uploadModel,function (err,data){
+                fs.readFile(uploadModel, function(err, data){
                     if(err){
                         throw err;
                     }

@@ -1,7 +1,7 @@
 "use strict";
 var fs = require("fs"),
 	_ = require("underscore");
-exports.execute = function(req,resp,root,str,mini,debug,conf){
+exports.execute = function(req, resp, root, str, mini, debug, conf){
 	var belong = "$[placeholder]";
 	var h = /\$belong\[(\S+)\]/.exec(str);
 	try{
@@ -10,13 +10,13 @@ exports.execute = function(req,resp,root,str,mini,debug,conf){
 			str = str.replace(h[0], "" );  			//替换关键字
 			str = belong.replace("$[placeholder]",str);
 		}
-		str = str.replace(/\$include\[(\S+)\]/g,function(match,key){
+		str = str.replace(/\$include\[(\S+)\]/g, function(match, key){
 			return fs.readFileSync( root + "/" + key,'utf-8');	 //读取include文本
 		});
 		var result = str;
 		if(conf.runJs){		//完全使用underscore内置template引擎
 			var compiled = _.template(str);
-			result = compiled({request:req,response:resp,require:require});
+			result = compiled({request: req, response: resp, require: require});
 		}
 		switch(typeof result){
 			case "function": result(); return;

@@ -1,7 +1,7 @@
 "use strict";
 var http = require('http'),
     url = require('url');
-exports.execute = function(req,resp){
+exports.execute = function(req, resp){
     var query = decodeURI( url.parse( req.url ).query),
         $url = /.*(http[s]?[:])/.test(query) ? query.replace(/.*(http[s]?[:])/,"$1") : 'http://' + req.headers.host + query;
     http.get($url, function(res) {

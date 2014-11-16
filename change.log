@@ -73,3 +73,6 @@
 	#agent增加异常捕获，避免服务器代理超时崩溃
 	#支持f2e-server外部引入conf.js配置文件，附加于nodeLib/config/conf.js（更新f2e-server不重新配置文件）
 
+--2014/11/16 v.1.2.10
+	#zencoding.html 使用服务端的highlight.js
+	#eslint 更新规则

@@ -1,8 +1,8 @@
 "use strict";
-var url  = require("url"),
-    fs     = require("fs"),
+var url = require("url"),
+    fs = require("fs"),
     mime = require("mime");
-exports.execute = function(req,resp,root,mini,conf){
+exports.execute = function(req, resp, root, mini, conf){
     var p = url.parse( req.url ), result = "", extType = "js";
     var $root = root + p.pathname + ( p.pathname.match(/^.*?\/$/) ? '' : '/' );
     try{

@@ -14,7 +14,7 @@ if( process.argv[2] === 'reset' ){
         }
     });
 }else{
-    fs.stat(hostsPath + '.bak',function(error,stat){
+    fs.stat(hostsPath + '.bak',function(error, stat){
         if( stat && stat.isFile && stat.isFile() ){
             console.log( '\nhosts.bak is existed.  run: ' );
             console.warn( '  "node hosts reset"' );

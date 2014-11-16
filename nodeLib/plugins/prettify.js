@@ -1,6 +1,7 @@
 "use strict";
 var http = require('http'),
     url = require('url'),
+    formidable = require('formidable'),
     fs = require('fs');
 var highlight,
     $style = 'default',     //可选项:ascetic,brown_paper,dark,default,far,github,idea,ir_black,magula,school_book,sunburst,vs,zenburn
@@ -12,7 +13,22 @@ var highlight,
         highlight = function(){return '<h1>hightlight is required! </h1>';};
         style = 'h1{text-align:center}';
     }
-exports.execute = function(req,resp){
+exports.execute = function(req, resp){
+    if( req.method === 'POST' ){
+        var form = new formidable.IncomingForm(), fields = {};
+        form.on('field', function(field, value) {
+            fields[field] = value;
+        }).on('end',function(){
+            resp.writeHead(200, {"Content-Type": "application/json"});
+            resp.end( JSON.stringify({
+                code: fields.code,
+                output: highlight(fields.code),
+                style: style
+            }) );
+        });
+        return form.parse(req);
+    }
+
     var query = decodeURI( url.parse( req.url ).query), data = '',
         $url = /.*(http[s]?[:])/.test(query) ? query.replace(/.*(http[s]?[:])/,"$1") : 'http://' + req.headers.host + query;
     http.get($url, function(res) {

@@ -6,15 +6,17 @@ var $path = require('path'),
     exec = require('child_process').exec;
 var building = 0,
     pathMap = function(path){
-    // if( path.match(/(.+?\.)(css|js)$/) && !path.match(/(\bmin\.)(css|js)$/) ){
-    //     return path.replace(/(.+?\.)(css|js)$/,'$1min.$2');
-    // }else{
-    //     return path;
-    // }
+    /*
+    if( path.match(/(.+?\.)(css|js)$/) && !path.match(/(\bmin\.)(css|js)$/) ){
+        return path.replace(/(.+?\.)(css|js)$/,'$1min.$2');
+    }else{
+        return path;
+    }
+    */
     return path;
 };
 //两秒内没有新的build,则build finished
-var i = 0, builded = false, l = [0,0,0,0,0,0,0,0,0,0];
+var i = 0, builded = false, l = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 setInterval(function(){
     l[i] = building;
     if( _.filter(l,function(n){return !!n;}).length ){
@@ -29,7 +31,7 @@ setInterval(function(){
     i = (i + 1) % l.length;
 },200);
 
-exports.execute = function(req,resp,root,handle,conf){
+exports.execute = function(req, resp, root, handle, conf){
     var $root = conf.output,
         mime = req.util.mime,
         buildFilder = conf.buildFilder || function(){return true;},
@@ -37,7 +39,7 @@ exports.execute = function(req,resp,root,handle,conf){
     var build = function( path ){
         var path1 = path,
             extType = $path.extname(path).substring(1);
-        fs.stat(root + path,function(error,stats){
+        fs.stat(root + path, function(error, stats){
             if(stats && stats.isFile && stats.isFile() && mime.isTXT(extType) && buildFilder(path) ){
                 var info = "";
                 building = 1;
@@ -62,9 +64,9 @@ exports.execute = function(req,resp,root,handle,conf){
                     });
                 });
             }else if(stats && stats.isDirectory && stats.isDirectory()){
-                fs.readdir(root + path,function(error,files){
-                    for ( var i in files) {        //对应下级目录或资源文件
-                        build(path + '/' + files[i]);
+                fs.readdir(root + path, function(error, files){
+                    for ( var k in files) {        //对应下级目录或资源文件
+                        build(path + '/' + files[k]);
                     }
                 });
             }
@@ -78,7 +80,7 @@ exports.execute = function(req,resp,root,handle,conf){
                     build("");
                 }
                 resp.end(JSON.stringify({
-                    error:error,
+                    error: error,
                     command: 'xcopy ' + root.replace(/(.*?)[\\\/]$/,'$1') + ' ' + $root + ' /e/d/s'
                 }));
             });
@@ -90,13 +92,13 @@ exports.execute = function(req,resp,root,handle,conf){
                             build("");
                         }
                         resp.end(JSON.stringify({
-                            error:err3,
+                            error: err3,
                             command: 'cp -Rf  ' + root + '* ' + $root
                         }));
                     });
                 }else{
                     resp.end(JSON.stringify({
-                        error:'目录不存在: ' + $root,
+                        error: '目录不存在: ' + $root,
                         command: 'xcopy ' + root.replace(/(.*?)[\\\/]$/,'$1') + ' ' + $root + ' /e/d/s'
                     }));
                 }
