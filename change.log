@@ -76,3 +76,5 @@
 --2014/11/16 v.1.2.10
 	#zencoding.html 使用服务端的highlight.js
 	#eslint 更新规则
+--2014/11/16 v1.3.0
+	#在文件夹列表页面 增加f2e-server版本更新提示, 采用本地package.json 和github的package.json对比版本号是否相同为依据
