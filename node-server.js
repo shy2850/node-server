@@ -9,7 +9,8 @@ var CONF = require("./nodeLib/config/conf"),    //综合配置
      url = require("url"),
       fs = require("fs");
 var staticConf = CONF.staticconf,                //静态文件服务器配置
-    mini = middleware.mini;
+    mini = middleware.mini,
+    serverInfo = {needUpdate: false};        //服务器相关的一些参数。
 function start(conf){
     var server = http.createServer(function (req, resp) { try{
         var host = (req.headers.host + ':80').split(':'),
@@ -28,7 +29,7 @@ function start(conf){
         //包装request功能
         req.data = querystring.parse( url.parse(req.url).query );
         req.util = {mime: mime, conf: conf, host: host[0], staticServer: "http://" + host[0] + ":" + staticConf.port + "/"};
-        req.$ = {title: pathurl, fileList: [] };
+        req.$ = {title: pathurl, fileList: [], needUpdate: serverInfo.needUpdate };
         var DEBUG = req.data.debug === "true" || conf.debug; //DEBUG模式判断
         if( conf['nginx-http-concat'] && req.url.match(/\?\?/) ){        // nginx-http-concat 资源合并
             require('./nodeLib/common/nginx-http-concat').execute(req,resp,root,mini,conf);
@@ -132,14 +133,16 @@ function start(conf){
     }});
     server.maxConnections = conf.maxConnections;
     server.listen(conf.port);
+    return server;
 }
 var ports = {}, extCmd = ([]).slice.call( process.argv, 2 ).join(' ');
-if(extCmd){ require('child_process').exec( extCmd ); }
 for(var k in CONF){
-    console.log("Server running at http://127.0.0.1:" + CONF[k].port + '\t[' + k + ']');
     (function(c){
         if(ports[c.port]){return;}
-        ports[c.port] = true;
-        start(c);
+        ports[c.port] = start(c);
     })(CONF[k]);
+    console.log("Server running at http://127.0.0.1:" + CONF[k].port + '\t[' + k + ']');
 }
+if(extCmd){ require('child_process').exec( extCmd ); }
+
+require('./nodeLib/config/update').execute(serverInfo);
