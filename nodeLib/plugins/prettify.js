@@ -44,3 +44,10 @@ exports.execute = function(req, resp){
           resp.end( e.stack.toString().replace(/\n/g,"<br>") );
     });
 };
+exports.parse = function(code){
+    return {
+        code: code,
+        output: highlight(code),
+        style: style
+    };
+};
