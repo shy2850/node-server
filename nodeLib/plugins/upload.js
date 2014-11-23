@@ -21,7 +21,9 @@ exports.execute = function(req, resp, root, handle, conf, modelPath){
             fields[field] = value;
         })
             .on('file', function(field, file) {
-                files.push({name: field, file: file});
+                if( file.size ){
+                    files.push({name: field, file: file});
+                }
             })
             .on('end', function() {
                 files.map(function(file){
