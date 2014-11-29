@@ -1,63 +1,81 @@
-window.Clock = (function(o) {
-    var arrow1, arrow2, arrow3, bg, bgSrc, el, r, rs, w, w2;
-    w = o.size;
-    w2 = w / 2;
-    el = document.getElementById(o.holder);
-    bgSrc = el.getAttribute("data-clock");
-    el.style.width = w + "px";
-    el.style.height = w + "px";
-    r = Raphael(o.holder, w, w);
-    Raphael.getColor.reset();
-    rs = r.set();
-    bg = r.image(bgSrc, 0, 0, w, w);
-    arrow3 = r.rect(w2 - w / 80, w2 - w / 15, w / 40, w * 2 / 5, w / 40).attr({
-        fill: "#000",
-        stroke: "none"
-    });
-    arrow2 = r.rect(w2 - w / 72, w2 - w / 20, w / 36, w / 3, w / 36).attr({
-        fill: "#000",
-        stroke: "none"
-    });
-    arrow1 = r.rect(w2 - w / 48, w2 - w / 25, w / 24, w / 5, w / 24).attr({
-        fill: "#000",
-        stroke: "none"
-    });
-    rs.push(bg);
-    rs.push(arrow1);
-    rs.push(arrow2);
-    rs.push(arrow3);
-    return setInterval(function() {
-        var d, h, m, s;
-        d = new Date();
-        h = (d.getHours() % 12 * 30 + 180) % 360 + d.getMinutes() / 2;
-        m = (d.getMinutes() * 6 + 180) % 360;
-        s = (d.getSeconds() * 6 + 180) % 360;
-        if (h === 0) {
-            arrow1.attr({
-                transform: "r0 " + w2 + " " + w2
-            });
-        } else {
-            arrow1.animate({
-                transform: "r" + h + " " + w2 + " " + w2
-            }, 600, "jswing");
+;window.requestAFrame = (function () {
+    return  window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        function (fn) {
+            return window.setTimeout(fn, 1000/60); 
+        };
+})();
+
+window.Clock = function(o){
+    var canvas = document.createElement("canvas"), r = o.size || 100,
+        c= canvas.getContext('2d');
+        c.strokeStyle = "#000";
+        c.lineWidth = 2,
+        P = Math.PI;
+    var holder = document.getElementById(o.holder);
+    holder.appendChild( canvas );
+    canvas.width = canvas.height = r * 2;
+    holder.style.width = holder.style.height = (r * 2) + "px";
+
+    var drawLine = function(c,deg,length){
+        var x = length * Math.cos(deg-P/2) + r,
+            y = length * Math.sin(deg-P/2) + r;
+        c.moveTo(r,r);
+        c.lineTo(x,y);
+        c.stroke();
+    };
+
+
+    function draw(){
+        c.clearRect(0,0,2*r,2*r);
+
+        //画圆
+        c.lineWidth = 4;  
+        c.beginPath();
+        c.arc(r,r,r-2,0,Math.PI*2);
+        c.closePath();
+        c.stroke();
+        c.save();
+
+      
+        c.beginPath();
+        c.translate(r,r);  
+        c.lineWidth = 2;   
+        for(var i=0;i<60;i++){  //刻度
+            if( i%5 ){
+                c.moveTo(.9*r, 0);
+            }else{
+                c.moveTo(.8*r, 0);
+            }
+            c.lineTo(r, 0);
+            c.rotate(Math.PI/30);
         }
-        if (m === 0) {
-            arrow2.attr({
-                transform: "r0 " + w2 + " " + w2
-            });
-        } else {
-            arrow2.animate({
-                transform: "r" + m + " " + w2 + " " + w2
-            }, 600, "jswing");
-        }
-        if (s === 0) {
-            return arrow3.attr({
-                transform: "r0 " + w2 + " " + w2
-            });
-        } else {
-            return arrow3.animate({
-                transform: "r" + s + " " + w2 + " " + w2
-            }, 400, "bounce");
-        }
-    }, 1000);
-});
+        c.stroke();
+        c.restore();
+        c.save();
+
+
+
+
+
+        var d = new Date(),
+            h = d.getHours(),
+            m = d.getMinutes(),
+            s = d.getSeconds(),
+            ss= s + (d.getTime() % 1000) / 1000;
+
+        c.beginPath();
+        c.lineWidth = 3;  //时针
+        drawLine( c, P*h/6, .4*r );
+        c.lineWidth = 2;  //分针
+        drawLine( c, P*m/30, .6*r );
+        c.lineWidth = 1;  //秒针 
+        drawLine( c, P*ss/30, .8*r );
+
+        requestAFrame(draw);
+    }
+
+    draw();
+};

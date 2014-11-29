@@ -3,9 +3,13 @@
 <head><%var $ = request.$, mime = request.util.mime, staticServer = request.util.staticServer;%>
 	<meta charset="UTF-8">
 	<title><%=$.title%></title>
-	<link rel="stylesheet" href="<%=staticServer%>static/css/bootstrap.min.css">
 	<link rel="stylesheet" href="<%=staticServer%>static/css/folder.css">
+	<!--[if lt IE 9]>
+	<style>.fixed-line{display:none;} body{padding:0;}</style>
+	<![endif]-->
+	<!--[if !IE | (gte IE 9)]><!-->
 	<script data-main="<%=staticServer%>static/js/folder.js" src="<%=staticServer%>static/js/require.min.js"></script>
+	<!--<![endif]-->
 	<%if($.needUpdate){%><script type="text/javascript">alert('Your f2e-server is need-update!');</script><%}%>
 </head>
 <body>
@@ -13,18 +17,7 @@
 	<a href="/config" class="btn btn-primary" title="配置" target="_blank">动态配置</a>
 	<a href="javascript:void(0)" class="btn btn-warning" id="ajaxUpload" title="点击选择文件将上传到当前文件夹">上传文件</a>
 	<a class="btn btn-danger" href="javascript:void(0);" id="output" title="点击将当前项目输出到指定文件夹">项目输出</a>
-	<div class="dropdown">
-		<a id="dLabel" class="btn btn-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			Useful API
-			<span class="caret"></span>
-		</a>
-		<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-			<li role="presentation"><a href="http://www.w3cfuns.com/tools.php?mod=bookjquery" target="_blank" class="btn">jQuery</a></li>
-			<li role="presentation"><a href="http://www.css88.com/doc/underscore/" target="_blank" class="btn">Underscore</a></li>
-			<li role="presentation"><a href="http://docs.kissyui.com/" target="_blank" class="btn">KISSY</a></li>
-			<li role="presentation"><a href="http://echarts.baidu.com/doc/doc.html" target="_blank" class="btn">Echarts</a></li>
-		</ul>
-	</div>
+	<a class="btn btn-success" href="https://github.com/shy2850/node-server" target="_blank">Github</a>
     <div id="clock" data-clock="<%=staticServer%>static/img/clock.gif"></div>
 </div>
 <ul id="list-container">

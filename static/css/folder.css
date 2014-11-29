@@ -1,7 +1,14 @@
 @charset "utf-8";
 body {
-  padding: 120px 20px 60px;
+  padding: 80px 20px 60px;
   background: #fff;
+}
+div, p, ul, li, a{
+  margin: 0;
+  padding: 0;
+}
+a, a:hover{
+  text-decoration: none !important;
 }
 .fixed-line {
   position: fixed;
@@ -19,6 +26,44 @@ body {
   right: 30px;
   top: 0px;
 }
+
+.btn {
+  display: inline-block;
+  padding: 8px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.428571429;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.btn-primary {
+  color: #fff;
+  background-color: #428bca;
+  border-color: #428bca;
+}
+.btn-warning {
+  color: #fff;
+  background-color: #f0ad4e;
+  border-color: #f0ad4e;
+}
+.btn-danger {
+  color: #fff;
+  background-color: #d9534f;
+  border-color: #d9534f;
+}
+.btn-success {
+  color: #fff;
+  background-color: #5cb85c;
+  border-color: #5cb85c;
+}
+
+
+
 #list-container li {
   line-height: 20px;
   height: 20px;
@@ -31,15 +76,6 @@ body {
   position: absolute;
   opacity: 0;
   filter: alpha(opacity=0);
-}
-.dropdown {
-  position: relative;
-  display: inline-block;
-  *display: inline;
-  *zoom: 1;
-}
-.dropdown-menu {
-  line-height: 26px;
 }
 .see-to-source,
 .see-to-source:hover {
