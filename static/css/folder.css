@@ -2,13 +2,14 @@
 body {
   padding: 80px 20px 60px;
   background: #fff;
+  font: normal 14px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
-div, p, ul, li, a{
-  margin: 0;
-  padding: 0;
+a{
+  color: #428bca;
+  text-decoration: none;
 }
-a, a:hover{
-  text-decoration: none !important;
+a:hover{
+  text-decoration: underline;
 }
 .fixed-line {
   position: fixed;
@@ -63,7 +64,9 @@ a, a:hover{
 }
 
 
-
+#list-container{
+  padding: 0;
+}
 #list-container li {
   line-height: 20px;
   height: 20px;

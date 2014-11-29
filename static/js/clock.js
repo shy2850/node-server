@@ -56,10 +56,6 @@ window.Clock = function(o){
         c.restore();
         c.save();
 
-
-
-
-
         var d = new Date(),
             h = d.getHours(),
             m = d.getMinutes(),
@@ -68,11 +64,12 @@ window.Clock = function(o){
 
         c.beginPath();
         c.lineWidth = 3;  //时针
-        drawLine( c, P*h/6, .4*r );
+        c.radius = 3;
+        drawLine( c, P*(h/6+m/360), .5*r );
         c.lineWidth = 2;  //分针
-        drawLine( c, P*m/30, .6*r );
+        drawLine( c, P*(m/30+ss/1800), .7*r );
         c.lineWidth = 1;  //秒针 
-        drawLine( c, P*ss/30, .8*r );
+        drawLine( c, P*ss/30, .85*r );
 
         requestAFrame(draw);
     }
