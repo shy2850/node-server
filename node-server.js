@@ -31,10 +31,6 @@ function start(conf){
         req.util = {mime: mime, conf: conf, host: host[0], staticServer: "http://" + host[0] + ":" + staticConf.port + "/"};
         req.$ = {title: pathurl, fileList: [], needUpdate: serverInfo.needUpdate };
         var DEBUG = req.data.debug === "true" || conf.debug; //DEBUG模式判断
-        if( conf['nginx-http-concat'] && req.url.match(/\?\?/) ){        // nginx-http-concat 资源合并
-            require('./nodeLib/common/nginx-http-concat').execute(req,resp,root,mini,conf);
-            return;
-        }
         setTimeout( function(){
             fs.stat(pathname,function(error, stats){
                 if(stats && stats.isFile && stats.isFile()){  //如果url对应的资源文件存在，根据后缀名写入MIME类型
@@ -49,23 +45,30 @@ function start(conf){
                         "Content-Type": mime.get(pathname) || 'text/html',
                         "Expires": expires
                     });
-                    fs.readFile(pathname, function(err, data){
-                        if(err){throw err;}
-                        if( data.length > 100 * 1024 * 1024 ){
-                            resp.writeHead(500, {"Content-Type": "text/html"});
-                            resp.end( '<center><h1 style="font:bold 72px/2 Microsoft Yahei;color: #c00;">文件过大！ 无法下载</h1></center>' );
-                            return;
-                        }
-                        var rs = data.toString(), ware;
-                        if( conf.middleware && (req.data.middleware !== "false") && (ware = middleware.get(pathname)) ){  //中间件处理, MIME需要mime.type中修改
-                            ware(req,resp,rs,pathname,DEBUG);
-                        }else if(  conf.handle && mime.isTXT(pathname) && !( /[\.\-]min\.(js|css)$/.test(pathurl) ) && req.data.handle !== "false" ){    //handle
-                            handle.execute(req,resp,root,rs, mini.get(pathname) ,DEBUG, conf);
-                        }else{
-                            resp.end( data );
-                        }
+
+                    var rs = fs.createReadStream(pathname), s = '', ware;
+                    rs.on('error',function(err){
+                        throw err;
+                    }).on('data',function(d){
+                        s += d;
                     });
+
+                    if( conf.middleware && (req.data.middleware !== "false") && (ware = middleware.get(pathname)) ){  //中间件处理, MIME需要mime.type中修改
+                        rs.on('end',function(){
+                            ware(req,resp,s,pathname,DEBUG);
+                        });
+                    }else if(  conf.handle && mime.isTXT(pathname) && !( /[\.\-]min\.(js|css)$/.test(pathurl) ) && req.data.handle !== "false" ){    //handle
+                        rs.on('end',function(){
+                            handle.execute(req,resp,root,s, mini.get(pathname) ,DEBUG, conf);
+                        });
+                    }else{
+                        rs.pipe(resp);
+                    }
                 } else if(conf.fs_mod && stats && stats.isDirectory && stats.isDirectory()){  //如果当前url被成功映射到服务器的文件夹，创建一段列表字符串写出
+                    if( conf['nginx-http-concat'] && req.url.match(/\?\?/) ){        // nginx-http-concat 资源合并
+                        require('./nodeLib/common/nginx-http-concat').execute(req,resp,root,mini,conf);
+                        return;
+                    }
                     pathurl = pathurl.lastIndexOf('/') === pathurl.length - 1 ? pathurl : pathurl + "/";
                     resp.writeHead(200, {"Content-Type": mime.get(req.data.type || 'html')});
                     fs.readdir(pathname, function(error, files){
