@@ -31,17 +31,14 @@ var middleware = {
         }
 	},
 	less: function(req, resp, rs, pathname, DEBUG){
-        new(require("less").Parser)({
-            paths: [ pathname.replace(/(\/[^\/]+?)$/,"") ]
-        }).parse(rs, function (err, tree) {
+        require("less").render(rs, {
+            paths: [ pathname.replace(/(\/[^\/]+?)$/,"") ],
+            compress: !DEBUG
+        }, function (err, output) {
             if (err) { throw err }
             else{
                 resp.writeHead(200, {"middleware-type": 'css', "Content-Type": mime.get('css')});
-                if(DEBUG){
-                    resp.end( tree.toCSS() );
-                }else{
-                    mini.css(tree.toCSS(), resp);
-                }
+                resp.end( output.css );
             }
         });
 	},

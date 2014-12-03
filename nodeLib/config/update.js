@@ -47,6 +47,7 @@ exports.execute = function(server){
             loadJSON( 'https://raw.githubusercontent.com/shy2850/node-server/master/package.json', function(err, json){
                 if(err){
                     console.log(err);
+                    return;
                 }
                 if( version !== json.version ){
                     server.needUpdate = true;
