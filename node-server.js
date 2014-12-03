@@ -1,8 +1,9 @@
 "use strict";
 var CONF = require("./nodeLib/config/conf"),    //综合配置
     handle = require("./nodeLib/common/handle"),//文本文件的模板操作
-    middleware = require("./nodeLib/common/middleware"),//支持中间件
+    middleware = require("./nodeLib/filter/middleware"),//支持中间件
     modules = require("./nodeLib/common/modules"),//支持的插件配置
+    filter = require('./nodeLib/filter/filter'),//支持前置过滤器
     querystring = require("querystring"),
     mime = require("mime"),    //MIME类型
     http = require("http"),
@@ -32,6 +33,7 @@ function start(conf){
         req.$ = {title: pathurl, fileList: [], needUpdate: serverInfo.needUpdate };
         var DEBUG = req.data.debug === "true" || conf.debug; //DEBUG模式判断
         setTimeout( function(){
+            filter.execute(req,resp,conf);
             fs.stat(pathname,function(error, stats){
                 if(stats && stats.isFile && stats.isFile()){  //如果url对应的资源文件存在，根据后缀名写入MIME类型
                     if( req.method === "POST" ){    // POST请求 添加target参数以后, 使用 upload 插件进行解析。
@@ -65,55 +67,13 @@ function start(conf){
                         rs.pipe(resp);
                     }
                 } else if(conf.fs_mod && stats && stats.isDirectory && stats.isDirectory()){  //如果当前url被成功映射到服务器的文件夹，创建一段列表字符串写出
-                    if( conf['nginx-http-concat'] && req.url.match(/\?\?/) ){        // nginx-http-concat 资源合并
-                        require('./nodeLib/common/nginx-http-concat').execute(req,resp,root,mini,conf);
-                        return;
-                    }
-                    pathurl = pathurl.lastIndexOf('/') === pathurl.length - 1 ? pathurl : pathurl + "/";
-                    resp.writeHead(200, {"Content-Type": mime.get(req.data.type || 'html')});
-                    fs.readdir(pathname, function(error, files){
-                        var urlSplit = pathurl.split("/"), list = [];
-                        if(urlSplit.length > 1){urlSplit.length -= 2;}else{urlSplit[0] = "..";}
-                        req.$.fileList.push({                                                //返回上一级
-                            href: (urlSplit.join("/") || "/"),
-                            name: "../"
-                        });
-                        for ( var i in files) {        //对应下级目录或资源文件
-                            req.$.fileList.push({
-                                href: encodeURI( pathurl + files[i] ),
-                                name: files[i]
-                            });
-                        }
-                        switch(req.data.type){
-                            case 'json':resp.end( JSON.stringify( files ) ); break;
-                            case 'jsonp':resp.end( (req.data.callback || 'callback') + '(' + JSON.stringify( files ) + ')' );break;
-                            case undefined:
-                                try{
-                                    var data = fs.readFileSync( conf.folder,'utf-8');
-                                    handle.execute(req,resp,root,data.toString(),mini.get(pathname),DEBUG, conf);
-                                    return;
-                                }catch(e){
-                                    if(conf.folder){console.log(e);}else{
-                                        req.$.fileList.map(function(item){
-                                            list.push( '<p><a href="' + item.href + '">' + item.name + '</a></p>' );
-                                        });
-                                        resp.end( '<div>' + list.join('') + '</div>' );
-                                    }
-                                }
-                                break;
-                            case 'xml':
-                                req.$.fileList.map(function(item){
-                                    list.push( '<p><a href="' + item.href + '">' + item.name + '</a></p>' );
-                                });
-                                resp.end( '<div>' + list.join('') + '</div>' );
-                        }
-                    });
+                    require('./nodeLib/filter/directory').execute(req,resp,root,pathname,pathurl,conf,DEBUG);
                 } else{
                     var m = modules.get( pathurl.replace('/','') );
                     if(m){
                         m.execute(req,resp,root,handle,conf);
                     }else if(conf.agent && conf.agent.get && (agent = conf.agent.get(pathurl) ) ){   // 代理过滤
-                        require('./nodeLib/common/agent').execute(req,resp,agent,req.url);
+                        require('./nodeLib/filter/agent').execute(req,resp,agent,req.url);
                         return;
                     }else{
                         resp.writeHead(404, {"Content-Type": "text/html"});
@@ -138,6 +98,7 @@ function start(conf){
     server.listen(conf.port);
     return server;
 }
+
 var ports = {}, extCmd = ([]).slice.call( process.argv, 2 ).join(' ');
 for(var k in CONF){
     (function(c){
@@ -146,6 +107,11 @@ for(var k in CONF){
     })(CONF[k]);
     console.log("Server running at http://127.0.0.1:" + CONF[k].port + '\t[' + k + ']');
 }
+
 if(extCmd){ require('child_process').exec( extCmd ); }
 
-require('./nodeLib/config/update').execute(serverInfo);
+try{
+    require('./nodeLib/config/update').execute(serverInfo);
+}catch(e){
+    console.log( e );
+}

@@ -17,6 +17,11 @@ var conf = {
         return !/\bnode_modules\b/.test( filePath );
     },
     'nginx-http-concat': true,
+    filter: {
+        get: function(){
+            // console.log( arguments[0].url );  // 这个前置过滤器可以过滤所有服务端请求, 配置和agent类似
+        }
+    },
     agent: {
         get: function(path){
             for (var i = 0; i < this.map.length; i++) {
