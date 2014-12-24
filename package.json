@@ -1,6 +1,6 @@
 {
   "name": "f2e-server",
-  "version": "1.3.6",
+  "version": "1.3.7",
   "description": "a nodejs based file-system-server with easy-template-engine and several F2E-utils",
   "main": "node-server.js",
   "dependencies": {

@@ -25,6 +25,7 @@ function start(conf){
             conf = CONF.localhost;
         }
         root = (conf.root || __dirname); conf.root = root;
+        filter.execute(req,resp,conf); //过滤器提前, 可以修改url
         try{pathurl = decodeURI(url.parse(req.url).pathname); }catch(e){ pathurl = req.url; }
         var pathname = (pathurl === '/') ? (root + conf.welcome) : root + pathurl;  //根目录时，追加welcome页面
         //包装request功能
@@ -33,7 +34,6 @@ function start(conf){
         req.$ = {title: pathurl, fileList: [], needUpdate: serverInfo.needUpdate };
         var DEBUG = req.data.debug === "true" || conf.debug; //DEBUG模式判断
         setTimeout( function(){
-            filter.execute(req,resp,conf);
             fs.stat(pathname,function(error, stats){
                 if(stats && stats.isFile && stats.isFile()){  //如果url对应的资源文件存在，根据后缀名写入MIME类型
                     if( req.method === "POST" ){    // POST请求 添加target参数以后, 使用 upload 插件进行解析。
