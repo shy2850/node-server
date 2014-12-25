@@ -1,0 +1,17 @@
+{  
+  "name": "f2e-server",  
+  "manifest_version": 2, 
+  "version": "0.0.1", 
+  "icons": { "128": "f2e.png", "48": "f2e.png", "16": "f2e.png"},
+  "description": "utils created in brower for f2e-server.",  
+  "browser_action": {  
+    "default_icon": "f2e.png" ,
+    "default_title": "f2e-server"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*.*"],
+      "js": ["script.js"]
+    }
+  ]
+} 
