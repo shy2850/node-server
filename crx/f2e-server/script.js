@@ -64,7 +64,6 @@
 
 	function cycleListen(){
 		var srcList = getSrcs();
-		console.log( srcList );
 		srcList.forEach(function(src){
 			if( !listener.has(src) ){
 				listener.listen(src);
