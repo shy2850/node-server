@@ -3,7 +3,7 @@ var mime = require("mime"),    //MIME类型
     http = require("http"),
     fs = require("fs");
 
-http.createServer(function(req,resp){
+http.createServer(function(req, resp){
 	var root = "",
 		pathname = decodeURI(req.url).substring(1);
 	fs.stat(root + pathname, function(error, stats){

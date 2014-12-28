@@ -34,16 +34,12 @@ function start(conf){
         req.$ = {title: pathurl, fileList: [], needUpdate: serverInfo.needUpdate };
         var DEBUG = req.data.debug === "true" || conf.debug; //DEBUG模式判断
         setTimeout( function(){
+            if( req.data["modify.check"] === "true" ){ // modify.check=true 时: 检测文件更新
+                filter.check(pathname, req.data.mtime, req, resp);
+                return;
+            }
             fs.stat(pathname,function(error, stats){
                 if(stats && stats.isFile && stats.isFile()){  //如果url对应的资源文件存在，根据后缀名写入MIME类型
-                    if( req.data.stats === "true" ){ // stats=true 时: 返回文件上次更新时间 配合插件使用，实时更新网页
-                        resp.writeHead(200, mime.get(".json") );
-                        resp.end(JSON.stringify({
-                            mtime: +stats.mtime
-                        }));
-                        return;
-                    }
-
                     if( req.method === "POST" ){    // POST请求 添加target参数以后, 使用 upload 插件进行解析。
                         req.data.target = pathurl;
                         modules.get("upload").execute(req,resp,root,handle,conf);

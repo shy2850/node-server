@@ -6,7 +6,7 @@
 		},
 		listen: function(src){
 			var xhr;
-			var mtime;
+			var mtime = "";
 			
 			src += src.indexOf("?") === -1 ? "?" : "";
 			
@@ -22,12 +22,12 @@
 						var data = {};
 						try{
 							data = JSON.parse(xhr.responseText);
-							if(mtime && mtime != data.mtime){
+							if(mtime && data.modify){
 								window.location.reload();
 							}else{
 								mtime = data.mtime;
 							}
-							setTimeout(test, 800);
+							setTimeout(test);
 						}catch(e){
 							//console.log( src + '\t:\t'+ xhr.responseText );
 						}
@@ -35,7 +35,7 @@
 						//setTimeout(test, 200);
 					}
 				};
-				xhr.open("GET", src + "&stats=true", true);
+				xhr.open("GET", src + "&modify.check=true&mtime="+mtime, true);
 				xhr.send();
 			}
 
