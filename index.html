@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>f2e-server</title>
+	<link rel="stylesheet" href="<%=request.util.staticServer%>static/css/folder.css">
+</head>
+<body>
+<div class="fixed-line">
+	<a href="/config" class="btn btn-primary" title="配置" target="_blank">动态配置</a>
+	<a href="javascript:void(0)" class="btn btn-warning" id="ajaxUpload" title="点击选择文件将上传到当前文件夹">上传文件</a>
+	<a class="btn btn-danger" href="javascript:void(0);" id="output" title="点击将当前项目输出到指定文件夹">项目输出</a>
+	<a class="btn btn-success" href="https://github.com/shy2850/node-server" target="_blank">Github</a>
+</div>
+<div ng-app="" ng-controller="fileList">
+	<ul id="list-container">
+		<li ng-repeat="file in files" class="{{file.type}}">
+			<a ng-click="setRoot(file.name, file.type)" href="javascript:void(0);">{{file.name}}</a>
+		</li>
+	</ul>
+</div>
+
+<script src="http://apps.bdimg.com/libs/angular.js/1.2.16/angular.min.js"></script>
+<script>
+	function fileList($scope, $http){
+		$scope.root = ".";
+		$scope.setRoot = function(root, type) {
+			var $root = root === "../" ? $scope.root.match(/^(.*?)(\/+[^\/]*)?$/)[1] : $scope.root + '/'+root;
+			console.log( $root );
+			if( !type || type === "folder" ){
+				$http
+					.get( $root + "/?type=json" )
+					.success(function(files){
+						if( files instanceof Array ){
+							$scope.root = $root;
+							$scope.files = [{name:"../",type:"folder"}].concat( files.map(function(f){
+								var t = f.match(/\.(\w+)$/) || [0,"folder"];
+								return {
+									name: f,
+									type: t[1]
+								};
+							}) );
+						}else{
+							alert( files );
+						}
+					}).error(function(e){
+						alert("请求失败！ 请重试");
+					});
+			}else{
+				window.open( $root );
+			}
+		}
+		$scope.setRoot("../");
+	}
+</script>
+</body>
+</html>
