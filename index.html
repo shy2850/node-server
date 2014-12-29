@@ -4,6 +4,11 @@
 	<meta charset="UTF-8">
 	<title>f2e-server</title>
 	<link rel="stylesheet" href="<%=request.util.staticServer%>static/css/folder.css">
+	<style>
+		.content{overflow: hidden;}
+		#list-container{float: left; width: 20%;}
+		.show{position: fixed; left: 20%; width: 80%; height: 500px; overflow:auto; }
+	</style>
 </head>
 <body>
 <div class="fixed-line">
@@ -12,32 +17,39 @@
 	<a class="btn btn-danger" href="javascript:void(0);" id="output" title="点击将当前项目输出到指定文件夹">项目输出</a>
 	<a class="btn btn-success" href="https://github.com/shy2850/node-server" target="_blank">Github</a>
 </div>
-<div ng-app="" ng-controller="fileList">
+<div ng-app ng-controller="fileList" class="content">
 	<ul id="list-container">
 		<li ng-repeat="file in files" class="{{file.type}}">
 			<a ng-click="setRoot(file.name, file.type)" href="javascript:void(0);">{{file.name}}</a>
+			<span ng-if="file.txt"><a href="javascript:void(0);" class="see-to-source" ng-click="showTxt(file.name)">源</a></span>
+			<span ng-if="file.img"><a href="javascript:void(0);" class="see-to-source" ng-click="showImg(file.name)">冬</a></span>
 		</li>
 	</ul>
+	<div class="show"><pre ng-bind-html="show" contenteditable="false"></pre></div>
 </div>
 
 <script src="http://apps.bdimg.com/libs/angular.js/1.2.16/angular.min.js"></script>
+<script src="http://apps.bdimg.com/libs/angular.js/1.2.16/angular-sanitize.min.js"></script>
+<script src="http://apps.bdimg.com/libs/angular.js/1.2.16/angular-route.min.js"></script>
 <script>
-	function fileList($scope, $http){
-		$scope.root = ".";
+	function fileList($scope, $http, $sce){
+		$scope.root = location.hash ? location.hash.replace(/^\W/,"") : ".";
+		// 刷新列表
 		$scope.setRoot = function(root, type) {
-			var $root = root === "../" ? $scope.root.match(/^(.*?)(\/+[^\/]*)?$/)[1] : $scope.root + '/'+root;
+			var $root = root === "../" ? $scope.root.match(/^(.*?)(\/*[^\/]*)?$/)[1] : $scope.root + '/'+root;
 			console.log( $root );
 			if( !type || type === "folder" ){
-				$http
-					.get( $root + "/?type=json" )
+				$http.get( $root + "/?type=json" )
 					.success(function(files){
 						if( files instanceof Array ){
-							$scope.root = $root;
+							$scope.root = $root; location.hash = "#" + $root.replace(/^\W/,"") + "/";
 							$scope.files = [{name:"../",type:"folder"}].concat( files.map(function(f){
 								var t = f.match(/\.(\w+)$/) || [0,"folder"];
 								return {
 									name: f,
-									type: t[1]
+									type: t[1],
+									txt: ["html","js","css","md","log"].indexOf( t[1] ) != -1,
+									img: [".jpg","gif","png","jepg","ico"].indexOf( t[1] ) != -1
 								};
 							}) );
 						}else{
@@ -51,6 +63,23 @@
 			}
 		}
 		$scope.setRoot("../");
+
+		//修改右侧展示源码
+		$scope.showTxt = function(name){
+			$http.get($scope.root + '/' + name + '?handle=false&middleware=false')
+				.success(function(txt){
+					$http.post( '/prettify', {code:txt} )
+						.success(function(res){
+							$scope.show = $sce.trustAsHtml(res.output + '<style>'+res.style+'</style>');
+						});
+				});
+
+		};
+		//修改右侧展示图片
+		$scope.showImg = function(name){
+			$scope.show = $sce.trustAsHtml( '<img src="' + $scope.root + '/' + name + '" alt="' + name + '" />' );
+		};
+
 	}
 </script>
 </body>
