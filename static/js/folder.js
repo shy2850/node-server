@@ -22,7 +22,7 @@
             if (res.error) {
               return alert('输出失败');
             } else {
-              return alert('成功：' + res.command);
+              return alert('复制成功：' + res.command);
             }
           }
         });

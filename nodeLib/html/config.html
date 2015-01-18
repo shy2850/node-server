@@ -10,12 +10,13 @@
 <%
 var conf = request.util.conf,
 	p;
-if( p = request.post ){
+if( (p = request.post) && p.root ){
 	var items = ['root','welcome','notFound','fs_mod','folder','middleware','debug','output','nginx-http-concat'];
 	items.map(function(item,i){
-		if(typeof p[item] !== 'undefined'){
-			request.util.conf[item] = p[item];
+		if(typeof p[item] === 'undefined'){
+			p[item] = false;
 		}
+		request.util.conf[item] = p[item];
 	});
 	print(';window.close();');
 }

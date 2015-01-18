@@ -9,21 +9,25 @@ var loadJSON = function( url, callback ){
     callback = typeof callback === 'function' ? callback : function(){};
 
     if( url.match(/^https?\:\/\//) ){
-        HTTP.get( url, function(res){
-            var data = '';
-            res.on('data',function(d){
-                data += d;
-            }).on('end',function(){
-                try{
-                    json = JSON.parse(data);
-                    return callback( undefined, json );
-                }catch(e){
-                    return callback( e );
-                }
+        try{
+            HTTP.get( url, function(res){
+                var data = '';
+                res.on('data',function(d){
+                    data += d;
+                }).on('end',function(){
+                    try{
+                        json = JSON.parse(data);
+                        return callback( undefined, json );
+                    }catch(e){
+                        return callback( e );
+                    }
+                });
+            }).on('error', function(e) {
+                return callback( e );
             });
-        }).on('error', function(e) {
-            return callback( e );
-        });
+        }catch(e){
+            return callback( e );       
+        }
     }else{
         fs.readFile( url, function(err, data){
             try{
@@ -37,7 +41,6 @@ var loadJSON = function( url, callback ){
 };
 
 exports.execute = function(server){
-
     loadJSON( path.join( __dirname , '../../package.json' ), function(err, json){
         if(err){
             console.log(err);

@@ -77,7 +77,12 @@ exports.execute = function(req, resp, root, handle, conf){
         if(!err){
             exec('xcopy ' + root.replace(/(.*?)[\\\/]$/,'$1') + ' ' + $root + ' /e/d/s', function (error) {
                 if (!error) {
-                    build("");
+                    try{
+                        build("");
+                    }catch(e){
+                        console.error("build error:");
+                        console.error(e);
+                    }
                 }
                 resp.end(JSON.stringify({
                     error: error,
@@ -89,7 +94,12 @@ exports.execute = function(req, resp, root, handle, conf){
                 if(!err2){
                     exec('cp -Rf ' + root + '* ' + $root,function(err3){
                         if (!err3) {
-                            build("");
+                            try{
+                                build("");
+                            }catch(e){
+                                console.error("build error:");
+                                console.error(e);
+                            }
                         }
                         resp.end(JSON.stringify({
                             error: err3,
