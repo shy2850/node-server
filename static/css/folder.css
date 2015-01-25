@@ -13,7 +13,6 @@ a:hover{
 }
 .fixed-line {
   position: fixed;
-  _position: absolute;
   line-height: 40px;
   overflow: visible;
   top: 30px;
@@ -34,7 +33,7 @@ a:hover{
   margin-bottom: 0;
   font-size: 14px;
   font-weight: 500;
-  line-height: 1.428571429;
+  line-height: 20px;
   text-align: center;
   vertical-align: middle;
   cursor: pointer;
@@ -63,6 +62,12 @@ a:hover{
   border-color: #5cb85c;
 }
 
+@media screen and (max-width: 600px){
+  .fixed-line #clock{display: none;}
+}
+@media screen and (max-width: 360px){
+  body{padding-top: 100px;}
+}
 
 #list-container{
   padding: 0;
