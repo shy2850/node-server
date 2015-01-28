@@ -10,6 +10,7 @@ f2e-server
 a nodejs based http-server with easy-template-engine and several F2E-utils
 
 github: <https://github.com/shy2850/node-server.git/>
+简书文档: <http://www.jianshu.com/p/a1456b95baec/>
 
 
 * 安装 f2e-server : $ 
@@ -22,7 +23,7 @@ github: <https://github.com/shy2850/node-server.git/>
 	``npm start``
 * 恢复hosts[windows]:$ 
 	``node hosts reset`` 
-* 配置文件: [nodeLib/config/conf.js](nodeLib/config/conf.js) 
+* 配置文件参考: [nodeLib/config/conf.js](nodeLib/config/conf.js) 
 
 
 ## 文件服务器

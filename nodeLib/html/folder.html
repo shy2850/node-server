@@ -12,7 +12,6 @@
 	<!--[if !IE | (gte IE 9)]><!-->
 	<script data-main="<%=staticServer%>static/js/folder.js" src="<%=staticServer%>static/js/require.min.js"></script>
 	<!--<![endif]-->
-	<%if($.needUpdate){%><script type="text/javascript">alert('Your f2e-server is need-update!');</script><%}%>
 </head>
 <body>
 <div class="fixed-line">
@@ -35,5 +34,12 @@
 %><li class="<%=type%>" ><a href="<%=t.href%>" <%=_blank%> ><%=t.name%></a> <%=_icon%></li>
 <%}%>	
 </ul>
+
+<%if($.needUpdate){%>
+<div class="worn-msg btn-warning animated flash">
+	<a href="https://github.com/shy2850/node-server/blob/master/change.log#L119" target="_blank">Your f2e-server is need-update!</a>
+</div>
+<%}%>
+
 </body>
 </html>

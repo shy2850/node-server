@@ -7,10 +7,15 @@
   "permissions": [
     "tabs",
     "contextMenus",
+    "windows",
     "http://*/*",
     "https://*/*"
   ],
-  "options_page": "options.html",
+  "browser_action":{
+    "default_title": "f2e-server",
+    "default_icon": "f2e.png",
+    "default_popup": "popup.html"
+  },
   "background" : {
     "scripts": [
       "background.js"

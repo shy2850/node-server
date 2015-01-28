@@ -8,9 +8,23 @@ a{
   color: #428bca;
   text-decoration: none;
 }
-a:hover{
+li a:hover{
   text-decoration: underline;
 }
+
+@-webkit-keyframes flash {
+  0%, 50%, 100% {opacity: 1;}
+  25%, 75% {opacity: 0;}
+}
+@keyframes flash {
+  0%, 50%, 100% {opacity: 1;}
+  25%, 75% {opacity: 0;}
+}
+.flash {
+  -webkit-animation: flash 2s infinite;
+  animation: flash 2s infinite;
+}
+
 .fixed-line {
   position: fixed;
   line-height: 40px;
@@ -85,6 +99,19 @@ a:hover{
   opacity: 0;
   filter: alpha(opacity=0);
 }
+.worn-msg{
+  position: absolute;
+  right: 1em;
+  bottom: 1em;
+  border: 1px solid #f60;
+  padding: 0 1em;
+  font: bold 16px/4 "Arial";
+}
+.worn-msg a{
+  text-decoration: none;
+  color: #fff;
+}
+
 .see-to-source,
 .see-to-source:hover {
   border: 1px solid #42a8e1;

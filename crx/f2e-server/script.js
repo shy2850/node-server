@@ -1,4 +1,12 @@
+;
 (function(){
+	//chrome.extension.sendMessage({href: location.href});
+
+	if( !location.search.match(/listen/) ){
+		return;
+	}
+
+	/*资源更新监听*/
 	var doc = document,
 		listener = {
 		has:function(x){
@@ -73,5 +81,4 @@
 	}
 	listener.listen(location.search); //先把当前页面进行监听
 	cycleListen();
-
 })();
