@@ -4,13 +4,23 @@
   "version": "0.0.1", 
   "icons": { "128": "f2e.png", "48": "f2e.png", "16": "f2e.png"},
   "description": "utils created in brower for f2e-server.",  
-  "browser_action": {  
-    "default_icon": "f2e.png" ,
-    "default_title": "f2e-server"
+  "permissions": [
+    "tabs",
+    "contextMenus",
+    "http://*/*",
+    "https://*/*"
+  ],
+  "options_page": "options.html",
+  "background" : {
+    "scripts": [
+      "background.js"
+    ]
   },
   "content_scripts": [
     {
-      "matches": ["http://*/*.*"],
+      "matches": ["<all_urls>"],
+      "run_at" : "document_end",
+      "all_frames": true,
       "js": ["script.js"]
     }
   ]
