@@ -1,11 +1,15 @@
 (function() {
   require.config({
     paths: {
-      "frame-upload":"frame-upload/index"
+      "frame-upload":"frame-upload/index",
+      wfQuery: "../../node_modules/wfquery/js/wfQuery"
     },
     shim: {
       "frame-upload":{
         deps: ["requestAFrame"]
+      },
+      clock:{
+        deps:["requestAFrame"]
       }
     }
   });

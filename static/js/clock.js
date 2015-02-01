@@ -1,13 +1,3 @@
-;window.requestAFrame = (function () {
-    return  window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame ||
-        window.oRequestAnimationFrame ||
-        function (fn) {
-            return window.setTimeout(fn, 1000/60); 
-        };
-})();
-
 window.Clock = function(o){
     var canvas = document.createElement("canvas"), r = o.size || 100,
         c= canvas.getContext('2d');
