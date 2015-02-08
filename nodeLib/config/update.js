@@ -26,7 +26,7 @@ var loadJSON = function( url, callback ){
                 return callback( e );
             });
         }catch(e){
-            return callback( e );       
+            return callback( e );
         }
     }else{
         fs.readFile( url, function(err, data){

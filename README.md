@@ -11,6 +11,7 @@ a nodejs based http-server with easy-template-engine and several F2E-utils
 
 github: <https://github.com/shy2850/node-server.git/>
 简书文档: <http://www.jianshu.com/p/a1456b95baec/>
+changelog: [change.log](change.log)
 
 
 * 安装 f2e-server : $ 
@@ -114,6 +115,7 @@ f2e-server 方便的支持了代理远程请求功能  [【__agent__】配置](n
 * get方法通过分析请求路径，返回一组相关代理配置
 	* host: 远程代理的host 默认为 当前host
 	* port: 远程代理的端口号, 默认为 80
+	* origin: 支持origin格式配置: 优先级低于host&port, 因为需要实时解析，性能不及host配置
 	* path: 路径转换方式, 可以根据本地路径转换成远程指定其他路径, 默认跟远程路径相同
 	* cookie: 远程代理cookie ( 直接copy远程请求的请求头中的cookie )
 

@@ -37,6 +37,7 @@ var conf = {
             },
             {
                 reg: /\.js$/,
+                origin: 'https://github.com/', //支持origin格式配置: 优先级低于host&port
                 path: function(url){
                     return url.path.replace(/(.*?)(\.min)?\.js$/,'$1.coffee');
                 }
