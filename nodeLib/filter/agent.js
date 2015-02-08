@@ -9,7 +9,7 @@ function doRequest(request, response, option, path){
       headers = {   //拼接headers数据，只处理必要的
           "user-agent": request.headers["user-agent"],
           "content-type": request.headers["content-type"],
-          cookie: cookies[option.host] || option.cookie,   //很多站点都是通过cookie进行SSO认证,可以自己在浏览器模拟
+          cookie: option.cookie || cookies[option.host],   //很多站点都是通过cookie进行SSO认证,可以自己在浏览器模拟
           host: option.host,
           accept: request.headers.accept
       };

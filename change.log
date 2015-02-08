@@ -124,7 +124,7 @@
 --2015/02/01 v1.4.2
 	#修改wfQuery为npm依赖
 
---2015/02/02 v1.4.3
+--2015/02/02 v1.4.4
 	#修改代理模块 filter/agent 支持保存远程cookie到f2e-server
 	#修改代理模块配置 支持通过 origin = http://xuan.news.cn/ 代替host和port配置，并解析协议为https:时，port自动设置为443.
 	#修改代理支持 对于远程服务的302转发中的域名部分修改成本地域名
