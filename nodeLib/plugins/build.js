@@ -43,7 +43,7 @@ exports.execute = function(req, resp, root, handle, conf){
     var $root = conf.output,
         mime = req.util.mime,
         buildFilder = conf.buildFilder || function(){return true;},
-        host = "http://" + req.headers.host + "/";
+        host = "http://" + req.headers.host + "";
     var build = function( path ){
         var path1 = path,
             extType = $path.extname(path).substring(1);
@@ -52,25 +52,24 @@ exports.execute = function(req, resp, root, handle, conf){
             if(stats && stats.isFile && stats.isFile() && mime.isTXT(extType) && buildFilder(path) ){ 
                 var info = "";
                 building = 1;
-                http.get(host + path + '?_build_=true', function(res) {
+                http.get(host + encodeURI(path) + '?_build_=true', function(res) {
                     var type = res.headers['middleware-type'];
-                    res.on('data',function(data){
-                       building = 1;
-                       info += data;
-                    });
-                    res.on('end',function(){
-                        if(type){
-                            path1 = path.replace(/[^\.]+$/,type);     //对应 middleware 里面的type
-                        }
-                        fs.writeFile( $root + path, info, function() {
-                            fs.rename( $root + path, $root + ( conf.debug ? path1 : pathMap(path1) ), function(err){
+                    if(type){
+                        path1 = path.replace(/[^\.]+$/,type);     //对应 middleware 里面的type
+                    }
+                    path1 = pathMap(path1, conf.debug);
+                    fs.rename( $root + path, $root + path1, function(err){
+                        var fws = fs.createWriteStream( $root + path1 );
+                        if(err){
+                            console.log(err);
+                        }else{
+                            res.pipe( fws ).on('finish',function(){
                                 building = 0;
-                                if(err){
-                                    console.log(err);
-                                }
                             });
-                        });
+                        }
                     });
+                }).on('error',function(){
+                    console.log( 'build error for: ' + path );
                 });
             }else if(stats && stats.isDirectory && stats.isDirectory()){ // 文件夹内递归需要构建
                 fs.readdir(root + path, function(error, files){
