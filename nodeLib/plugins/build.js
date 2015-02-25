@@ -3,7 +3,8 @@ var $path = require('path'),
     fs = require('fs'),
     _ = require('underscore'),
     http = require('http'),
-    exec = require('child_process').exec;
+    exec = require('child_process').exec,
+    execFile = require('child_process').execFile;
 var building = 0,
     pathMap = function(path){
     /*
@@ -31,13 +32,13 @@ setInterval(function(){
     i = (i + 1) % l.length;
 },200);
 
-var optipng, jpegtran, execFile = require('child_process').execFile;
+var optipng, jpegtran;
 try{
     optipng = require('optipng-bin');
     jpegtran = require('jpegtran-bin').path;
 }catch(e){
     console.log( "optipng-bin & jpegtran-bin is not installed. \n building will run without Image minified!" );
-} 
+}
 
 exports.execute = function(req, resp, root, handle, conf){
     var $root = conf.output,
@@ -49,8 +50,7 @@ exports.execute = function(req, resp, root, handle, conf){
             extType = $path.extname(path).substring(1);
         fs.stat(root + path, function(error, stats){
             //文本类型资源通过HTTP获取, 以确保跟开发环境资源相同
-            if(stats && stats.isFile && stats.isFile() && mime.isTXT(extType) && buildFilder(path) ){ 
-                var info = "";
+            if(stats && stats.isFile && stats.isFile() && mime.isTXT(extType) && buildFilder(path) ){
                 building = 1;
                 http.get(host + encodeURI(path) + '?_build_=true', function(res) {
                     var type = res.headers['middleware-type'];
@@ -85,13 +85,17 @@ exports.execute = function(req, resp, root, handle, conf){
             }
 
             if( mime.get(path) === "image/png" ){ // 使用 optipng-bin 进行图片压缩
-                execFile(optipng.path, ['-out', $root+path, $root+path], function (err) {
+                building = 1;
+                execFile(optipng.path, ['-out', $root + path, $root + path], function (err) {
+                    building = 0;
                     if (err) {
                         console.log(err);
                     }
                 });
             }else if( mime.get(path) === "image/jpeg" ){ // 使用 jpegtran-bin 进行图片压缩
-                execFile(jpegtran, ['-outfile', $root+path, $root+path], function (err) {
+                building = 1;
+                execFile(jpegtran, ['-outfile', $root + path, $root + path], function (err) {
+                    building = 0;
                     if (err) {
                         console.log(err);
                     }
