@@ -131,3 +131,6 @@
 
 --2015/02/02 v1.4.4*
     #修改代理模块 Node.js v0.12.0 要求response.setHeader 参数的name&value均不能为undefined或null.
+
+--2015/02/02 v1.4.5
+	#增加图片压缩功能
