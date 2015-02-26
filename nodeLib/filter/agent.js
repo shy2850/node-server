@@ -1,10 +1,11 @@
 "use strict";
 var http = require('http'),
     https = require('https'),
-    url = require('url');
+    url = require('url'),
+    fs = require('fs');
 var cookies = {};
 
-function doRequest(request, response, option, path){
+function doRequest(request, response, option, path, fws){
   var location = url.parse(path),
       headers = {   //拼接headers数据，只处理必要的
           "user-agent": request.headers["user-agent"],
@@ -44,6 +45,13 @@ function doRequest(request, response, option, path){
         }
         response.writeHead(res.statusCode, res.headers);
         res.pipe(response);
+        if(fws){
+          res.on('data',function(chunk){
+            fws.write(chunk);
+          }).on('end',function(){
+            fws.end();
+          });
+        }
     }).on('error',function(err){
         response.writeHead(408, {"Content-Type": "text/html"});
         response.end( JSON.stringify({
@@ -63,12 +71,43 @@ function execOpt (opt) {
   }
 }
 
+var mkdirs = function(dirpath, mode, callback) {
+  fs.exists(dirpath, function(exists) {
+    if(exists) {
+      callback();
+    } else {
+      //尝试创建父目录，然后再创建当前目录
+      mkdirs(require('path').dirname(dirpath), mode, function(){
+        fs.mkdirSync(dirpath, mode);
+        callback();
+      });
+    }
+  });
+};
+
 exports.execute = function(request, response, option, path){
   //配置解析: 支持通过 origin = http://xuan.news.cn/ 代替host和port配置，
   //并解析协议为https:时，port自动设置为443.
   execOpt(option);
 
-  var req = doRequest(request, response, option, path);
+  var fws = null;
+  if( option.save === true ){
+    var root = request.util.conf.root,
+        dir = root + path.replace( /^(.*?)[^\\\/]+$/, "$1"),
+        filename = root + path;
+
+    if( fs.existsSync(dir) ){
+      fws = fs.createWriteStream( filename.replace(/[?]+.*$/,"") );
+    }else{
+      try{
+        mkdirs(dir,{},function(){
+          //fws = fs.createWriteStream( filename.replace(/[?]+.*$/,"") );
+        });
+      }catch(e){}
+    }
+  }
+
+  var req = doRequest(request, response, option, path, fws);
   request.on('data', function(chunk) {
       req.write( chunk );  //提交POST数据
   }).on('end', function() {
