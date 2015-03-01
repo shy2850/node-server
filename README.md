@@ -10,6 +10,8 @@ f2e-server
 
 a nodejs based http-server with easy-template-engine and several F2E-utils
 
+集成Node.js 环境版本下载: [百度网盘](http://pan.baidu.com/s/1mgwvcQ8)
+
 github: <https://github.com/shy2850/node-server.git/>
 
 简书文档: <http://www.jianshu.com/p/a1456b95baec/>
