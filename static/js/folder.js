@@ -1,13 +1,9 @@
 (function() {
   require.config({
     paths: {
-      "frame-upload":"frame-upload/index",
       wfQuery: "../../node_modules/wfquery/js/wfQuery"
     },
     shim: {
-      "frame-upload":{
-        deps: ["requestAFrame"]
-      },
       clock:{
         deps:["requestAFrame"]
       }
@@ -30,31 +26,6 @@
             }
           }
         });
-      }
-    });
-  });
-
-  require(["frame-upload"],function(FrameUpload){
-    var el = document.getElementById('ajaxUpload');
-    new FrameUpload({
-      el: el,
-      src: "/upload?iframe=true&_"+ +new Date,
-      action: "/upload?uploadUrl="+document.title,
-      onchange: function(){
-        el.innerHTML = '上传中...';
-        this.submit();
-      },
-      afterUpload: function(data){
-        if(data.length){
-          alert( '上传成功' );
-          el.innerHTML = '上传文件';
-        }else{
-          alert( '上传失败' );
-          el.innerHTML = '重新上传';
-        }
-      },
-      ready: function(){
-        this.setAttribute("multiple","multiple");
       }
     });
   });

@@ -3,6 +3,7 @@
 f2e-server
 ==========
 ![f2e-server](http://pub.idqqimg.com/qconn/wpa/button/button_old_41.gif)
+
 [点击链接加入群【f2e-server】：](http://jq.qq.com/?_wv=1027&k=MqC52t)
 
 基于nodejs平台的HTTP服务器，提供了基本的模板引擎以及常用的前端工具。
@@ -10,7 +11,9 @@ f2e-server
 a nodejs based http-server with easy-template-engine and several F2E-utils
 
 github: <https://github.com/shy2850/node-server.git/>
+
 简书文档: <http://www.jianshu.com/p/a1456b95baec/>
+
 changelog: [change.log](change.log)
 
 
@@ -21,7 +24,7 @@ changelog: [change.log](change.log)
 * 修改hosts[windows]:$ 
 	``node hosts`` 
 * 启动f2e-server服务:$ 
-	``npm start``
+	``npm start`` __服务启动后，会在f2e-server外层目录自动生成 conf.js 文件, 可参考修改__
 * 恢复hosts[windows]:$ 
 	``node hosts reset`` 
 * 配置文件参考: [nodeLib/config/conf.js](nodeLib/config/conf.js) 
@@ -77,7 +80,7 @@ f2e-server 默认使用underscore模板, 参见 [nodeLib/common/handle.js#L18](n
 ## 中间件支持
 
 f2e-server采用中间件的动态解析模式, 参见 
-[nodeLib/common/middleware.js](nodeLib/common/middleware.js) 
+[nodeLib/filter/middleware.js](nodeLib/filter/middleware.js) 
 
 * 默认支持 
 [less](https://github.com/less/less.js.git)
@@ -93,6 +96,7 @@ f2e-server采用中间件的动态解析模式, 参见
 ## 项目输出
 
 * 模板、 资源合并压缩、中间件支持(或混搭使用) 均被支持输出到结果文件目录中 【__output__】
+* 如果安装相关图片压缩依赖的模块, build默认支持在构建输出结果时对png,jpg等类型图片进行无损压缩
 * 中间件中 在请求头设置 __middleware-type__ 属性, 将能够在输出时, 修改响应的文件后缀名 
 * 如在开发中使用响应后缀,建议参考 [【__agent__】配置](nodeLib/config/conf.js#L26)
 
@@ -118,6 +122,7 @@ f2e-server 方便的支持了代理远程请求功能  [【__agent__】配置](n
 	* origin: 支持origin格式配置: 优先级低于host&port, 因为需要实时解析，性能不及host配置
 	* path: 路径转换方式, 可以根据本地路径转换成远程指定其他路径, 默认跟远程路径相同
 	* cookie: 远程代理cookie ( 直接copy远程请求的请求头中的cookie )
+	* save: 代理请求资源保存到本地对应文件目录 ( 资源批量下载以及中间件模板编译 )
 
 ## 插件功能
 
@@ -128,8 +133,8 @@ f2e-server 提供了一些有用的插件, 提倡开发者扩展
 * [config](nodeLib/plugins/config.js): 临时修改当前服务配置项[Beta版]
 * [favicon.ico](nodeLib/plugins/favicon.ico.js): 单独进行favicon.ico实现
 * [prettify](nodeLib/plugins/prettify.js): 代码的服务端highlight实现, 支持远程请求同agent插件 ``/prettify?http://news.cn``
-* [psd](nodeLib/plugins/psd.js): 读取服务器目录下的psd文件并且实时转化成png, 展示到浏览器中
-* [upload](nodeLib/plugins/upload.js): 文件上传功能依赖插件, PS: post请求处理同时使用该模块实现
+* [psd](nodeLib/plugins/psd.js): 读取服务器目录下的psd文件并且实时转化成png, 展示到浏览器中, 同时支持了解析PSD源资源数据，分别保存成png图片(Beta)
+* [upload](nodeLib/plugins/upload.js): post请求处理使用该模块实现（支持文件上传）
 
 
 

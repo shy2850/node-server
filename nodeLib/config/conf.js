@@ -1,5 +1,6 @@
 "use strict";
-var path = require('path');
+var path = require('path'),
+    fs = require('fs');
 var conf = {
     root: "D:\\", //服务器索引的根目录，可配置为任意本地地址
     welcome: "", //使用欢迎页面的文件名，为空时，表示不使用欢迎页面
@@ -16,6 +17,10 @@ var conf = {
     buildFilder: function(filePath){
         return !/\bnode_modules\b/.test( filePath );
     },
+    rename: function(filename, debug){ //构建完成后是否重命名文件
+        // return debug ? filename : filename.replace(/\.(js|css)$/,".min.$1");
+        return filename;
+    },
     'nginx-http-concat': true,
     filter: {
         get: function(){
@@ -24,37 +29,39 @@ var conf = {
     },
     agent: {
         get: function(path){
-            for (var i = 0; i < this.map.length; i++) {
-                if( this.map[i].reg.test(path) ){
-                    return this.map[i];
+            var map = [
+                {
+                    reg: /\b(js|icons)\b/, //路径中若符合正则且映射不到内容，获取远程数据
+                    host: 'shy2850.sturgeon.mopaas.com'
+                },
+                {
+                    reg: /\.js$/,
+                    origin: 'https://github.com/', //支持origin格式配置: 优先级低于host&port
+                    path: function(url){
+                        return url.path.replace(/(.*?)(\.min)?\.js$/,'$1.coffee');
+                    }
+                },
+                {
+                    reg: /\.css$/,
+                    path: function(url){
+                        return url.path.replace(/(.*?)(\.min)?\.css$/,'$1.less');
+                    },
+                    save: true // 添加save:true 参数时： 请求响应时将自动保存结果到本地
+                },
+                {
+                    reg: /\.html$/,
+                    path: function(url){
+                        return url.path.replace(/(.*?)\.html$/,'$1.jade');
+                    }
+                }
+            ];
+
+            for (var i = 0; i < map.length; i++) {
+                if( map[i].reg.test(path) ){
+                    return map[i];
                 }
             }
-        },
-        map: [
-            {
-                reg: /\b(js|icons)\b/, //路径中若符合正则且映射不到内容，获取远程数据
-                host: 'shy2850.sturgeon.mopaas.com'
-            },
-            {
-                reg: /\.js$/,
-                origin: 'https://github.com/', //支持origin格式配置: 优先级低于host&port
-                path: function(url){
-                    return url.path.replace(/(.*?)(\.min)?\.js$/,'$1.coffee');
-                }
-            },
-            {
-                reg: /\.css$/,
-                path: function(url){
-                    return url.path.replace(/(.*?)(\.min)?\.css$/,'$1.less');
-                }
-            },
-            {
-                reg: /\.html$/,
-                path: function(url){
-                    return url.path.replace(/(.*?)\.html$/,'$1.jade');
-                }
-            }
-        ]
+        }, 
     },
     extend: function(o){
         var res = {};
@@ -69,7 +76,7 @@ var conf = {
     expires: 0     //服务端缓存时间设置
 };
 exports.localhost = conf.extend({
-    root: ''
+    root: path.join(__dirname, '../../')
 });
 
 exports.staticconf = conf.extend({ //不要删除或者修改这个服务
@@ -78,11 +85,20 @@ exports.staticconf = conf.extend({ //不要删除或者修改这个服务
     debug: false,
     expires: 1000 * 60 * 60 * 24
 });
+
+var conf_path = path.join( __dirname, "../../../conf.js" );
+var stat = fs.existsSync( conf_path );
+
+if( !stat ){
+    fs.writeFileSync( conf_path, 'exports["localhost"] = ' + JSON.stringify( exports.localhost, null, 4 ) + ';\n' );
+}
 try{
     var $conf = require('../../../conf.js');
     for(var k in $conf){
-        exports[k] = conf.extend( $conf[k] );
+        if( k != "staticconf" ){
+            exports[k] = conf.extend( $conf[k] );
+        }
     }
 }catch(e){
-
+    console.log(e);
 }

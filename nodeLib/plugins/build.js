@@ -5,17 +5,7 @@ var $path = require('path'),
     http = require('http'),
     exec = require('child_process').exec,
     execFile = require('child_process').execFile;
-var building = 0,
-    pathMap = function(path){
-    /*
-    if( path.match(/(.+?\.)(css|js)$/) && !path.match(/(\bmin\.)(css|js)$/) ){
-        return path.replace(/(.+?\.)(css|js)$/,'$1min.$2');
-    }else{
-        return path;
-    }
-    */
-    return path;
-};
+var building = 0;
 //两秒内没有新的build,则build finished
 var i = 0, builded = false, l = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 setInterval(function(){
@@ -57,7 +47,7 @@ exports.execute = function(req, resp, root, handle, conf){
                     if(type){
                         path1 = path.replace(/[^\.]+$/,type);     //对应 middleware 里面的type
                     }
-                    path1 = pathMap(path1, conf.debug);
+                    path1 = conf.rename ? conf.rename(path1, conf.debug) : path1;
                     fs.rename( $root + path, $root + path1, function(err){
                         var fws = fs.createWriteStream( $root + path1 );
                         if(err){
