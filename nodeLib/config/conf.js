@@ -7,6 +7,9 @@ var conf = {
     notFound: path.join( __dirname , "/../html/404.html" ),      //访问的资源不存在是，跳转的页面配置
     folder: path.join( __dirname , "/../html/folder.html" ),     //显示文件夹列表时候的配置页面
     handle: true,       //是否开启服务器动态脚本
+    include: "\\$include\\[[\"\\s]*([^\"\\s]+)[\"\\s]*\\]",
+    placeholder: "$[placeholder]",
+    belong: "\\$belong\\[[\"\\s]*([^\"\\s]+)[\"\\s]*\\]",
     middleware: true,   //中间件支持, LESS/CoffeeScript 等支持
     debug: true,        //是否对js以及css文件进行简单压缩，debug:true表示不压缩
     "fs_mod": true,       //是否支持文件夹列表展示
@@ -17,7 +20,7 @@ var conf = {
     buildFilder: function(filePath){
         return !/\bnode_modules\b/.test( filePath );
     },
-    rename: function(filename, debug){ //构建完成后是否重命名文件
+    rename: function(filename/*, debug*/){ //构建完成后是否重命名文件
         // return debug ? filename : filename.replace(/\.(js|css)$/,".min.$1");
         return filename;
     },
@@ -61,7 +64,7 @@ var conf = {
                     return map[i];
                 }
             }
-        }, 
+        }
     },
     extend: function(o){
         var res = {};
@@ -86,16 +89,16 @@ exports.staticconf = conf.extend({ //不要删除或者修改这个服务
     expires: 1000 * 60 * 60 * 24
 });
 
-var conf_path = path.join( __dirname, "../../../conf.js" );
-var stat = fs.existsSync( conf_path );
+var confPath = path.join( __dirname, "../../../conf.js" );
+var stat = fs.existsSync( confPath );
 
 if( !stat ){
-    fs.writeFileSync( conf_path, 'exports["localhost"] = ' + JSON.stringify( exports.localhost, null, 4 ) + ';\n' );
+    fs.writeFileSync( confPath, 'exports["localhost"] = ' + JSON.stringify( exports.localhost, null, 4 ) + ';\n' );
 }
 try{
     var $conf = require('../../../conf.js');
     for(var k in $conf){
-        if( k != "staticconf" ){
+        if( k !== "staticconf" ){
             exports[k] = conf.extend( $conf[k] );
         }
     }
