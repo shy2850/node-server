@@ -36,10 +36,10 @@
             <li class="dropdown">
               <a role="button" class="dropdown-toggle" data-toggle="dropdown">WEB服务器<b class="caret"></b></a>
               <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">简介</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">基本配置</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">域名路由</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">请求过滤器</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="server.html#introduce">简介</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="server.html#base-conf">基本配置</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="server.html#host-conf">域名路由</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="server.html#filter-conf">请求过滤器</a></li>
               </ul>
             </li>
             <li class="dropdown">
