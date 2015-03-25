@@ -1,0 +1,87 @@
+$belong[/layout.vm]
+
+<section class="container row">
+    <div class="col-md-3">
+        <div id="sidebar" class="my_sidebar">
+            <ul class="nav">
+                <li class="sidebar_head_li"><a href="#introduce">简介</a></li>
+                <li class="sidebar_head_li"><a href="#include">模板引用和包含</a></li>
+                <li class="sidebar_head_li"><a href="#request">服务端内置对象</a></li>
+                <li class="sidebar_head_li"><a href="#diy">自定义部分</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="page_content col-md-9" role="main">
+        <section id="install-nodejs">
+            <h2>简介</h2>
+            <p>f2e-server使用 <a href="http://underscorejs.org/#template" target="_blank">underscore.template</a>, 作为默认的模板引擎, 因为它足够简单。</p>
+            <p>默认的： <code>&lt;%%&gt;</code> 中间的部分是服务端执行的代码, <code>&lt;%=%&gt;</code>是将服务端对象的toString()拼接到响应中, <code>&lt;%-%&gt;</code>HTML-escape</p>
+            <p>例如：</p>
+            <pre class="language-javascript"><code>&lt;ul&gt;
+    &lt;% var t=0, arr = ["使用入门","WEB服务器","模板引擎","中间件","项目输出","代理","其他"]; 
+    for(; t&lt;arr.length; t++){%&gt;
+    &lt;li&gt;&lt;%=arr[t]%&gt;&lt;/li&gt;
+    &lt;%}%&gt;
+&lt;/ul&gt;</code></pre>
+            <p>服务端输出结果为:</p>
+            <pre class="language-markup"><code>&lt;ul&gt;
+    &lt;li&gt;使用入门&lt;/li&gt;
+    &lt;li&gt;WEB服务器&lt;/li&gt;
+    &lt;li&gt;模板引擎&lt;/li&gt;
+    &lt;li&gt;中间件&lt;/li&gt;
+    &lt;li&gt;项目输出&lt;/li&gt;
+    &lt;li&gt;代理&lt;/li&gt;
+    &lt;li&gt;其他&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+        </section>
+        
+        <section id="include">
+            <h2>模板引用和包含</h2>
+            <p>如下图所示代码片段</p>
+            <p>
+                <a href="http://upload-images.jianshu.io/upload_images/139018-a69001e7ab4732e4.png" target="_blank">
+                    <img src="http://upload-images.jianshu.io/upload_images/139018-a69001e7ab4732e4.png" alt="模板引用和包含.png">
+                </a>
+            </p>
+            <p>生成的结果代码如下：</p>
+            <pre class="language-markup"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h2 style="text-align:center"&gt;我是header&lt;/h2&gt;
+
+&lt;ul&gt;
+    &lt;li&gt;列表1&lt;/li&gt;
+    &lt;li&gt;列表2&lt;/li&gt;
+    &lt;li&gt;列表3&lt;/li&gt;
+    &lt;li&gt;列表4&lt;/li&gt;
+    &lt;li&gt;列表5&lt;/li&gt;
+    &lt;li&gt;列表6&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            <p>你还可以修改<code>conf.js</code> 中相关配置，支持不同的关键字替换内容</p>
+            <pre class="language-javascript"><code>exports[localhost] = {
+    include: "\\$include\\[[\"\\s]*([^\"\\s]+)[\"\\s]*\\]",
+    placeholder: "$[placeholder]",
+    belong: "\\$belong\\[[\"\\s]*([^\"\\s]+)[\"\\s]*\\]"
+};</code></pre>
+        </section>
+
+        <section id="request">
+            <h2>服务端内置对象</h2>
+        </section>
+
+        <section id="diy">
+            <h2>自定义部分</h2>
+    </section>
+</div>
+<div class="page_bottom col-md-9 pull-right">
+    <a href="server.html" class="pull-left">上一节: WEB服务器</a>
+</div>
+</section>
+
