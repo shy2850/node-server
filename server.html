@@ -1,0 +1,88 @@
+$belong[/layout.vm]
+
+<section class="container row">
+    <div class="col-md-3">
+        <div id="sidebar" class="my_sidebar">
+            <ul class="nav">
+                <li class="sidebar_head_li"><a href="#introduce">简介</a></li>
+                <li class="sidebar_head_li"><a href="#base-conf">基本配置</a></li>
+                <li class="sidebar_head_li"><a href="#host-conf">域名路由</a></li>
+                <li class="sidebar_head_li"><a href="#filter-conf">过滤器</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="page_content col-md-9" role="main">
+        <section id="install-nodejs">
+            <h2>简介</h2>
+            <p>基本的服务器功能, 除了按照指定的MIME输出请求数据, 有可能需要基本的文件夹列表展示、404页面配置，甚至多端口多服务等功能。</p>
+        </section>
+        
+        <section id="base-conf">
+            <h2>基本配置</h2>
+            <p>基本服务器功能, 可以配置欢迎页面文件名, 404页面完整路径</p>
+            <pre class="language-javascript"><code>exports["localhost"] = {
+    "root": "e:\\node_modules\\f2e-server\\",  //root 修改成自己的项目根目录
+    "welcome": "index.html",    // 开启欢迎页面  为空时不开启  
+    "notFound": "e:\\node_modules\\f2e-server\\nodeLib\\html\\404.html",  //系统内置了一个404页面, 支持修改
+    "fs_mod": true,  //是否开启文件夹列表展示
+    "port": 80,     // 修改端口号 【默认80端口】
+    "maxConnections": 1000  // 当前主机服务支持最大并发链接数
+};
+</code></pre>
+            <p>如果需要配置多个端口服务，只需要复制一组，只需要注意修改端口号即可:</p>
+            <pre class="language-javascript"><code>exports["localhost"] = {
+    root: "E:\\"
+};
+exports["localhost1"] = {
+    root: "D:\\",
+    port: 8080
+};
+exports["localhost2"] = {
+    root: "E:\\doc\\",
+    port: 8043
+};
+</code></pre>
+        </section>
+
+        <section id="host-conf">
+            <h2>域名路由</h2>
+            <p>f2e-server同样支持在同个端口按照不同的访问域名分别索引不同的项目服务, 如下：</p>
+            <pre class="language-javascript"><code>exports["localhost"] = {
+    root: "E:\\"
+};
+exports["test.baidu.com"] = {   
+    root: "D:\\"
+};
+exports["test.news.cn"] = { 
+    root: "E:\\doc\\"
+};
+</code></pre>
+            <p>已经配置的多个服务使用了同一个端口[默认的80], 我们期望通过域名来分别索引就需要进行域名解析</p>
+            <p>因为本地域名解析需要修改系统的hosts文件来实现, f2e-server提供了一个hosts程序，快捷修改windows系统目录中的hosts文件【需要足够权限】</p>
+            <pre class="language-bash"><code>$ node hosts.js
+  hosts backup in hosts.bak and Instead of new local-hosts config
+</code></pre>
+            <p>
+                如果看到以上信息, 说明你的hosts自动配置完成，同时之前你正在使用的hosts配置备份在hosts.bak中 <br>
+                使用 <code>node hosts.js reset</code> 可以讲备份文件还原
+            </p>
+        </section>
+
+        <section id="filter-conf">
+            <h2>使用过滤器</h2>
+            <pre class="language-javascript"><code>exports["localhost"] = {
+    "root": "e:\\node_modules\\f2e-server\\",  
+    "filter": {
+        get: function(req,resp){
+            console.log( req.url ); //所有通过服务器的请求都可以在这里进行拦截和修改
+        }
+    }
+};</code></pre>
+    </section>
+</div>
+<div class="page_bottom col-md-9 pull-right">
+    <a href="start.html" class="pull-left">上一节: 使用入门</a>
+</div>
+</section>
+
