@@ -13,7 +13,7 @@ $belong[/layout.vm]
     </div>
 
     <div class="page_content col-md-9" role="main">
-        <section id="install-nodejs">
+        <section id="introduce">
             <h2>简介</h2>
             <p>f2e-server使用 <a href="http://underscorejs.org/#template" target="_blank">underscore.template</a>, 作为默认的模板引擎, 因为它足够简单。</p>
             <p>默认的： <code>&lt;%%&gt;</code> 中间的部分是服务端执行的代码, <code>&lt;%=%&gt;</code>是将服务端对象的toString()拼接到响应中, <code>&lt;%-%&gt;</code>HTML-escape</p>
@@ -91,14 +91,80 @@ $belong[/layout.vm]
 
         <section id="request">
             <h2>服务端内置对象</h2>
+            <ul class="task-list">
+                <li>request: 包转完成的当前请求
+                    <ul class="task-list">
+                        <li>request.data: GET请求参数包装, 如 <code>request.data.type</code> 表示GET请求参数type的值</li>
+                        <li>request.post: POST请求参数包装, 获取方式同GET, <b>注:GET请求时, <code>request.post === null</code></b></li>
+                        <li>request.util: 
+                            <ul class="task-list">
+                                <li>request.util.mime: f2e-server扩展mime模块</li>
+                                <li>request.util.conf: 当前服务配置</li>
+                                <li>request.util.staticServer: 预留staticconf配置的url</li>
+                            </ul>
+                        </li>
+                        <li>request.$:
+                            <ul class="task-list">
+                                <li>request.$.title: 当前请求路径 pathname</li>
+                                <li>request.$.host: 当前host</li>
+                                <li>request.$.fileList: 文件夹列表存储</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>response: 原生的响应对象</li>
+                <li>require: nodejs 全局require</li>
+                <li>_: underscore源对象</li>
+            </ul>
+            <p>你可以基于这个快速构建一个jsonp支持页面 <code>jsonp.js</code> </p>
+            <pre class="language-javascript"><code>&lt;%=(request.data.callback||"callback")%&gt;({
+    serverTime: &lt;%=+new Date%&gt;,
+    clientTime: +new Date,
+    data:{
+        /*any others*/
+    }
+});</code></pre>
+            <p>也可以阅读默认的文件夹列表展示 <a href="https://github.com/shy2850/node-server/blob/master/nodeLib/html/folder.html" target="_blank">nodeLib/html/folder.html</a> 有关样例, 了解fileList用法</p>
         </section>
 
         <section id="diy">
             <h2>自定义部分</h2>
+            <p>服务器内置对象中包含了require这个全局变量，因此可以使用nodejs系统内置(或者扩展)的模块进行功能开发。</p>
+            <p>
+                对于模板引擎的使用：如果使用异步的数据处理，你可能需要修改<code>underscore.template</code>的内置方法，
+                将模板渲染的内容返回成一个function，模板引擎会主动执行这个方法。如：
+                <a href="https://github.com/shy2850/node-server/blob/master/static/css/folder.css#L123" target="_blank">static/css/folder.css</a>
+            </p>
+            <pre class="language-javascript"><code>&lt;%
+    return function(){
+        var fs = require("fs");
+        fs.readdir(request.util.conf.root+"/static/img/fileicon/",function(error,files){ 
+
+            if(error){
+                response.end(  __p );   // __p 是模板引擎内部拼接字符串的变量名 
+            }else{
+                var expires = new Date(); 
+                expires.setTime( expires.getTime() + 1000*60*60*24 );
+                
+                // 手工设置响应头增加缓存设置
+                response.writeHead(200, {"Content-Type": "text/css",Expires:expires}); 
+                
+                files.map(function(file){   // 拼接css样式字符串
+                  file = file.replace('.gif','');
+                  __p += "#list-container  ."+file+"\{background: url(../img/fileicon/"+file+".gif) no-repeat left center;\}\n";
+                });
+
+                response.end(  __p );   //手工输出
+            }
+        });
+    };
+%&gt;</code></pre>
+            <p>你可以根据相关API重写<a href="https://github.com/shy2850/node-server/blob/master/nodeLib/html/folder.html" target="_blank">nodeLib/html/folder.html</a> 换一个自己喜欢的列表展示。</p>
     </section>
 </div>
 <div class="page_bottom col-md-9 pull-right">
     <a href="server.html" class="pull-left">上一节: WEB服务器</a>
+    <a href="agent.html" class="pull-right">下一节: 代理</a>
 </div>
 </section>
 

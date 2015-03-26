@@ -1,0 +1,160 @@
+$belong[/layout.vm]
+<style>
+    .bg-danger{padding: .5em;}
+</style>
+<section class="container row">
+    <div class="col-md-3">
+        <div id="sidebar" class="my_sidebar">
+            <ul class="nav">
+                <li class="sidebar_head_li"><a href="#introduce">简介</a></li>
+                <li class="sidebar_head_li"><a href="#simple">简单代理</a></li>
+                <li class="sidebar_head_li"><a href="#mutiple">多域代理</a></li>
+                <li class="sidebar_head_li"><a href="#urlmap">路径映射</a></li>
+                <li class="sidebar_head_li"><a href="#sso">SSO和Cookie代理锁定</a></li>
+                <li class="sidebar_head_li"><a href="#save">实时持久化(整站下载)</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="page_content col-md-9" role="main">
+        <section id="introduce">
+            <h2>简介</h2>
+            <p>前端开发联调中跨域问题是比较核心的问题之一, f2e-server 对于代理的配置和使用做了较为详细的封装</p>
+        </section>
+        
+        <section id="simple">
+            <h2>简单代理</h2>
+            <p>在配置中对agent参数增加 <code>get</code> 方法，返回对应需要代理的服务端域名（或者IP）以及端口号</p>
+            <pre class="language-javascript"><code>exports.localhost = {
+    root: "E:\\",
+    agent:{
+        get: function(path){
+            return {
+                host: "www.baidu.com",
+                port: 443 //80端口为默认端口, 若为80端口可不配置此项。
+            };
+        }
+    }
+};</code></pre>
+            <p>f2e-server支持将普通的https请求也代理到本地的http服务下</p>
+            <p>百度首页<code>http://www.baidu.com</code>会自动重定向到<code>https://www.baidu.com</code>, 因此直接代理端口：<code>443</code>(https协议端口)。</p>
+            <p><img src="images/agent-baidu.gif" alt="localhost代理百度首页"></p>
+        </section>
+
+        <section id="mutiple">
+            <h2>多域代理</h2>
+            <p>有的时候你需要根据不同链接路径分别代理多个域名下的链接</p>
+            <pre class="language-javascript"><code>exports.localhost = {
+    root: "E:\\",
+    agent:{
+        get: function(path){
+            // 当路径以 /cloudnews 字符串开始, 代理来自xuan.news.cn的请求数据
+            if(path.match(/^\/cloudnews\b/)){    
+                return {
+                    host: "xuan.news.cn"
+                };
+            }else{
+                return {
+                    host: "www.baidu.com",
+                    port: 443 //80端口为默认端口, 可不配置此项
+                };
+            }
+        }
+    }
+};</code></pre>
+            <p><img src="images/agent-xuan.gif" alt="localhost代理xuan.news.cn"></p>
+            <p>在 <code>agent.get</code> 方法中, 你可以随意地组织自己的代码根据不同的请求路径特点进行分发处理.</p>
+        </section>
+
+        <section id="urlmap">
+            <h2>路径映射</h2>
+            <p>跟请求路径分发代理相似的, 有时候面对远程路径跟本地文件夹目录名称可能不一样(且不方便修改), 这个时候需要根据对应关系修改代理请求路径。</p>
+            <p>例如场景: 对于本地所有请求到 <code>/xuan_cloud/*</code> 的路径都映射到远程的 <code>/cloudnews/</code> 路径下 </p>
+            <pre class="language-javascript"><code>exports.localhost = {
+    root: "E:\\",
+    agent:{
+        get: function(path){
+            if(path.match(/xuan_cloud/)){
+                return {
+                    host: "xuan.news.cn",
+                    path: function(url){    //path
+                        //console.log(url); // 你可以通过控制台查看url参数格式
+                        return url.path.replace(/xuan_cloud/,"cloudnews");
+                    }
+                };
+            }else{
+                return {
+                    host: "www.baidu.com",
+                    port: 443 //80端口为默认端口, 可不配置此项
+                };
+            }
+        }
+    }
+};</code></pre>
+            <p><img src="images/agent-xuan-path.gif" alt="代理路径映射"></p>
+            <p>path方法的参数 使用 <a href="https://nodejs.org/api/url.html#url_url_parse_urlstr_parsequerystring_slashesdenotehost" target="_blank">url.parse(path)</a> 包装对象方便修改</p>
+        </section>
+
+        <section id="sso">
+            <h2>SSO和Cookie代理锁定</h2>
+            <p>
+                为了代理多域服务, f2e-server 无法通过修改本地域名下cookie实现cookie传递 (多个服务之间的cookie设置有可能冲突), 
+                系统实现了一个简单的cookie处理系统, 在系统内存中针对每一个代理域名分别存储了对应的cookie字符串, 根据代理响应的 <code>set-cookie</code> 进行处理
+                <a href="https://github.com/shy2850/node-server/blob/master/nodeLib/filter/agent.js#L30" target="_blank">nodeLib/filter/agent.js</a>
+            </p>
+            <p>你也可以在代理配置中设置锁定的cookie</p>
+            <pre class="language-javascript"><code>exports.localhost = {
+    root: "E:\\",
+    agent:{
+        get: function(path){
+            if(path.match(/xuan_cloud/)){
+                return {
+                    host: "xuan.news.cn",
+                    cookie: 'xuanzhi_id=xxxx;name=shy2850', 
+                    path: function(url){    //path
+                        //console.log(url); // 你可以通过控制台查看url参数格式
+                        return url.path.replace(/xuan_cloud/,"cloudnews");
+                    }
+                };
+            }else{
+                return {
+                    host: "www.baidu.com",
+                    port: 443 //80端口为默认端口, 可不配置此项
+                };
+            }
+        }
+    }
+};</code></pre>
+            <p>这个cookie的值一般直接来自于指定页面的响应头中, 如图：</p>
+            <p><img src="images/agent-cookie.gif" alt="Chrome Cookie展示"></p>
+        </section>
+
+        <section id="save">
+            <h2>实时持久化(整站下载)</h2>
+            <p>配置中提供参数 <code>save:true</code> 开启实时存储代理获取的数据到本地文件</p>
+            <pre class="language-javascript"><code>exports.localhost = {
+    root: "E:\\",
+    agent:{
+        get: function(path){
+            return {
+                host: "www.baidu.com",
+                save: !!path.match(/index.php/),// 如果是index.php路径则将相应数据存储在本地index.php文件中
+                port: 443 //80端口为默认端口, 若为80端口可不配置此项。
+            };
+        }
+    }
+};</code></pre>
+            <p class="bg-danger">此功能为Beta版本。</p>
+            <p class="bg-danger">系统没有解决递归创建文件夹问题, 如果本地映射目录不存在,每次请求只能创建一级目录,直到目录创建完成才保存资源。</p>
+            <p class="bg-danger">一次下载完成的资源，下次将直接从本地路径获取, 不在通过代理获取远程数据。</p>
+        </section>
+        <section>
+            <h3>PS: </h3>
+            <p><em>开发环境代理个别简单的GET请求可以直接使用 <code>/agent?http://news.cn</code> （/agent?+请求url）类似请求, 省去配置的繁杂。</em></p>
+        </section>
+    </div>
+    <div class="page_bottom col-md-9 pull-right">
+        <a href="handle.html" class="pull-left">上一节: 模板引擎</a>
+    </div>
+</section>
+
