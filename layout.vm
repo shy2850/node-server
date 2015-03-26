@@ -66,9 +66,9 @@
             <li class="dropdown">
               <a role="button" class="dropdown-toggle" data-toggle="dropdown">中间件<b class="caret"></b></a>
               <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">简介</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">安装使用</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">扩展和Issue</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="middleware.html#introduce">简介</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="middleware.html#install">安装使用</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="middleware.html#extend">扩展和Issue</a></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1" target="_blank" href="http://less.bootcss.com/">LESS</a></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1" target="_blank" href="http://coffee-script.org/">Coffee</a></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1" target="_blank" href="http://jade-lang.com/">Jade</a></li>
@@ -77,10 +77,10 @@
             <li class="dropdown">
               <a role="button" class="dropdown-toggle" data-toggle="dropdown">项目输出<b class="caret"></b></a>
               <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">简介</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">合并压缩</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">过滤处理</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">中间件资源/重命名</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="build.html#introduce">简介</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="build.html#minify">合并压缩</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="build.html#filter">过滤处理</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="build.html#rename">中间件资源/重命名</a></li>
               </ul>
             </li>
             <li class="dropdown">

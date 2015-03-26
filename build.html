@@ -1,0 +1,91 @@
+$belong[/layout.vm]
+
+<section class="container row">
+    <div class="col-md-3">
+        <div id="sidebar" class="my_sidebar">
+            <ul class="nav">
+                <li class="sidebar_head_li"><a href="#introduce">简介</a></li>
+                <li class="sidebar_head_li"><a href="#minify">合并压缩</a></li>
+                <li class="sidebar_head_li"><a href="#filter">过滤处理</a></li>
+                <li class="sidebar_head_li"><a href="#rename">中间件资源/重命名</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="page_content col-md-9" role="main">
+        <section id="introduce">
+            <h2>简介</h2>
+            <p>f2e-server 不仅支持动态的进行 模板包含(也可以进行文件合并)、资源文件的压缩、中间件的编译 </p>
+            <p>同时的, 服务器也支持将这些动态编译的结果保存到本地指定的目录中</p>
+            <pre class="language-javascript"><code>exports["localhost"] = {
+    "root": "d:\\doc\\",
+    "middleware": true,     // 开启中间件支持 默认为true
+    "debug": fasle,         // debug设置为false, 将进行js和css压缩
+    "output": "c:\\output\\"  //项目输出到指定文件夹
+};</code></pre>
+        </section>
+        
+        <section id="minify">
+            <h2>合并压缩</h2>
+            <p>我们建议您在开发阶段使用模板引用进行多文件动态合并(各种文本类型后缀名文件均支持模板引擎渲染), 例如：</p>
+            <pre class="language-javascript"><code>&#36;include[js/config.js]
+&#36;include[js/m-attr.js]
+&#36;include[js/m-chart.js]
+&#36;include[js/m-cloud.js]
+&#36;include[js/m-debate.js]
+&#36;include[js/m-embed.js]
+&#36;include[js/m-gallery.js]
+&#36;include[js/m-store.js]
+&#36;include[js/m-timeLine.js]
+&#36;include[js/m-txt.js]
+&#36;include[js/script.js]</code></pre>
+            <p>使用以下配置时：</p>
+            <pre class="language-javascript"><code>exports["localhost"] = {
+    "root": "d:\\doc\\",
+    "middleware": true,     // 开启中间件支持 默认为true
+    "debug": fasle,         // debug设置为false, 将进行js和css压缩
+    "output": "c:\\output\\"  //项目输出到指定文件夹
+};</code></pre>
+            <p>这样的话, 你在开发以及构建将面对完全相同的数据, 而在开发中, 团队开发中各个成员可以分别关注自己的文件和进行版本控制</p>
+        </section>
+
+        <section id="filter">
+            <h2>过滤处理</h2>
+            <p>f2e-server 默认会将当前项目所有文件和文件夹先复制到指定目录, 然后再依次使用模板引擎进行编译、中间件编译、压缩模块压缩等</p>
+            <p>如果其中只有部分目录和文件需要进行编译, 大部分文件只是需要复制的话, 可以设置buildFilter参数：</p>
+            <pre class="language-javascript"><code>exports["localhost"] = {
+    "root": "d:\\doc\\",
+    "middleware": true,     // 开启中间件支持 默认为true
+    "debug": fasle,         // debug设置为false, 将进行js和css压缩
+    "output": "c:\\output\\",  //项目输出到指定文件夹
+    "buildFilter": function(path){
+        //如果路径中含有node_modules 则只是复制文件，不通过服务器进行编译处理
+        return !path.match(/node_modules/); 
+    }
+};</code></pre>
+        </section>
+
+        <section id="rename">
+            <h2>中间件资源/重命名</h2>
+            <p>中间件的 <code>middleware-type</code> 设置会被项目输出响应到, 在输出时修改成指定文件后缀名。</p>
+            <p>我们仍然可以修改文件名映射关系, 例如我们将需要压缩的文件, 统一在后缀名前添加 ".min"</p>
+            <pre class="language-javascript"><code>exports["localhost"] = {
+    "root": "d:\\doc\\",
+    "middleware": true,     // 开启中间件支持 默认为true
+    "debug": fasle,         // debug设置为false, 将进行js和css压缩
+    "output": "c:\\output\\",  //项目输出到指定文件夹
+    "buildFilter": function(path){
+        //如果路径中含有node_modules 则只是复制文件，不通过服务器进行编译处理
+        return !path.match(/node_modules/); 
+    },
+    rename: function(filename){ //构建完成后是否重命名文件
+        return filename.replace(/\.(js|css)$/,".min.$1");
+    }
+};</code></pre>
+        </section>
+</div>
+<div class="page_bottom col-md-9 pull-right">
+    <a href="middleware.html" class="pull-left">上一节: 中间件</a>
+</div>
+</section>
+

@@ -1,0 +1,78 @@
+$belong[/layout.vm]
+
+<section class="container row">
+    <div class="col-md-3">
+        <div id="sidebar" class="my_sidebar">
+            <ul class="nav">
+                <li class="sidebar_head_li"><a href="#introduce">简介</a></li>
+                <li class="sidebar_head_li"><a href="#install">安装使用</a></li>
+                <li class="sidebar_head_li"><a href="#extend">扩展和issue</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="page_content col-md-9" role="main">
+        <section id="introduce">
+            <h2>简介</h2>
+            <p>f2e-server 通过中间件的方式支持动态的编译LESS/CoffeeScript/Jade/Markdown等类型代码</p>
+        </section>
+        
+        <section id="install">
+            <h2>安装使用</h2>
+            <p>在安装目录中使用 <code>$ npm install</code> 命令将package.json中的开发依赖全部安装</p>
+            <p>或者分别安装 less、 coffee-script、jade、markdown</p>
+        </section>
+
+        <section id="extend">
+            <h2>扩展和issue</h2>
+            <p>f2e-server 内置4种中间件实现 <a href="https://github.com/shy2850/node-server/blob/master/nodeLib/filter/middleware.js" target="_blank">nodeLib/filter/middleware.js</a></p>
+            <pre class="language-javascript"><code>var middleware = {
+    coffee: function(req, resp, rs, pathname, DEBUG){
+        var scriptStr = require("coffee-script").compile( rs );
+        //"middleware-type" 用以项目输出时转换后缀名
+        resp.writeHead(200, {"middleware-type": 'js', "Content-Type": mime.get('js')});   
+        if(DEBUG){
+            resp.end( scriptStr );
+        }else{
+            mini.js(scriptStr, resp);
+        }
+    },
+    less: function(req, resp, rs, pathname, DEBUG){
+        require("less").render(rs, {
+            paths: [ pathname.replace(/(\/[^\/]+?)$/,"") ],
+            compress: !DEBUG
+        }, function (err, output) {
+            if (err) { throw err }
+            else{
+                resp.writeHead(200, {"middleware-type": 'css', "Content-Type": mime.get('css')});
+                resp.end( output.css );
+            }
+        });
+    },
+    jade: function(req, resp, rs){
+        resp.writeHead(200,{"middleware-type": 'html', "Content-Type": mime.get('html')});
+        var output = require('jade').render(rs);
+        resp.end( output );
+    },
+    md: function(req, resp, rs){
+        resp.writeHead(200,{"middleware-type": 'html', "Content-Type": mime.get('html')});
+        var output = require( "markdown" ).markdown.toHTML(rs + '');
+        resp.end( '&lt;style&gt;code{padding:2px 8px;background:#eee;}&lt;/style&gt;' + output );
+    }
+};</code></pre>
+            <p>从上面的4个样例中, 可以比较清楚的了解怎么扩展一个中间件</p>
+            <p>你只需要在 <code>middleware</code> 属性中新增一组属性, 对应关系如下:</p>
+            <ul>
+                <li>属性名： -&gt; 需要编译的中间件文件后缀名 </li>
+                <li>middleware-type： -&gt; 项目输出时, 对应文件修改后缀名 </li>
+                <li>DEBUG： -&gt; 判断是否进行资源压缩, 为 <code>true</code> 时 不压缩, 插件扩展可以根据此参数进行设置</li>
+            </ul>
+            <p>了解一下github有关如何 “pull request”, 可以将你扩展的中间件提交给我们, 我们会选择其中优秀的部分。 </p>
+        </section>
+</div>
+<div class="page_bottom col-md-9 pull-right">
+    <a href="agent.html" class="pull-left">上一节: 代理</a>
+    <a href="build.html" class="pull-right">下一节: 项目输出</a>
+</div>
+</section>
+
