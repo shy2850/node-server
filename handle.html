@@ -39,12 +39,28 @@ $belong[/layout.vm]
         <section id="include">
             <h2>模板引用和包含</h2>
             <p>如下图所示代码片段</p>
-            <p>
-                <a href="http://upload-images.jianshu.io/upload_images/139018-a69001e7ab4732e4.png" target="_blank">
-                    <img src="http://upload-images.jianshu.io/upload_images/139018-a69001e7ab4732e4.png" alt="模板引用和包含.png">
-                </a>
-            </p>
-            <p>生成的结果代码如下：</p>
+            <p>page.html</p>
+            <pre class="language-javascript"><code>&#36;belong[layout.html]
+&lt;ul&gt;
+    &lt;% var t=0, arr = ["使用入门","WEB服务器","模板引擎","中间件","项目输出","代理","其他"]; 
+    for(; t&lt;arr.length; t++){%&gt;
+    &lt;li&gt;&lt;%=arr[t]%&gt;&lt;/li&gt;
+    &lt;%}%&gt;
+&lt;/ul&gt;</code></pre>
+            <p>layout.html</p>
+            <pre class="language-markup"><code>&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &#36;include[header.html]
+    &#36;[placeholder]
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            <p>header.html</p>
+            <pre class="language-markup"><code>&lt;h2 style="text-align:center"&gt;我是header&lt;/h2&gt;</code></pre>
+            <p>通过f2e-server服务器访问page.html时, 生成的结果代码如下：</p>
             <pre class="language-markup"><code>&lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
 &lt;head&gt;
@@ -65,6 +81,7 @@ $belong[/layout.vm]
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
             <p>你还可以修改<code>conf.js</code> 中相关配置，支持不同的关键字替换内容</p>
+            <p>include和belong字段可以配置正则字符串或者正则对象, 其中的第一组分组获得的结果即为索引文件名</p>
             <pre class="language-javascript"><code>exports[localhost] = {
     include: "\\$include\\[[\"\\s]*([^\"\\s]+)[\"\\s]*\\]",
     placeholder: "$[placeholder]",

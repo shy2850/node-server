@@ -45,10 +45,10 @@
             <li class="dropdown">
               <a role="button" class="dropdown-toggle" data-toggle="dropdown">模板引擎<b class="caret"></b></a>
               <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">简介</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">模板引用和包含</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">服务端内置对象</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">自主DIY</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="handle.html#introduce">简介</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="handle.html#include">模板引用和包含</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="handle.html#request">服务端内置对象</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="handle.html#diy">自主DIY</a></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1" target="_blank" href="http://underscorejs.org/#template">Underscore</a></li>
               </ul>
             </li>
