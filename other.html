@@ -1,0 +1,91 @@
+$belong[/layout.vm]
+<style>
+    .bg-warning{padding: .5em;}
+    .bg-danger{padding: .5em;}
+</style>
+<section class="container row">
+    <div class="col-md-3">
+        <div id="sidebar" class="my_sidebar">
+            <ul class="nav">
+                <li class="sidebar_head_li"><a href="#combine">Combine支持(http-concat)</a></li>
+                <li class="sidebar_head_li"><a href="#psd">psd文件解析</a></li>
+                <li class="sidebar_head_li"><a href="#upload">upload使用</a></li>
+                <li class="sidebar_head_li"><a href="#crx">Chrome插件</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="page_content col-md-9" role="main">
+        <section id="combine">
+            <h2>Combine支持(http-concat)</h2>
+            <p>f2e-server 提供了动态的 http-concat(根据指定的url格式进行动态的资源合并) 支持, 如下链接格式均能被识别：</p>
+            <pre class="language-javascript"><code>1. "http://localhost/js??jquery.js,comm.js,main.js,index.js"
+// 双问号分割pathname和search, search参数多组待合并文件名之间用逗号分割
+2. "http://localhost/js/??jquery.js?v1.9.1,comm.js?v1.0,main.js,index.js"
+// 每组文件名的版本参数将被忽略
+3. "http://localhost/js??dist/jquery.js,comm.js,main.js,../index/index.js"
+// 文件名支持携带目录信息
+</code></pre>   
+            <p class="bg-warning">combine只能对文本内容进行简单合并, 不能和模板引擎混杂使用</p>
+        </section>
+
+        <section id="psd">
+            <h2>psd文件解析(Beta)</h2>
+            <p>如果安装了完整版本的 f2e-server, 将可以点击获取解析后的png图片文件, 同时创建一个同名的文件夹, 里面存储所有PSD原稿用到的图片和文档碎片。</p>
+            <p><img src="images/other-psd.gif"></p>
+            <p class="bg-danger">此功能为开发版本, 极有可能因为nodejs内存不足造成服务器崩溃</p>
+        </section>
+
+        <section id="upload">
+            <h2>upload使用</h2>
+            <p>前端开发调试中可能会遇到文件上传调试的功能, f2e-server 为文件上传提供了比较方便的功能</p>
+            <p>简单文件上传直接提交POST数据到 <code>/upload</code> 路径下就可以了(文件将默认上传到 <code>static</code> 目录下)。 可以参见: 
+                <a href="https://github.com/shy2850/node-server/blob/master/nodeLib/html/uploadOK.html" target="_blank">nodeLib/html/uploadOK.html</a></p>
+            <p>你也可以修改 文件上传的目录 或者 数据输出页面:</p>
+            <p>GET请求头设置 <code>uploadDir</code>: 文件上传的目录</p>
+            <p>GET请求头设置 <code>target</code>: 数据输出页面(参考uploadOK.html使用模板引擎修改)</p>
+        </section>
+
+        <section id="crx">
+            <h2>Chrome插件</h2>
+            <p>f2e-server 内置一个chrome插件开发目录, 目前提供了两个简单的插件功能(后续可能提供更多功能)</p>
+            <ol>
+                <li>浏览器二维码本地生成</li>
+                <li>html页面修改实时更新</li>
+            </ol>
+            <p>如何导入:</p>
+            <ol>
+                <li>
+                    打开chrome扩展程序 <code>chrome://extensions/</code>
+                    <p><img src="images/other-crx-1.gif" alt="打开chrome扩展程序"></p>
+                </li>
+                <li>
+                    打开开发者模式
+                    <p><img src="images/other-crx-2.gif" alt="打开开发者模式"></p>
+                </li>
+                <li>
+                    加载正在开发的扩展程序
+                    <p><img src="images/other-crx-3.gif" alt="加载正在开发的扩展程序"></p>
+                </li>
+                <li>
+                    完成
+                    <p><img src="images/other-crx-4.gif" alt="完成"></p>
+                </li>
+                <li>
+                    点击浏览器右上角小图标 <img src="images/f2e.png" width="20" alt="f2e"> 可查看当前页面的二维码
+                    <p><img src="images/other-crx-5.gif" alt="查看二维码"></p>
+                </li>
+                <li>
+                    页面自动刷新 需要在请求的查询参数中添加 <code>listen</code> 字段如：
+                    <p><img src="images/other-crx-6.gif" alt="页面自动刷新"></p>
+                    <p>可以看到 f2e-server 使用了阻塞式的请求来监听本地文件变化进行页面自动刷新</p>
+                </li>
+            </ol>
+        </section>
+
+</div>
+<div class="page_bottom col-md-9 pull-right">
+    <a href="build.html" class="pull-left">上一节: 项目构建</a>
+</div>
+</section>
+
