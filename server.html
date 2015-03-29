@@ -1,5 +1,7 @@
 $belong[/layout.vm]
-
+<style>
+    .bg-primary{padding: .5em;border-radius: 6px;}
+</style>
 <section class="container row">
     <div class="col-md-3">
         <div id="sidebar" class="my_sidebar">
@@ -71,14 +73,29 @@ exports["test.news.cn"] = {
 
         <section id="filter-conf">
             <h2>使用过滤器</h2>
+            <p>使用服务器过滤器, 可以批量地处理很多特例情况, 如下：</p>
+            <p><span class="bg-primary"> 例 </span>： 访问服务器目录 <code>/dist/*</code> 下面的资源时, 需要获取 <code>/src/</code> 下面的对应资源</p>
             <pre class="language-javascript"><code>exports["localhost"] = {
     "root": "e:\\node_modules\\f2e-server\\",  
     "filter": {
         get: function(req,resp){
-            console.log( req.url ); //所有通过服务器的请求都可以在这里进行拦截和修改
+            req.url = req.url.replace(/\bdist\b/,"src"); //所有通过服务器的请求都可以在这里进行拦截和修改
         }
     }
 };</code></pre>
+            <p><span class="bg-primary"> 例 </span>： 禁用服务器目录 <code>/node_modules/*</code> </p>
+            <pre class="language-javascript"><code>exports["localhost"] = {
+    "root": "e:\\node_modules\\f2e-server\\",  
+    "filter": {
+        get: function(req, resp){
+            if( req.url.match(/node_modules/) ){
+                resp.writeHead(403,{"content-type":"text/html"});
+                resp.end('&lt;h2 style="text-align:center"&gt;禁止访问&lt;/h2&gt;');
+            }
+        }
+    }
+};</code></pre>
+            <p><img src="images/server-403.gif" alt="网页-403"></p>
     </section>
 </div>
 <div class="page_bottom col-md-9 pull-right">
