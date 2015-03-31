@@ -83,6 +83,21 @@ exports["test.news.cn"] = {
         }
     }
 };</code></pre>
+            <p><span class="bg-primary"> 例 </span>： 使用手机访问页面进行重定向</p>
+            <pre class="language-javascript"><code>exports.localhost = {
+    root: "E:\\",
+    filter:{
+        get: function(req, resp){
+            var reg = /mobile\/([^_]*?)\.html/;     // 如果路径匹配, 且是手机UA, 追加 "_m" 进行重定向。
+            if( req.headers["user-agent"].match(/mobile/i) &amp;&amp; req.url.match(reg) ){
+                resp.writeHead(302, {
+                    location: req.url.replace( reg, 'mobile\/$1_m\.html' )
+                });
+                resp.end();
+            }
+        }
+    }
+};</code></pre>
             <p><span class="bg-primary"> 例 </span>： 禁用服务器目录 <code>/node_modules/*</code> </p>
             <pre class="language-javascript"><code>exports["localhost"] = {
     "root": "e:\\node_modules\\f2e-server\\",  
