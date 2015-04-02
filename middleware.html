@@ -1,11 +1,14 @@
 $belong[/layout.vm]
-
+<style>
+    .bg-primary{padding: .5em;border-radius: 6px;}
+</style>
 <section class="container row">
     <div class="col-md-3">
         <div id="sidebar" class="my_sidebar">
             <ul class="nav">
                 <li class="sidebar_head_li"><a href="#introduce">简介</a></li>
                 <li class="sidebar_head_li"><a href="#install">安装使用</a></li>
+                <li class="sidebar_head_li"><a href="#use-freemarker">使用freemarker</a></li>
                 <li class="sidebar_head_li"><a href="#extend">扩展和issue</a></li>
             </ul>
         </div>
@@ -20,12 +23,90 @@ $belong[/layout.vm]
         <section id="install">
             <h2>安装使用</h2>
             <p>在安装目录中使用 <code>$ npm install</code> 命令将package.json中的开发依赖全部安装</p>
-            <p>或者分别安装 less、 coffee-script、jade、markdown</p>
+            <p>或者分别安装 less、 coffee-script、jade、markdown、freemarker.js</p>
+            <p>
+                安装完成开启服务器, 在服务器下直接访问指定后缀名资源，将能够获取编译后的结果
+            </p>
+            <p>如果需要对需要编译的源文本进行简单修改, 可使用如下配置:</p>
+            <pre class="language-javascript"><code>exports["localhost"] = {
+    "root": "D:\\doc\\",
+    "middleware": {
+        get: function(rs){
+            return rs.replace(/\&lt;%(.*?)%\&gt;/g,"");
+        }
+    }
+}</code></pre>
+        </section>
+
+        <section id="use-freemarker">
+            <h2>使用freemarker</h2>
+            <p>
+                <span class="bg-primary"> 注 </span>：
+                在windows下面使用freemarker.js, 除了需要安装Java环境(一般操作系统都自带了1.6以上的jre)以外,
+                还需要安装 <a href="http://ant.apache.org/" target="_blank">Apache Ant</a>
+            </p>
+            <p><img src="images/middleware-ant-download.gif" alt="安装Ant"></p>
+            <p>进入下载页面,并下载</p>
+            <p><img src="images/middleware-ant-zip.gif" alt="下载Ant"></p>
+            <p>因为freemarker.js要求ant安装目录为 <code>c:/ant</code> 需要将下载完成的 zip 文件解压到这个目录</p>
+            <p><img src="images/middleware-ant-save.gif" alt="解压Ant"></p>
+
+            <p><span class="bg-primary"> 例 </span>：</p>
+            <p><code>app.ftl</code></p>
+            <pre class="language-markup"><code>&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Welcome!&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;#-- Greet the user with his/her name --&gt;
+  &lt;h1&gt;Welcome ${user!}!&lt;/h1&gt;
+  &lt;#include "123.ftl"&gt;
+  &lt;p&gt;We have these animals:
+  &lt;ul&gt;
+  &lt;#list applicants as applicant&gt;
+  &lt;li&gt;${applicant.name} (age: ${applicant.age})
+    &lt;ul&gt;
+      &lt;#list applicant.skills as skill&gt;
+      &lt;li&gt;
+        - ${skill}
+      &lt;/li&gt;  
+      &lt;/#list&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/#list&gt;
+  &lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt; </code></pre>
+            <p><code>app.json</code></p>
+            <pre class="language-javascript"><code>{
+    "applicants":[
+      {
+        "name": "Jean Test",
+        "maidenName": "Jean Test",
+        "age": 20,
+        "skills": [ "HTML", "CSS" ],
+        "testResults": { "a": 10.5, "b": 20, "c": 30 },
+        "decided": true
+      },
+      {
+        "name": "José Test",
+        "maidenName": null,
+        "age": 30,
+        "skills": [ "Ruby", "C++", "Cuda" ],
+        "testResults": { "a": 20, "b": 30, "c": 40 },
+        "decided": false
+      }
+    ]
+}</code></pre>
+            <p><code>123.ftl</code></p>
+            <pre class="language-markup"><code>&lt;button&gt;include 123&lt;/button&gt;</code></pre>
+            <p>输出结果：</p>
+            <p><img src="images/middleware-ftl.gif" alt="freemarker welcome you"></p>
         </section>
 
         <section id="extend">
             <h2>扩展和issue</h2>
-            <p>f2e-server 内置4种中间件实现 <a href="https://github.com/shy2850/node-server/blob/master/nodeLib/filter/middleware.js" target="_blank">nodeLib/filter/middleware.js</a></p>
+            <p>f2e-server 内置多种中间件实现 <a href="https://github.com/shy2850/node-server/blob/master/nodeLib/filter/middleware.js" target="_blank">nodeLib/filter/middleware.js</a></p>
             <pre class="language-javascript"><code>var middleware = {
     coffee: function(req, resp, rs, pathname, DEBUG){
         var scriptStr = require("coffee-script").compile( rs );
@@ -58,6 +139,28 @@ $belong[/layout.vm]
         resp.writeHead(200,{"middleware-type": 'html', "Content-Type": mime.get('html')});
         var output = require( "markdown" ).markdown.toHTML(rs + '');
         resp.end( '&lt;style&gt;code{padding:2px 8px;background:#eee;}&lt;/style&gt;' + output );
+    },
+    ftl: function(req, resp, rs, pathname){
+        resp.writeHead(200,{"middleware-type": 'html', "Content-Type": mime.get('html')});
+        var Freemarker = require('freemarker.js');
+        var fm = new Freemarker({
+            viewRoot: req.util.conf.root,
+            options: {}
+        });
+        var dataObj = JSON.parse( fs.readFileSync( pathname.replace(/\.ftl/,".json") ) ),
+            tmp = req.$.title+'.tmp', 
+            tmpUrl = req.util.conf.root + tmp;
+        fs.writeFile( tmpUrl, rs, function(err){
+            if(err){throw err;}
+            fm.render( tmp, dataObj, function(err, html) {
+                if(err){
+                    throw err;
+                }else{
+                    resp.end( html );
+                }
+                fs.unlink(tmpUrl);
+            });
+        });
     }
 };</code></pre>
             <p>从上面的4个样例中, 可以比较清楚的了解怎么扩展一个中间件</p>
