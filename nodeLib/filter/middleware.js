@@ -60,21 +60,30 @@ var middleware = {
             viewRoot: req.util.conf.root,
             options: {}
         });
-        var dataObj = JSON.parse( fs.readFileSync( pathname.replace(/\.ftl/,".json") ) );
-        fm.render( req.$.title, dataObj, function(err, html) {
-            if(err){
-                throw err;
-            }else{
-                resp.end( html );
-            }
+        var dataObj = JSON.parse( fs.readFileSync( pathname.replace(/\.ftl/,".json") ) ),
+            tmp = req.$.title+'.tmp', 
+            tmpUrl = req.util.conf.root + tmp;
+        fs.writeFile( tmpUrl, rs, function(err){
+            if(err){throw err;}
+            fm.render( tmp, dataObj, function(err, html) {
+                if(err){
+                    throw err;
+                }else{
+                    resp.end( html );
+                }
+                fs.unlink(tmpUrl);
+            });
         });
     }
 };
 exports.get = function(pathname){
     var extType = pathname.split('.').pop(),
         fn = middleware[extType];
-    return !fn ? !1 : function(req, resp){
+    return !fn ? !1 : function(req, resp, rs){
         try{
+            if(typeof req.util.conf.middleware.get === "function"){
+                arguments[2] = req.util.conf.middleware.get(rs,req,resp) || rs;
+            }
             fn.apply(middleware,arguments);
         }catch(e){
             resp.writeHead(500, {"Content-Type": "text/html"});

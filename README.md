@@ -1,12 +1,10 @@
-![f2e-server](https://raw.githubusercontent.com/shy2850/node-server/master/static/img/favicon.ico) 
-
-f2e-server
+f2e-server 
 ==========
-![f2e-server](http://pub.idqqimg.com/qconn/wpa/button/button_old_41.gif)
-
+点击进入 [f2e-server.com](http://f2e-server.com) 查看详细文档
+或
 [点击链接加入群【f2e-server】：](http://jq.qq.com/?_wv=1027&k=MqC52t)
 
-基于nodejs平台的HTTP服务器，提供了基本的模板引擎以及常用的前端工具。
+f2e-server 是基于nodejs平台的HTTP服务器，提供了基本的模板引擎以及常用的前端工具。
 
 a nodejs based http-server with easy-template-engine and several F2E-utils
 
