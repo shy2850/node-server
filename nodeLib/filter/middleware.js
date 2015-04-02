@@ -1,5 +1,6 @@
 "use strict";
-var mime = require("mime"),
+var fs = require("fs"),
+    mime = require("mime"),
     cssmin = require("cssmin");
 var mini = {
     js: function(str, resp){
@@ -51,6 +52,22 @@ var middleware = {
         resp.writeHead(200,{"middleware-type": 'html', "Content-Type": mime.get('html')});
         var output = require( "markdown" ).markdown.toHTML(rs + '');
         resp.end( '<style>code{padding:2px 8px;background:#eee;}</style>' + output );
+    },
+    ftl: function(req, resp, rs, pathname){
+        resp.writeHead(200,{"middleware-type": 'html', "Content-Type": mime.get('html')});
+        var Freemarker = require('freemarker.js');
+        var fm = new Freemarker({
+            viewRoot: req.util.conf.root,
+            options: {}
+        });
+        var dataObj = JSON.parse( fs.readFileSync( pathname.replace(/\.ftl/,".json") ) );
+        fm.render( req.$.title, dataObj, function(err, html) {
+            if(err){
+                throw err;
+            }else{
+                resp.end( html );
+            }
+        });
     }
 };
 exports.get = function(pathname){
