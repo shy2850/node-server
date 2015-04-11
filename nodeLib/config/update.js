@@ -47,12 +47,12 @@ exports.execute = function(server){
         }
         var version = json.version, init = false;
         function lookforupdate(){
-            loadJSON( 'https://raw.githubusercontent.com/shy2850/node-server/master/package.json', function(err, json){
-                if(err){
-                    console.log(err);
+            loadJSON( 'https://raw.githubusercontent.com/shy2850/node-server/master/package.json', function(err1, json1){
+                if(err1){
+                    console.log(err1);
                     return;
                 }
-                if( version !== json.version ){
+                if( version !== json1.version ){
                     server.needUpdate = true;
                 }
                 if(!init){

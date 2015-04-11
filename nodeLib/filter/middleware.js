@@ -36,7 +36,7 @@ var middleware = {
             paths: [ pathname.replace(/(\/[^\/]+?)$/,"") ],
             compress: !DEBUG
         }, function (err, output) {
-            if (err) { throw err }
+            if (err) { throw err; }
             else{
                 resp.writeHead(200, {"middleware-type": 'css', "Content-Type": mime.get('css')});
                 resp.end( output.css );
@@ -61,13 +61,15 @@ var middleware = {
             options: {}
         });
         var dataObj = JSON.parse( fs.readFileSync( pathname.replace(/\.ftl/,".json") ) ),
-            tmp = req.$.title+'.tmp', 
+            tmp = req.$.title + '.tmp',
             tmpUrl = req.util.conf.root + tmp;
         fs.writeFile( tmpUrl, rs, function(err){
-            if(err){throw err;}
-            fm.render( tmp, dataObj, function(err, html) {
-                if(err){
-                    throw err;
+            if(err){
+                throw err;
+            }
+            fm.render( tmp, dataObj, function(err1, html) {
+                if(err1){
+                    throw err1;
                 }else{
                     resp.end( html );
                 }
@@ -103,5 +105,5 @@ mime.get = function(path, fallback){
     }
 };
 mime.isTXT = function(path, fallback){
-    return  /\b(php|jsp|asp|less|coffee|jade)$/.test(path) || /\b(text|xml|javascript|json)\b/.test( this.get(path, fallback) );
+    return /\b(php|jsp|asp|less|coffee|jade)$/.test(path) || /\b(text|xml|javascript|json)\b/.test( this.get(path, fallback) );
 };

@@ -97,13 +97,15 @@ exports.execute = function(request, response, option, path){
         filename = root + path;
 
     if( fs.existsSync(dir) ){
-      fws = fs.createWriteStream( filename.replace(/[?]+.*$/,"") );
+        fws = fs.createWriteStream( filename.replace(/[?]+.*$/,"") );
     }else{
-      try{
-        mkdirs(dir,{},function(){
-          //fws = fs.createWriteStream( filename.replace(/[?]+.*$/,"") );
-        });
-      }catch(e){}
+        try{
+          mkdirs(dir,{},function(){
+            //fws = fs.createWriteStream( filename.replace(/[?]+.*$/,"") );
+          });
+        }catch(e){
+          console.log(e);
+        }
     }
   }
 

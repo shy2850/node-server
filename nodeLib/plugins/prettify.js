@@ -10,7 +10,7 @@ var highlight,
         highlight = require('highlight').Highlight;
         style = fs.readFileSync( "node_modules/highlight/lib/vendor/highlight.js/styles/" + $style + ".css",'utf-8');
     }catch(e){
-        highlight = function(){return '<h1>hightlight is required! </h1>';};
+        highlight = function(){ return '<h1>hightlight is required! </h1>'; };
         style = 'h1{text-align:center}';
     }
 exports.execute = function(req, resp){

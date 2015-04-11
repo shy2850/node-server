@@ -10,7 +10,7 @@ var building = 0;
 var i = 0, builded = false, l = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 setInterval(function(){
     l[i] = building;
-    if( _.filter(l,function(n){return !!n;}).length ){
+    if( _.filter(l, function(n){ return !!n; }).length ){
         if( i === 0 ){
             builded = true;
             console.log( 'building......' );
@@ -33,7 +33,7 @@ try{
 exports.execute = function(req, resp, root, handle, conf){
     var $root = conf.output,
         mime = req.util.mime,
-        buildFilder = conf.buildFilder || function(){return true;},
+        buildFilder = conf.buildFilder || function(){ return true; },
         host = "http://" + req.headers.host + "";
     var build = function( path ){
         var path1 = path,
@@ -62,7 +62,7 @@ exports.execute = function(req, resp, root, handle, conf){
                     console.log( 'build error for: ' + path );
                 });
             }else if(stats && stats.isDirectory && stats.isDirectory()){ // 文件夹内递归需要构建
-                fs.readdir(root + path, function(error, files){
+                fs.readdir(root + path, function(error1, files){
                     for ( var k in files) {        //对应下级目录或资源文件
                         build(path + '/' + files[k]);
                     }

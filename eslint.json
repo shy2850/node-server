@@ -7,6 +7,7 @@
         "exports": false
     },
     "rules": {
-        "quotes": false
+        "quotes": false,
+        "comma-spacing": false
     }
 }
