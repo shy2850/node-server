@@ -10,6 +10,8 @@ $belong[/layout.vm]
                 <li class="sidebar_head_li"><a href="#combine">Combine支持(http-concat)</a></li>
                 <li class="sidebar_head_li"><a href="#psd">psd文件解析</a></li>
                 <li class="sidebar_head_li"><a href="#upload">upload使用</a></li>
+                <li class="sidebar_head_li"><a href="#prettify">代码美化</a></li>
+                <li class="sidebar_head_li"><a href="#placeholder">图片占位</a></li>
                 <li class="sidebar_head_li"><a href="#crx">Chrome插件</a></li>
             </ul>
         </div>
@@ -44,6 +46,40 @@ $belong[/layout.vm]
             <p>你也可以修改 文件上传的目录 或者 数据输出页面:</p>
             <p>GET请求头设置 <code>uploadDir</code>: 文件上传的目录</p>
             <p>GET请求头设置 <code>target</code>: 数据输出页面(参考uploadOK.html使用模板引擎修改)</p>
+        </section>
+    
+        <section id="prettify">
+            <h2>代码美化</h2>
+            <p>f2e-server 内置highlight-js接口, 提供在服务端对任意代码片段进行美化返回结果</p>
+            <ol>
+                <li>文件列表中对于文本类型的文件后面会有一个 “源” 字图标，在安装完highlight之后可以点击查看。</li>
+                <li>插件还支持POST请求进行代码转化, 参数如下:
+                    <ul>
+                        <li><code>code</code>: 传入源代码</li>
+                    </ul>
+                </li>
+                <li>异步接口返回的数据结构如下:
+                    <pre class="language-javascript"><code>{
+    code: post.code, // 源代码返回
+    output: highlight(post.code), //美化后代码
+    style: style   // highlight 选用的style源码方便使用方输出
+}</code></pre>
+                </li>
+            </ol>
+        </section>
+
+        <section id="placeholder">
+            <h2>占位图片</h2>
+            <p>f2e-server 内置了占位图片效果, 直接访问: <code>/placeholder.jpg</code> 返回效果</p>
+            <p><img src="images/other-placeholder.gif" alt="图片占位效果"></p>
+            <p>参数样例：<code>/placeholder.jpg?w=320&amp;h=200&amp;bg=0066ff&amp;fc=ff6600</code></p>
+            <ul>
+                <li><code>w :</code> 图片宽度</li>
+                <li><code>h :</code> 图片高度</li>
+                <li><code>bg:</code> 背景颜色</li>
+                <li><code>fc:</code> 字体颜色</li>
+            </ul>
+            <p class="bg-warning">placeholder插件通过java-swing技术实现, 需要本机的jre环境支持。</p>
         </section>
 
         <section id="crx">
