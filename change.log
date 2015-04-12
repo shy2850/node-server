@@ -161,4 +161,4 @@
 
 --2015/04/11 v1.5.2
 	#eslint检测修改
-	#hosts.js 工具支持非window路径 "/etc/hosts"
+	#hosts.js 工具支持linux操作系统hosts路径 "/etc/hosts"
