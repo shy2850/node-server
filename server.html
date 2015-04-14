@@ -103,9 +103,10 @@ exports["test.news.cn"] = {
     "root": "e:\\node_modules\\f2e-server\\",  
     "filter": {
         get: function(req, resp){
-            if( req.url.match(/node_modules/) ){
+            if( req.url.match(/^[\\\/]+(config|build|upload)([\/\\])*$/) ){
                 resp.writeHead(403,{"content-type":"text/html"});
                 resp.end('&lt;h2 style="text-align:center"&gt;禁止访问&lt;/h2&gt;');
+                return false; // 设置返回值, 可以阻止请求相关功能继续执行.
             }
         }
     }
