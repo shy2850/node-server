@@ -51,7 +51,16 @@ exports.staticconf = conf.extend({ //不要删除或者修改这个服务
     root: path.join(__dirname, '../../'),
     port: 2850,
     debug: false,
-    expires: 1000 * 60 * 60 * 24
+    expires: 1000 * 60 * 60 * 24,
+    filter: {
+        get: function(req, resp){
+            if( req.url.match(/nodeLib\/html/) || req.url.match(/^[\\\/]+(config|build|upload)([\/\\])*$/) ){
+                resp.writeHead(403,{"content-type":"text/html"});
+                resp.end('<h2 style="text-align:center">禁止访问</h2>');
+                return false;
+            }
+        }
+    }
 });
 
 var confPath = path.join( __dirname, "../../../conf.js" );

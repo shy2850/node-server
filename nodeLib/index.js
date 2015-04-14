@@ -25,7 +25,9 @@ exports.start = function(conf){
             conf = CONF.localhost;
         }
         root = (conf.root || __dirname); conf.root = root;
-        filter.execute(req,resp,conf); //过滤器提前, 可以修改url
+        if( typeof filter.execute(req,resp,conf) !== "undefined"){
+            return false;   //有返回值的时候, 防止继续运行
+        } //过滤器提前, 可以修改url
         try{pathurl = decodeURI(url.parse(req.url).pathname); }catch(e){ pathurl = req.url; }
         var pathname = (pathurl === '/') ? (root + conf.welcome) : root + pathurl;  //根目录时，追加welcome页面
         //包装request功能
