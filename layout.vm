@@ -98,7 +98,7 @@
 
           <ul class="nav navbar-nav navbar-right">
               <li><a data-toggle="modal" data-target="#myModal" href="javascript:;">关于f2e-server</a></li>
-              <li><a target="_blank" href="http://git.oschina.net/shy2850/node-server">GitOSC</a></li>
+              <li><a target="_blank" href="http://www.oschina.net/p/f2e-node-server">GitOSC</a></li>
               <li><a target="_blank" href="https://github.com/shy2850/node-server">Github</a></li>
           </ul>
         </nav>
