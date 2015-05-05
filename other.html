@@ -8,6 +8,7 @@ $belong[/layout.vm]
         <div id="sidebar" class="my_sidebar">
             <ul class="nav">
                 <li class="sidebar_head_li"><a href="#combine">Combine支持(http-concat)</a></li>
+                <li class="sidebar_head_li"><a href="#autoprefix">CSS3自动前缀</a></li>
                 <li class="sidebar_head_li"><a href="#psd">psd文件解析</a></li>
                 <li class="sidebar_head_li"><a href="#upload">upload使用</a></li>
                 <li class="sidebar_head_li"><a href="#prettify">代码美化</a></li>
@@ -29,6 +30,37 @@ $belong[/layout.vm]
 // 文件名支持携带目录信息
 </code></pre>   
             <p class="bg-warning">combine只能对文本内容进行简单合并, 不能和模板引擎混杂使用</p>
+        </section>
+
+        <section id="autoprefix">
+            <h2>CSS3自动前缀</h2>
+            <p>f2e-server 服务端提供了动态的添加最新完整CSS3浏览器前缀 【可用于构建阶段】</p>
+            <p>要求：</p>
+            <ul>
+                <li>安装 autoprefixer-core <code>npm install autoprefixer-core</code></li>
+                <li>在conf.js中对应服务下配置参数 <code>"autoprefix": true</code></li>
+            </ul>
+            <p>如下源代码：</p>
+            <pre class="language-css"><code>.page{
+    position: relative;
+    transition: transform .6s ease-in .1s;
+    transform-origin: center;
+    transform-style: preserve-3d;
+    transform: rotateY(0deg);
+}</code></pre>   
+            <p>操作后结果代码：</p>
+            <pre class="language-css"><code>.page{
+    position: relative;
+    -webkit-transition: -webkit-transform .6s ease-in .1s;
+            transition: transform .6s ease-in .1s;
+    -webkit-transform-origin: center;
+        -ms-transform-origin: center;
+            transform-origin: center;
+    -webkit-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+    -webkit-transform: rotateY(0deg);
+            transform: rotateY(0deg);
+}</code></pre> 
         </section>
 
         <section id="psd">

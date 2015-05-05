@@ -87,6 +87,7 @@
               <a role="button" class="dropdown-toggle" data-toggle="dropdown">其他<b class="caret"></b></a>
               <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="other.html#combine">Combine支持(http-concat)</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="other.html#autoprefix">CSS3自动前缀</a></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="other.html#psd">psd文件解析</a></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="other.html#upload">upload使用</a></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="other.html#prettify">代码美化</a></li>
