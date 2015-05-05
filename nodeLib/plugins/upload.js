@@ -40,7 +40,7 @@ exports.execute = function(req, resp, root, handle, conf, modelPath){
                     }
                     resp.writeHead(200, {'content-type': mime.get(extType)});
                     req.forward = true;
-                    handle.execute.call(req,req,resp,root,data.toString(),mini.get(extType),true,conf);
+                    handle.execute.call(req,req,resp,root,data.toString(),mini,true,conf);
                 });
             });
         form.parse(req);

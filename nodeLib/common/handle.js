@@ -24,15 +24,12 @@ exports.execute = function(req, resp, root, str, mini, debug, conf){
 			var compiled = _.template(str);
 			result = compiled({request: req, response: resp, require: require});
 		}
+
 		switch(typeof result){
 			case "function": result(); return;
 			case "string":
 			default :
-				if( debug ) {
-					resp.end( result );
-				}else{
-					mini(result,resp);
-				}
+				mini.get(req.$.title, debug)(result,resp,conf);
 		}
 	}catch(e){
 		resp.writeHead(500, {"Content-Type": "text/html"});

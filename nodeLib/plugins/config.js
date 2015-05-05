@@ -1,7 +1,8 @@
 "use strict";
 var fs = require('fs'),
     path = require('path'),
-    upload = require('./upload');
+    upload = require('./upload'),
+    mini = require("./../filter/middleware").mini;
 
 var configPath = path.join( __dirname, "/../html/config.html" );
 
@@ -11,7 +12,7 @@ exports.execute = function(req, resp, root, handle, conf){
         upload.execute(req,resp,root,handle,conf,configPath);
     }else{
         resp.writeHead(200, {'content-type': 'text/html'});
-        handle.execute(req,resp,root, fs.readFileSync( configPath, 'utf-8'), null, true, conf);
+        handle.execute(req,resp,root, fs.readFileSync( configPath, 'utf-8'), mini, true, conf);
     }
 
 };

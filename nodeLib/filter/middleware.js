@@ -2,6 +2,13 @@
 var fs = require("fs"),
     mime = require("mime"),
     cssmin = require("cssmin");
+var autoprefixer;
+try{
+    autoprefixer = require("autoprefixer-core");
+}catch(e){
+    autoprefixer = false;
+}
+
 var mini = {
     js: function(str, resp){
         var resu = require("uglify-js").minify(str,{fromString: true});
@@ -9,11 +16,14 @@ var mini = {
     },
     css: function(str, resp){ resp.end( cssmin(str)); },
     htm: function(str, resp){ resp.end( str.replace(/\s+/g," ") ); },
-    get: function(pathname){
+    get: function(pathname, debug){
         var extType = pathname.split('.').pop();
-        return function(str, resp){
-            var m = mini[extType];
-            if(m){
+        return function(str, resp, conf){
+            var m;
+            if( extType === "css" && conf && conf.autoprefix && autoprefixer ){
+                str = autoprefixer.process( str ).css;
+            }
+            if(!debug && (m = mini[extType]) ){
                 m(str, resp);
             }else{
                 resp.end( str );
@@ -25,11 +35,7 @@ var middleware = {
 	coffee: function(req, resp, rs, pathname, DEBUG){
         var scriptStr = require("coffee-script").compile( rs );
         resp.writeHead(200, {"middleware-type": 'js', "Content-Type": mime.get('js')});   //用以build输出时转换后缀名
-        if(DEBUG){
-            resp.end( scriptStr );
-        }else{
-            mini.js(scriptStr, resp);
-        }
+        mini.get("js",DEBUG)(scriptStr, resp);
 	},
 	less: function(req, resp, rs, pathname, DEBUG){
         require("less").render(rs, {
@@ -39,7 +45,7 @@ var middleware = {
             if (err) { throw err; }
             else{
                 resp.writeHead(200, {"middleware-type": 'css', "Content-Type": mime.get('css')});
-                resp.end( output.css );
+                mini.get("css", DEBUG)(output.css, resp);
             }
         });
 	},

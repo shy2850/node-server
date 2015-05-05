@@ -67,7 +67,7 @@ exports.start = function(conf){
                         });
                     }else if( conf.handle && mime.isTXT(pathname) && !( /[\.\-]min\.(js|css)$/.test(pathurl) ) && req.data.handle !== "false" ){    //handle
                         rs.on('end',function(){
-                            handle.execute(req,resp,root,s, mini.get(pathname) ,DEBUG, conf);
+                            handle.execute(req,resp,root,s, mini ,DEBUG, conf);
                         });
                     }else{
                         rs.pipe(resp);

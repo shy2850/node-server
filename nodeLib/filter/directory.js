@@ -34,7 +34,7 @@ exports.execute = function(req, resp, root, pathname, pathurl, conf, DEBUG){
             case undefined:
                 try{
                     var data = fs.readFileSync( conf.folder,'utf-8');
-                    handle.execute(req,resp,root,data.toString(),mini.get(pathname),DEBUG, conf);
+                    handle.execute(req,resp,root,data.toString(),mini,DEBUG, conf);
                     return;
                 }catch(e){
                     if(conf.folder){

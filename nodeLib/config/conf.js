@@ -11,6 +11,7 @@ var conf = {
     placeholder: "$[placeholder]",
     belong: "\\$belong\\[[\"\\s]*([^\"\\s]+)[\"\\s]*\\]",
     middleware: true,   //中间件支持, LESS/CoffeeScript 等支持
+    autoprefix: false,   //autoprefixer 支持
     debug: true,        //是否对js以及css文件进行简单压缩，debug:true表示不压缩
     "fs_mod": true,       //是否支持文件夹列表展示
     port: 80,           //服务器监听端口
@@ -55,7 +56,7 @@ exports.staticconf = conf.extend({ //不要删除或者修改这个服务
     filter: {
         get: function(req, resp){
             if( req.url.match(/nodeLib\/html/) || req.url.match(/^[\\\/]+(config|build|upload)([\/\\])*$/) ){
-                resp.writeHead(403,{"content-type":"text/html"});
+                resp.writeHead(403,{"content-type": "text/html"});
                 resp.end('<h2 style="text-align:center">禁止访问</h2>');
                 return false;
             }

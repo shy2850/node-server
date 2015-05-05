@@ -11,7 +11,7 @@
 var conf = request.util.conf,
 	p;
 if( (p = request.post) && p.root ){
-	var items = ['root','welcome','notFound','fs_mod','folder','middleware','debug','output','nginx-http-concat'];
+	var items = ['root','welcome','notFound','fs_mod','folder','middleware','debug','output','nginx-http-concat','autoprefix'];
 	items.map(function(item,i){
 		if(typeof p[item] === 'undefined'){
 			p[item] = false;
@@ -48,6 +48,10 @@ if( (p = request.post) && p.root ){
 		<tr>
 			<td>中间件支持:</td>
 			<td><input type="checkbox" name="middleware" <%if(conf.middleware){%>checked="checked"<%}%> ></td>
+		</tr>
+		<tr>
+			<td>autoprefix支持:</td>
+			<td><input type="checkbox" name="autoprefix" <%if(conf.autoprefix){%>checked="checked"<%}%> ></td>
 		</tr>
 		<tr>
 			<td>开发模式(不压缩):</td>
