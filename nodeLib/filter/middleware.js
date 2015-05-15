@@ -45,7 +45,7 @@ var middleware = {
             if (err) { throw err; }
             else{
                 resp.writeHead(200, {"middleware-type": 'css', "Content-Type": mime.get('css')});
-                mini.get("css", DEBUG)(output.css, resp);
+                mini.get("css", DEBUG)(output.css, resp, req.util.conf);
             }
         });
 	},

@@ -28,5 +28,8 @@
       "all_frames": true,
       "js": ["script.js"]
     }
+  ],
+  "web_accessible_resources": [
+      "style.css"
   ]
 } 

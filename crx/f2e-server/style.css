@@ -1,0 +1,13 @@
+.f2e-crx-holder{
+    position: absolute;
+    width: 600px;
+    left: 50%;
+    top: 80px;
+    margin-left: -300px;
+}
+
+.f2e-crx-holder img{
+    display: block;
+    float: left;
+    margin: 0 10px 10px 0
+}
