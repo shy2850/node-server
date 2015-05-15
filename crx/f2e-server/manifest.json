@@ -26,7 +26,7 @@
       "matches": ["<all_urls>"],
       "run_at" : "document_end",
       "all_frames": true,
-      "js": ["script.js"]
+      "js": ["listen.js","css-sprite.js"]
     }
   ],
   "web_accessible_resources": [

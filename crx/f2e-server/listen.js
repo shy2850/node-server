@@ -79,49 +79,4 @@
 		listener.listen(location.search); //先把当前页面进行监听
 		cycleListen();
 	}
-
-	if( location.search.match(/css\W*sprite/) ){
-		var style = document.createElement("link");
-		style.rel = "stylesheet";
-		style.href = chrome.extension.getURL("style.css");
-		document.body.appendChild( style );
-
-		var css = document.body.innerText,
-			holder = document.createElement("div");
-			replacer = [],
-			map = {},
-			i = 0;
-		holder.className = "f2e-crx-holder";
-		document.body.appendChild(holder);
-		css.replace( /url\("?(.*?)"?\)\s*no\-repeat\s*(-?\w+)?\s*(-?\w+)/g, function(str, src, left, top){
-			replacer.push({
-				src: src,
-				left: parseFloat(left),
-				top: parseFloat(top)
-			});
-
-			map[ src ] = map[ src ] || (function(src){
-				var img = document.createElement("img");
-				img.onerror = img.onload = function(){
-					i++;
-					if( i === Object.keys(map).length ){
-						ready();
-					}
-				};
-				img.src = src;
-				holder.appendChild( img );
-				return img;
-			})(src);
-
-			return "{{"+replacer.length+"}}";
-		});
-
-		function ready(){
-			for( var src in map ){
-				console.log( map[src].offsetLeft + " , " + map[src].offsetTop );
-			}
-		};
-
-	}
-	
 })();

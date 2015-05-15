@@ -173,3 +173,6 @@
 --2015/05/05 v1.5.5
 	#增加 autoprefix 支持， 默认为 false，需要在配置中开启 
 	#增加开发依赖： "npm install autoprefixer-core"
+
+--2015/05/15 v1.5.6
+	#增加 css-sprite 支持, 通过chrome插件的纯浏览器端方案实现简单的版本
