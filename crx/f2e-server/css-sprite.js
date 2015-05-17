@@ -90,8 +90,8 @@
 
 			name = window.prompt( "filename:", name );
 			filename = this.download = name + ".png";
+			canvas.title = canvas.download = filename;
 
-			this.href = canvas.toDataURL("image/png");
 			cssResult = cssModel.replace( /\{\{(\d+)\}\}/g, function(mat, i){
 				var origin = replacer[i-1],
 					img = map[ origin.src ];
@@ -101,7 +101,12 @@
 					+ (origin.top - img.offsetTop) + 'px';
 
 			});
-
+			try{
+				this.href = canvas.toDataURL("image/png");
+			}catch(e){
+				alert( "There're images crossdomain, \n please save png by self." );
+				return false;
+			}
 		};
 
 		a2.onclick = function(){
@@ -110,11 +115,15 @@
 				return false;
 			}
 			filename = this.download = name + ".css";
-			this.href = "data:text/css;base64," + btoa( cssResult );
+			this.href = "data:text/css;base64," + btoa( unescape( escape(cssResult).replace(/%u/g,"\\") ) );
 		};
 		window.onresize = ready;
 
 	}
 	
-
+	native2ascii = function(str){
+		return str.replace(/[\x00-\xff]/g, function(c){
+			return escape(c).replace(/%u/,"\\").toLowerCase();
+		});
+	};
 })();
