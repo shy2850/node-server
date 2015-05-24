@@ -2,7 +2,7 @@
 var path = require('path'),
     fs = require('fs');
 var conf = {
-    root: "D:\\", //服务器索引的根目录，可配置为任意本地地址
+    root: path.join(__dirname, '../../'), //服务器索引的根目录，可配置为任意本地地址
     welcome: "", //使用欢迎页面的文件名，为空时，表示不使用欢迎页面
     notFound: path.join( __dirname , "/../html/404.html" ),      //访问的资源不存在是，跳转的页面配置
     folder: path.join( __dirname , "/../html/folder.html" ),     //显示文件夹列表时候的配置页面
@@ -44,12 +44,9 @@ var conf = {
     },
     expires: 0     //服务端缓存时间设置
 };
-exports.localhost = conf.extend({
-    root: path.join(__dirname, '../../')
-});
+exports.localhost = conf.extend({});
 
 exports.staticconf = conf.extend({ //不要删除或者修改这个服务
-    root: path.join(__dirname, '../../'),
     port: 2850,
     debug: false,
     expires: 1000 * 60 * 60 * 24,
