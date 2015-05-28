@@ -2,6 +2,7 @@
 var $path = require('path'),
     fs = require('fs'),
     _ = require('underscore'),
+    url = require("url"),
     http = require('http'),
     exec = require('child_process').exec,
     execFile = require('child_process').execFile;
@@ -31,24 +32,28 @@ try{
 }
 
 exports.execute = function(req, resp, root, handle, conf){
+    var referer = url.parse( req.headers.referer );
+    root = $path.join(root, referer.pathname);
     var $root = conf.output,
         mime = req.util.mime,
-        buildFilder = conf.buildFilder || function(){ return true; },
-        host = "http://" + req.headers.host + "";
+        buildFilder = conf.buildFilder || function(){ return true; };
+
     var build = function( path ){
         var path1 = path,
-            extType = $path.extname(path).substring(1);
-        fs.stat(root + path, function(error, stats){
+            extType = $path.extname(path).substring(1),
+            joinPath = $path.join($root, path);
+        fs.stat( $path.join(root, path), function(error, stats){
             //文本类型资源通过HTTP获取, 以确保跟开发环境资源相同
             if(stats && stats.isFile && stats.isFile() && mime.isTXT(extType) && buildFilder(path) ){
                 building = 1;
-                http.get(host + encodeURI(path) + '?_build_=true', function(res) {
+                //console.log( referer.href + "/" + encodeURI(path) );
+                http.get( referer.href + "/" + encodeURI(path) + '?_build_=true', function(res) {
                     var type = res.headers['middleware-type'];
                     if(type){
                         path1 = path.replace(/[^\.]+$/,type);     //对应 middleware 里面的type
                     }
                     path1 = conf.rename ? conf.rename(path1, conf.debug) : path1;
-                    fs.rename( $root + path, $root + path1, function(err){
+                    fs.rename( joinPath, $path.join($root, path1), function(err){
                         var fws = fs.createWriteStream( $root + path1 );
                         if(err){
                             console.log(err);
@@ -62,7 +67,7 @@ exports.execute = function(req, resp, root, handle, conf){
                     console.log( 'build error for: ' + path );
                 });
             }else if(stats && stats.isDirectory && stats.isDirectory()){ // 文件夹内递归需要构建
-                fs.readdir(root + path, function(error1, files){
+                fs.readdir( $path.join(root, path), function(error1, files){
                     for ( var k in files) {        //对应下级目录或资源文件
                         build(path + '/' + files[k]);
                     }
@@ -76,7 +81,7 @@ exports.execute = function(req, resp, root, handle, conf){
 
             if( mime.get(path) === "image/png" ){ // 使用 optipng-bin 进行图片压缩
                 building = 1;
-                execFile(optipng.path, ['-out', $root + path, $root + path], function (err) {
+                execFile(optipng.path, ['-out', joinPath, joinPath], function (err) {
                     building = 0;
                     if (err) {
                         console.log(err);
@@ -84,7 +89,7 @@ exports.execute = function(req, resp, root, handle, conf){
                 });
             }else if( mime.get(path) === "image/jpeg" ){ // 使用 jpegtran-bin 进行图片压缩
                 building = 1;
-                execFile(jpegtran, ['-outfile', $root + path, $root + path], function (err) {
+                execFile(jpegtran, ['-outfile', joinPath, joinPath], function (err) {
                     building = 0;
                     if (err) {
                         console.log(err);
