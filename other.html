@@ -83,8 +83,8 @@ $belong[/layout.vm]
         <section id="prettify">
             <h2>代码美化</h2>
             <p>f2e-server 内置highlight-js接口, 提供在服务端对任意代码片段进行美化返回结果. <code>(修改下面链接, 查看代码)</code></p>
-            <p><input type="text" class="form-control" value="http://f2e-server.com/other.html" onchange="$('#prettify-frame').attr({src:'http://182.92.234.110:2850/prettify?'+this.value});"></p>
-            <p><iframe id="prettify-frame" src="http://182.92.234.110:2850/prettify?http://f2e-server.com/other.html" frameborder="0" style="width:100%;height:300px;background:#fff;"></iframe></p>
+            <p><input type="text" class="form-control" value="http://f2e-server.com/other.html" onchange="$('#prettify-frame').attr({src:'http://f2e-server.com:2850/prettify?'+this.value});"></p>
+            <p><iframe id="prettify-frame" src="http://f2e-server.com:2850/prettify?http://f2e-server.com/other.html" frameborder="0" style="width:100%;height:300px;background:#fff;"></iframe></p>
             <ol>
                 <li>文件列表中对于文本类型的文件后面会有一个 “源” 字图标，在安装完highlight之后可以点击查看。</li>
                 <li>插件还支持POST请求进行代码转化, 参数如下:
@@ -105,8 +105,8 @@ $belong[/layout.vm]
         <section id="placeholder">
             <h2>占位图片</h2>
             <p>f2e-server 内置了占位图片效果, 直接访问: <code>/placeholder.jpg</code> 返回效果  <code>(修改下面参数, 获取图片)</code></p>
-            <p><input type="text" class="form-control" value="w=300&h=200&bg=0066ff&fc=ff6600" onchange="$('#placeholder-frame').attr({src:'http://182.92.234.110:4321/placeholder.jpg?'+this.value});"></p>
-            <p><img id="placeholder-frame" src="http://182.92.234.110:4321/placeholder.jpg?w=300&amp;h=200&amp;bg=0066ff&amp;fc=ff6600"></p>
+            <p><input type="text" class="form-control" value="w=300&h=200&bg=0066ff&fc=ff6600" onchange="$('#placeholder-frame').attr({src:'http://wf.f2e-server.com/placeholder.jpg?'+this.value});"></p>
+            <p><img id="placeholder-frame" src="http://wf.f2e-server.com/placeholder.jpg?w=300&amp;h=200&amp;bg=0066ff&amp;fc=ff6600"></p>
             <p>参数样例：<code>/placeholder.jpg?w=320&amp;h=200&amp;bg=0066ff&amp;fc=ff6600</code></p>
             <ul>
                 <li><code>w :</code> 图片宽度</li>
