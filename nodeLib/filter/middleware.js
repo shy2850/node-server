@@ -117,5 +117,5 @@ mime.get = function(path, fallback){
     }
 };
 mime.isTXT = function(path, fallback){
-    return /\b(php|jsp|asp|less|coffee|jade)$/.test(path) || /\b(text|xml|javascript|json)\b/.test( this.get(path, fallback) );
+    return /\b(php|jsp|asp|less|coffee|jade|mdppt)$/.test(path) || /\b(text|xml|javascript|json)\b/.test( this.get(path, fallback) );
 };
