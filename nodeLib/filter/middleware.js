@@ -56,8 +56,13 @@ var middleware = {
     },
     md: function(req, resp, rs){
         resp.writeHead(200,{"middleware-type": 'html', "Content-Type": mime.get('html')});
-        var output = require( "markdown" ).markdown.toHTML(rs + '');
+        var output = require('marked')(rs + '');
         resp.end( '<style>code{padding:2px 8px;background:#eee;}</style>' + output );
+    },
+    mdppt: function(req, resp, rs){
+        resp.writeHead(200,{"middleware-type": 'html', "Content-Type": mime.get('html')});
+        var output = require('./nodePPT/index.js')(rs + '');
+        resp.end( output );
     },
     ftl: function(req, resp, rs, pathname){
         resp.writeHead(200,{"middleware-type": 'html', "Content-Type": mime.get('html')});
@@ -94,6 +99,7 @@ exports.get = function(pathname){
             }
             fn.apply(middleware,arguments);
         }catch(e){
+            console.log(e);
             resp.writeHead(500, {"Content-Type": "text/html"});
             resp.end( JSON.stringify(e) );
         }
