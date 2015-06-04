@@ -8,7 +8,7 @@ var cookies = {};
 function doRequest(request, response, option, path, fws){
   var location = url.parse(path),
       headers = {   //拼接headers数据，只处理必要的
-          "user-agent": request.headers["user-agent"],
+          "user-agent": request.headers["user-agent"] || "f2eBrowser",
           "content-type": request.headers["content-type"] || "text/html",
           cookie: option.cookie || cookies[option.host] || "",   //很多站点都是通过cookie进行SSO认证,可以自己在浏览器模拟
           host: option.host || request.util.host,
