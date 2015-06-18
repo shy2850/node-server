@@ -11,7 +11,7 @@
 var conf = request.util.conf,
 	p;
 if( (p = request.post) && p.root ){
-	var items = ['root','welcome','notFound','fs_mod','folder','middleware','debug','output','nginx-http-concat','autoprefix'];
+	var items = ['root','welcome','notFound','fs_mod','folder','middleware','debug', 'cdn','output','nginx-http-concat','autoprefix'];
 	items.map(function(item,i){
 		if(typeof p[item] === 'undefined'){
 			p[item] = false;
@@ -56,6 +56,10 @@ if( (p = request.post) && p.root ){
 		<tr>
 			<td>开发模式(不压缩):</td>
 			<td><input type="checkbox" name="debug" <%if(conf.debug){%>checked="checked"<%}%> ></td>
+		</tr>
+		<tr>
+			<td>开启CDN:</td>
+			<td><input type="checkbox" name="cdn" <%if(conf.cdn){%>checked="checked"<%}%> ></td>
 		</tr>
 		<tr>
 			<td>输出文件夹:</td>

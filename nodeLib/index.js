@@ -11,6 +11,7 @@ var CONF = require("./config/conf"),    //综合配置
       fs = require("fs");
 var staticConf = CONF.staticconf,                //静态文件服务器配置
     mini = middleware.mini,
+    cdn = middleware.cdn,
     serverInfo = {needUpdate: false};        //服务器相关的一些参数。
 exports.start = function(conf){
     var server = http.createServer(function (req, resp) { try{
@@ -34,6 +35,7 @@ exports.start = function(conf){
         req.data = querystring.parse( url.parse(req.url).query );
         req.util = {mime: mime, conf: conf, host: host[0], staticServer: "http://" + host[0] + ":" + staticConf.port + "/"};
         req.$ = {title: pathurl, fileList: [], needUpdate: serverInfo.needUpdate };
+        resp.cdn_path = host[0] + req.url; // cdn 索引
         var DEBUG = req.data.debug === "true" || conf.debug; //DEBUG模式判断
         setTimeout( function(){
             if( req.data["modify.check"] === "true" ){ // modify.check=true 时: 检测文件更新
@@ -47,18 +49,30 @@ exports.start = function(conf){
                         modules.get("upload").execute(req,resp,root,handle,conf);
                         return;
                     }
+
                     var expires = new Date();
                     expires.setTime( expires.getTime() + (conf.expires || 0) );
                     resp.writeHead(200, {
                         "Content-Type": mime.get(pathname) || 'text/html',
-                        "Expires": expires
+                        "Expires": expires,
+                        "Last-Modified": +stats.mtime
                     });
 
-                    var rs = fs.createReadStream(pathname), s = '', ware;
+                    if( !conf.cdn ){
+                        cdn.disabled( host[0] );
+                    }else{
+                        cdn.enable( host[0] );
+                        if( cdn.execute(req, resp, stats) ){
+                            return;
+                        }
+                    }
+
+                    var rs = fs.createReadStream(pathname), s = '', dataArr = [], ware;
                     rs.on('error',function(err){
                         throw err;
                     }).on('data',function(d){
                         s += d;
+                        dataArr.push(d);
                     });
 
                     if( conf.middleware && (req.data.middleware !== "false") && (ware = middleware.get(pathname)) ){  //中间件处理, MIME需要mime.type中修改
@@ -70,6 +84,9 @@ exports.start = function(conf){
                             handle.execute(req,resp,root,s, mini ,DEBUG, conf);
                         });
                     }else{
+                        rs.on("end", function(){
+                            cdn.set( resp, Buffer.concat(dataArr, s.length ), +stats.mtime );
+                        });
                         rs.pipe(resp);
                     }
                 } else if(conf.fs_mod && stats && stats.isDirectory && stats.isDirectory()){  //如果当前url被成功映射到服务器的文件夹，创建一段列表字符串写出

@@ -1,6 +1,7 @@
 "use strict";
 var fs = require("fs"),
     mime = require("mime"),
+    cdn = require("./cdn"), // cdn模块
     cssmin = require("cssmin");
 var autoprefixer;
 try{
@@ -12,10 +13,14 @@ try{
 var mini = {
     js: function(str, resp){
         var resu = require("uglify-js").minify(str,{fromString: true});
+        cdn.set( resp, resu.code );
         resp.end( resu.code );
     },
-    css: function(str, resp){ resp.end( cssmin(str)); },
-    htm: function(str, resp){ resp.end( str.replace(/\s+/g," ") ); },
+    css: function(str, resp){ 
+        var _css = cssmin(str);
+        cdn.set( resp, _css );
+        resp.end( _css ); 
+    },
     get: function(pathname, debug){
         var extType = pathname.split('.').pop();
         return function(str, resp, conf){
@@ -26,6 +31,7 @@ var mini = {
             if(!debug && (m = mini[extType]) ){
                 m(str, resp);
             }else{
+                cdn.set( resp, str );
                 resp.end( str );
             }
         };
@@ -106,6 +112,7 @@ exports.get = function(pathname){
     };
 };
 exports.mini = mini;
+exports.cdn = cdn;
 
 mime.get = function(path, fallback){
     if( /\bdo$/.test(path) ){
