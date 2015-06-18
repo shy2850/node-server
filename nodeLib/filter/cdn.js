@@ -4,13 +4,15 @@ var fs = require("fs"),
 var map = {}, hosts = [];
 exports.execute = function( req, resp, stats ) {
 	var k = resp.cdn_path,
-		source = map[k];
+		source = map[k],
+		mt = +stats.mtime;
 	if( !source ){
 		return false;
-	}else if( source.mtime < +stats.mtime ){
+	}else if( source.mtime < mt ){
 		return false;
 	}else{
-		if (req.headers["if-modified-since"] && +stats.mtime == req.headers["if-modified-since"]) {
+		var t = req.headers["if-modified-since"];
+		if ( t && mt == t ) {
 		    resp.writeHead(304, "Not Modified");
 		    resp.end();
 		}else{
