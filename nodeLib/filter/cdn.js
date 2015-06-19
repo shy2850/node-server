@@ -11,13 +11,13 @@ exports.execute = function( req, resp, stats ) {
 	}else if( source.mtime < mt ){
 		return false;
 	}else{
-		// var t = req.headers["if-modified-since"];
-		// if ( t && mt == t ) {
-		//     resp.writeHead(304, "Not Modified");
-		//     resp.end();
-		// }else{
+		var t = req.headers["if-modified-since"];
+		if ( t && mt == t ) {
+		    resp.writeHead(304, "Not Modified");
+		    resp.end();
+		}else{
 			resp.end( source.data );
-		// }
+		}
 		return true;
 	}
 };
