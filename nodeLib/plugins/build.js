@@ -116,7 +116,7 @@ exports.execute = function(req, resp, root, handle, conf){
                 }));
             });
         }else{
-            exec('rm -rf ' + $root,function(err2){
+            exec('rm -rf ' + $root + '/*',function(err2){
                 if(!err2){
                     exec('cp -Rf ' + root + '* ' + $root,function(err3){
                         if (!err3) {
