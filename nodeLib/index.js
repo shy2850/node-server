@@ -35,7 +35,7 @@ exports.start = function(conf){
         req.data = querystring.parse( url.parse(req.url).query );
         req.util = {mime: mime, conf: conf, host: host[0], staticServer: "http://" + host[0] + ":" + staticConf.port + "/"};
         req.$ = {title: pathurl, fileList: [], needUpdate: serverInfo.needUpdate };
-        resp.cdn_path = host[0] + req.url; // cdn 索引
+        resp.cdn_path = req.headers.host + req.url; // cdn 索引
         var DEBUG = req.data.debug === "true" || conf.debug; //DEBUG模式判断
         setTimeout( function(){
             if( req.data["modify.check"] === "true" ){ // modify.check=true 时: 检测文件更新
