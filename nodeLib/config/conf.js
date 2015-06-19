@@ -54,7 +54,7 @@ exports.staticconf = conf.extend({ //不要删除或者修改这个服务
     expires: 1000 * 60 * 60 * 24,
     filter: {
         get: function(req, resp){
-            if( req.url.match(/^[\\\/]?(config|upload|nodeLib\/html)([\/\\])*/ ){
+            if( req.url.match(/^[\\\/]?(config|upload|nodeLib\/html)([\/\\])*/) ){
                 resp.writeHead(403,{"content-type": "text/html"});
                 resp.end('<h2 style="text-align:center">禁止访问</h2>');
                 return false;
