@@ -187,7 +187,9 @@
         <p>© 2014-2015 <a target="_blank" href="http://f2e-server.com/">f2e-server</a>. All Rights Reserved.</p>
     </div>
 </div>
-
-<script src="js/banner.min.js"></script>
+<!--[if lt IE 9]>
+<script> $(".banner").css({backgroundImage: "url(images/banner.gif)"}); </script>
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><script src="js/banner.min.js"></script><!--<![endif]-->
 </body>
 </html>
