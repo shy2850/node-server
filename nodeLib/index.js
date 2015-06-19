@@ -25,25 +25,55 @@ exports.start = function(conf){
         }else if( (host[1] | 0) === 80 ){
             conf = CONF.localhost;
         }
-        root = (conf.root || __dirname); conf.root = root;
+        root = conf.root;
         if( typeof filter.execute(req,resp,conf) !== "undefined"){
             return false;   //有返回值的时候, 防止继续运行
         } //过滤器提前, 可以修改url
         try{pathurl = decodeURI(url.parse(req.url).pathname); }catch(e){ pathurl = req.url; }
-        var pathname = (pathurl === '/') ? (root + conf.welcome) : root + pathurl;  //根目录时，追加welcome页面
+        var pathname = root + pathurl;
+
         //包装request功能
         req.data = querystring.parse( url.parse(req.url).query );
         req.util = {mime: mime, conf: conf, host: host[0], staticServer: "http://" + host[0] + ":" + staticConf.port + "/"};
         req.$ = {title: pathurl, fileList: [], needUpdate: serverInfo.needUpdate };
-        resp.cdn_path = req.headers.host + req.url; // cdn 索引
+        resp.cdnPath = req.headers.host + req.url; // cdn 索引
         var DEBUG = req.data.debug === "true" || conf.debug; //DEBUG模式判断
+
+        // 资源未找到时， 处理信息
+        var other = function (_req, _resp, _handle, _conf, _pathurl){
+            var m = modules.get( _pathurl.replace('/','') );
+            if(m){
+                m.execute(_req,_resp,_conf.root,_handle,_conf);
+            }else if(_conf.agent && _conf.agent.get && (agent = _conf.agent.get(_pathurl) ) ){   // 代理过滤
+                require('./filter/agent').execute(_req,_resp,agent,_req.url);
+            }else{
+                _resp.writeHead(404, {"Content-Type": "text/html"});
+                fs.readFile(_conf.notFound || '', function (err, data){
+                    if(err){
+                        if( _conf.notFound ){ console.log(err); }
+                        _resp.end( '<h1 style="font-size:200px;text-align:center;">404</h1>' );
+                    }else{
+                        _resp.end( data );
+                    }
+                });
+            }
+        };
+
         setTimeout( function(){
-            if( req.data["modify.check"] === "true" ){ // modify.check=true 时: 检测文件更新
-                filter.check(pathname, req.data.mtime, req, resp);
+            try{    // 欢迎页面处理
+                if( conf.welcome && fs.statSync(pathname).isDirectory() ){
+                    pathname += '/' + conf.welcome;
+                }
+                if( req.data["modify.check"] === "true" ){ // modify.check=true 时: 检测文件更新
+                    filter.check(pathname, req.data.mtime, req, resp);
+                    return;
+                }
+            }catch(e){
+                other(req, resp, handle, conf, pathurl);
                 return;
             }
             fs.stat(pathname,function(error, stats){
-                if(stats && stats.isFile && stats.isFile()){  //如果url对应的资源文件存在，根据后缀名写入MIME类型
+                if(stats && stats.isFile()){  //如果url对应的资源文件存在，根据后缀名写入MIME类型
                     if( req.method === "POST" ){    // POST请求 添加target参数以后, 使用 upload 插件进行解析。
                         req.data.target = pathurl;
                         modules.get("upload").execute(req,resp,root,handle,conf);
@@ -58,7 +88,7 @@ exports.start = function(conf){
                         "Last-Modified": +stats.mtime
                     });
 
-                    if( !conf.cdn ){
+                    if( !conf.cdn ){    // cdn 禁用启用
                         cdn.disabled( host[0] );
                     }else{
                         cdn.enable( host[0] );
@@ -89,29 +119,14 @@ exports.start = function(conf){
                         });
                         rs.pipe(resp);
                     }
-                } else if(conf.fs_mod && stats && stats.isDirectory && stats.isDirectory()){  //如果当前url被成功映射到服务器的文件夹，创建一段列表字符串写出
+                } else if(conf.fs_mod && stats && stats.isDirectory()){  //如果当前url被成功映射到服务器的文件夹，创建一段列表字符串写出
                     require('./filter/directory').execute(req,resp,root,pathname,pathurl,conf,DEBUG);
                 } else{
-                    var m = modules.get( pathurl.replace('/','') );
-                    if(m){
-                        m.execute(req,resp,root,handle,conf);
-                    }else if(conf.agent && conf.agent.get && (agent = conf.agent.get(pathurl) ) ){   // 代理过滤
-                        require('./filter/agent').execute(req,resp,agent,req.url);
-                        return;
-                    }else{
-                        resp.writeHead(404, {"Content-Type": "text/html"});
-                        fs.readFile(conf.notFound || '', function (err, data){
-                            if(err){
-                                if( conf.notFound ){ console.log(err); }
-                                resp.end( '<h1 style="font-size:200px;text-align:center;">404</h1>' );
-                            }else{
-                                resp.end( data );
-                            }
-                        });
-                    }
+                    other(req, resp, handle, conf, pathurl);
                 }
             });
         }, req.data.delay | 0 );// 增加delay参数，使得所有GET请求可以动态延时
+
     }catch(err){
         console.log(err.stack);
         resp.writeHead(500, {"Content-Type": "text/html"});

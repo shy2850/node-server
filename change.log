@@ -192,3 +192,8 @@
 	#增加cdn配置， 内部同时支持 304-NotModified 需要开启配置。
 	#开发阶段文件修改自动更新cdn, 如果动态修改debug，cdn将被缓存, 建议同时修改cdn配置
 	
+--2015/06/20 v1.6.8
+	#修改linux下 build 插件的 bash 拼接错误
+	#解决linux下多服务器配置 root 互相篡改的问题
+	#welcome页面支持多级目录, 启用后 fs_mod 失效
+	#eslint检测修改

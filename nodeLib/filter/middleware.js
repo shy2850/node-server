@@ -16,10 +16,10 @@ var mini = {
         cdn.set( resp, resu.code );
         resp.end( resu.code );
     },
-    css: function(str, resp){ 
-        var _css = cssmin(str);
-        cdn.set( resp, _css );
-        resp.end( _css ); 
+    css: function(str, resp){
+        var $css = cssmin(str);
+        cdn.set( resp, $css );
+        resp.end( $css );
     },
     get: function(pathname, debug){
         var extType = pathname.split('.').pop();
