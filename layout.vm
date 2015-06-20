@@ -135,6 +135,24 @@
     }
 </style>
   $[placeholder]
+  <section class="container row">
+    <div class="col-md-3"></div>
+    <div id="disqus_thread" class="col-md-9"></div>
+  </section>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'f2e-server';
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
 <script>
 $(function(){
     // back to top
@@ -177,13 +195,11 @@ $(function(){
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
   <div class="footer">
     <div class="container text-center">
         <p><a target="_blank" href="https://github.com/shy2850/node-server/issues/new">反馈意见</a></p>
         <p>© 2014-2015 <a target="_blank" href="http://f2e-server.com/">f2e-server</a>. All Rights Reserved.</p>
     </div>
 </div>
-
 </body>
 </html>
