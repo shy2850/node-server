@@ -48,6 +48,7 @@ var conf = {
 exports.localhost = conf.extend({});
 
 exports.staticconf = conf.extend({ //不要删除或者修改这个服务
+    host: "",
     port: 2850,
     debug: false,
     cdn: true,
@@ -72,7 +73,9 @@ if( !stat ){
 try{
     var $conf = require('../../../conf.js');
     for(var k in $conf){
-        if( k !== "staticconf" ){
+        if( k === "staticconf" ){
+            exports[k] = conf.extend.call( exports.staticconf, $conf[k] );
+        }else{
             exports[k] = conf.extend( $conf[k] );
         }
     }

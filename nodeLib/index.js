@@ -34,7 +34,7 @@ exports.start = function(conf){
 
         //包装request功能
         req.data = querystring.parse( url.parse(req.url).query );
-        req.util = {mime: mime, conf: conf, host: host[0], staticServer: "http://" + host[0] + ":" + staticConf.port + "/"};
+        req.util = {mime: mime, conf: conf, host: host[0], staticServer: "http://" + (staticConf.host||host[0]) + ":" + staticConf.port + "/"};
         req.$ = {title: pathurl, fileList: [], needUpdate: serverInfo.needUpdate };
         resp.cdnPath = req.headers.host + req.url; // cdn 索引
         var DEBUG = req.data.debug === "true" || conf.debug; //DEBUG模式判断
@@ -126,7 +126,6 @@ exports.start = function(conf){
                 }
             });
         }, req.data.delay | 0 );// 增加delay参数，使得所有GET请求可以动态延时
-
     }catch(err){
         console.log(err.stack);
         resp.writeHead(500, {"Content-Type": "text/html"});
