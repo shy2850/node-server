@@ -1,6 +1,6 @@
 {
   "name": "f2e-server",
-  "version": "1.6.8",
+  "version": "1.6.9",
   "description": "a nodejs based file-system-server with easy-template-engine and several F2E-utils",
   "main": "node-server.js",
   "dependencies": {
@@ -19,7 +19,7 @@
     "less": "2.0.0",
     "highlight": "0.2.3",
     "psd": ">=1.0.2",
-    "optipng-bin": ">=2.0.4",
+    "optipng-bin": ">=3.0.2",
     "jpegtran-bin": ">=2.0.2",
     "freemarker.js": ">=1.2.0"
   },

@@ -192,8 +192,11 @@
 	#增加cdn配置， 内部同时支持 304-NotModified 需要开启配置。
 	#开发阶段文件修改自动更新cdn, 如果动态修改debug，cdn将被缓存, 建议同时修改cdn配置
 	
---2015/06/20 v1.6.8
+--2015/06/21 v1.6.8
 	#修改linux下 build 插件的 bash 拼接错误
 	#staticconf 支持修改, 并且添加 host 约束。 弥补配置被篡改的问题
 	#welcome页面支持多级目录, 启用后 fs_mod 失效
 	#eslint检测修改
+
+--2015/06/21 v1.6.9
+	#修复问题： optipng-bin 版本 v3.0.2 API修改，导致 build 失败

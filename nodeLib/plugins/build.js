@@ -81,7 +81,7 @@ exports.execute = function(req, resp, root, handle, conf){
 
             if( mime.get(path) === "image/png" ){ // 使用 optipng-bin 进行图片压缩
                 building = 1;
-                execFile(optipng.path, ['-out', joinPath, joinPath], function (err) {
+                execFile(optipng, ['-out', joinPath, joinPath], function (err) {
                     building = 0;
                     if (err) {
                         console.log(err);
