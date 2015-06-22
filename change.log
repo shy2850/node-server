@@ -200,3 +200,5 @@
 
 --2015/06/21 v1.6.9
 	#修复问题： optipng-bin 版本 v3.0.2 API修改，导致 build 失败
+--2015/06/21 v1.6.9
+	#middleware支持sass, 后缀为：scss 

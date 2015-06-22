@@ -54,7 +54,21 @@ var middleware = {
                 mini.get("css", DEBUG)(output.css, resp, req.util.conf);
             }
         });
-	},
+    },
+    scss: function(req, resp, rs, pathname, DEBUG){
+        require('node-sass').render({
+            file: pathname,
+            outFile: pathname.replace(/(\.scss)$/,".css"),
+            includePaths: [ pathname.replace(/(\/[^\/]+?)$/,"") ],
+            outputStyle: (!DEBUG ? "compressed" : "expanded")
+        }, function (err, output) {
+            if (err) { throw err; }
+            else{
+                resp.writeHead(200, {"middleware-type": 'css', "Content-Type": mime.get('css')});
+                mini.get("css", DEBUG)(output.css.toString(), resp, req.util.conf);
+            }
+        });
+    },
     jade: function(req, resp, rs){
         resp.writeHead(200,{"middleware-type": 'html', "Content-Type": mime.get('html')});
         var output = require('jade').render(rs);
