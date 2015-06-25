@@ -21,8 +21,12 @@ exports.execute = function(req, resp, root, str, mini, debug, conf){
 
 		var result = str;
 		if(conf.runJs){		//完全使用underscore内置template引擎
-			var compiled = _.template(str);
-			result = compiled({request: req, response: resp, require: require});
+			if( !conf.template || !conf.template.get || (conf.template.filter && !conf.template.filter.test(req.$.title) ) ){
+				var compiled = _.template(str);
+				result = compiled({request: req, response: resp, require: require});
+			}else{
+				result = conf.template.get(str, req.$.title, req, resp, require);
+			}
 		}
 
 		switch(typeof result){

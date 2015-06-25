@@ -32,20 +32,15 @@ exports.execute = function(req, resp, root, pathname, pathurl, conf, DEBUG){
             case 'json':resp.end( JSON.stringify( files ) ); break;
             case 'jsonp':resp.end( (req.data.callback || 'callback') + '(' + JSON.stringify( files ) + ')' ); break;
             case undefined:
-                try{
-                    var data = fs.readFileSync( conf.folder,'utf-8');
-                    handle.execute(req,resp,root,data.toString(),mini,DEBUG, conf);
+                if( !conf.folder){
+                    req.$.fileList.map(function(item){
+                        list.push( '<p><a href="' + item.href + '">' + item.name + '</a></p>' );
+                    });
+                    resp.end( '<meta charset="utf-8"/><div>' + list.join('') + '</div>' );
                     return;
-                }catch(e){
-                    if(conf.folder){
-                        console.log(e);
-                    }else{
-                        req.$.fileList.map(function(item){
-                            list.push( '<p><a href="' + item.href + '">' + item.name + '</a></p>' );
-                        });
-                        resp.end( '<div>' + list.join('') + '</div>' );
-                    }
                 }
+                var data = fs.readFileSync( conf.folder,'utf-8');
+                handle.execute(req,resp,root,data.toString(),mini,DEBUG, conf);
                 break;
             case 'xml':
                 req.$.fileList.map(function(item){
