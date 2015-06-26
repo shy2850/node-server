@@ -28,7 +28,6 @@ blockquote{
     padding: .1em .3em .1em;
 }
 section.container{
-    border-bottom: 1px solid #D5D5D5;
     margin: 40px auto;
 }
 section.container:last-child{

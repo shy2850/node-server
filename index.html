@@ -133,6 +133,22 @@
       </div>
   </div>
 
+  <div class="row" style="padding: 3%;">
+    <h2>change.log</h2>
+    <p id="change-log" style="height:400px; overflow-y: scroll;">
+      
+    </p>
+  <script>
+    $.ajax({
+      url: "/shy2850/node-server/master/change.log",
+      success: function(log){
+        $("#change-log").html( log.replace(/[\n\r]/g, '<br />') );
+        $("#change-log")[0].scrollTop = 30000;
+      }
+    });
+  </script>
+  </div>
+
   <div class="row">
       <div class="col-lg-4">
         <a href="#">

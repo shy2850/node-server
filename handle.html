@@ -7,7 +7,7 @@ $belong[/layout.vm]
                 <li class="sidebar_head_li"><a href="#introduce">简介</a></li>
                 <li class="sidebar_head_li"><a href="#include">模板引用和包含</a></li>
                 <li class="sidebar_head_li"><a href="#request">服务端内置对象</a></li>
-                <li class="sidebar_head_li"><a href="#diy">自定义部分</a></li>
+                <li class="sidebar_head_li"><a href="#diy">自定义引擎</a></li>
             </ul>
         </div>
     </div>
@@ -129,38 +129,36 @@ $belong[/layout.vm]
         </section>
 
         <section id="diy">
-            <h2>自定义部分</h2>
-            <p>服务器内置对象中包含了require这个全局变量，因此可以使用nodejs系统内置(或者扩展)的模块进行功能开发。</p>
-            <p>
-                对于模板引擎的使用：如果使用异步的数据处理，你可能需要修改<code>underscore.template</code>的内置方法，
-                将模板渲染的内容返回成一个function，模板引擎会主动执行这个方法。如：
-                <a href="https://github.com/shy2850/node-server/blob/master/static/css/folder.css#L123" target="_blank">static/css/folder.css</a>
-            </p>
-            <pre class="language-javascript"><code>&lt;%
-    return function(){
-        var fs = require("fs");
-        fs.readdir(request.util.conf.root+"/static/img/fileicon/",function(error,files){ 
+            <h2>自定义引擎 v1.7.1</h2>
+            <p>支持通过配置 template 属性修改默认的模板引擎配置</p>
+            <p>以 artTemplate 为例. 配置前在 <code>conf.js</code> 同级目录 安装artTemplate <code>npm install art-template</code></p>
+            <pre class="language-javascript"><code>var artTemplate = require("art-template");
+    artTemplate.config('base', 'D:\\doc\\');// 设置模板根目录，默认为引擎所在目录
+    artTemplate.config('compress', true);// 压缩输出
 
-            if(error){
-                response.end(  __p );   // __p 是模板引擎内部拼接字符串的变量名 
-            }else{
-                var expires = new Date(); 
-                expires.setTime( expires.getTime() + 1000*60*60*24 );
-                
-                // 手工设置响应头增加缓存设置
-                response.writeHead(200, {"Content-Type": "text/css",Expires:expires}); 
-                
-                files.map(function(file){   // 拼接css样式字符串
-                  file = file.replace('.gif','');
-                  __p += "#list-container  ."+file+"\{background: url(../img/fileicon/"+file+".gif) no-repeat left center;\}\n";
-                });
-
-                response.end(  __p );   //手工输出
+exports["localhost"] = {
+    "root": "D:\\doc\\",
+    "template": {
+        // 配置需要进行模板渲染的匹配, 默认 html,js,css,json 等所有文本型都被渲染
+        filter: /\.html$/, 
+        get: function(source/*源字符串*/, file/*源文件相对root路径*/, request, response){
+            var path = file.replace(/^\/(.*?)\.\w+$/,'$1'),  // 去除 .html
+                json, data = {};
+            try{
+                // 同文件名的json文件作为data数据。
+                json = require("fs").readFileSync( "D:\\doc\\" + path + ".json" ),
+                data = JSON.parse(json);
+            }catch(e){
+                console.log( e );
             }
-        });
-    };
-%&gt;</code></pre>
-            <p>你可以根据相关API重写<a href="https://github.com/shy2850/node-server/blob/master/nodeLib/html/folder.html" target="_blank">nodeLib/html/folder.html</a> 换一个自己喜欢的列表展示。</p>
+            //渲染返回结果
+            return artTemplate( path, data );
+        }
+    },
+    "expires": 0
+};</code></pre>
+        <p>以下是直接下载 artTemplate 中 <a href="https://github.com/aui/artTemplate/tree/master/demo/node-template" target="_blank">demo</a> 的渲染效果截图</p>
+        <p><img src="images/middleware-artTemplate.gif" alt="artTemplate 官方demo"></p>
     </section>
 </div>
 <div class="page_bottom col-md-9 pull-right">
