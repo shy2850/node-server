@@ -14,6 +14,7 @@ $belong[/layout.vm]
                 <li class="sidebar_head_li"><a href="#prettify">代码美化</a></li>
                 <li class="sidebar_head_li"><a href="#placeholder">图片占位</a></li>
                 <li class="sidebar_head_li"><a href="#crx">Chrome插件</a></li>
+                <li class="sidebar_head_li"><a href="#css-sprite">CSS-Sprite</a></li>
             </ul>
         </div>
     </div>
@@ -156,13 +157,20 @@ $belong[/layout.vm]
                     <p><img src="images/other-crx-6.gif" alt="页面自动刷新"></p>
                     <p>可以看到 f2e-server 使用了阻塞式的请求来监听本地文件变化进行页面自动刷新</p>
                 </li>
-                <li>
-                    在访问列表中查看css/less文件时, 点击如图链接:
-                    <p><img src="images/other-crx-7.gif" alt="css-sprite链接"></p>
-                    <p>进入后先点击 <a href="javascript:void(0);" class="btn btn-success">Sprite</a> 保存合并图片, 再点击存储css文件</p>
-                    <p><img src="images/other-crx-8.gif" alt="css-sprite界面"></p>
-                </li>
             </ol>
+        </section>
+
+        <section id="css-sprite">
+            <h2>CSS-Sprite</h2>
+            <p>f2e-server 内置的 css-sprite 通过chrome插件实现, 可以操作任意css文件</p>
+            <p>在访问列表中查看css/less文件时, 点击如图链接:</p>
+            <p><img src="images/other-crx-7.gif" alt="css-sprite链接"></p>
+            <p>进入后先点击 <a href="javascript:void(0);" class="btn btn-success">Sprite</a> 保存合并图片, 再点击存储css文件</p>
+            <p><img src="images/other-crx-8.gif" alt="css-sprite界面"></p>
+            <p class="bg-warning">事实上：在css文件路径后面手动添加search参数 <code>css-sprite</code> 就可以开启</p>
+            <p>
+                下载: <a class="btn btn-success" role="button" href="downloads/baidu-shy2850.zip">百度首页 css-sprite 样例 </a>
+            </p>
         </section>
 
 </div>
