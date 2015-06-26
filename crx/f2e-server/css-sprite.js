@@ -25,7 +25,7 @@
 
 
 		var css = document.body.innerText,
-			reg = /url\("?(.*?)"?\)\s*no\-repeat\s*(-?\w+)?\s*(-?\w+)?/g,
+			reg = /url\("?([^\(\)]*?)"?\)\s*no\-repeat\s*(-?\w+)?\s*(-?\w+)?/g,
 			holder = document.createElement("div"),
 			replacer = [],
 			map = {},
