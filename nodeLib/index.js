@@ -85,7 +85,7 @@ exports.start = function(conf){
                     resp.writeHead(200, {
                         "Content-Type": mime.get(pathname) || 'text/html',
                         "Expires": expires,
-                        "Last-Modified": +stats.mtime
+                        "Last-Modified": new Date( +stats.mtime )
                     });
 
                     if( !conf.cdn ){    // cdn 禁用启用
