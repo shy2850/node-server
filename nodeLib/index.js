@@ -85,6 +85,7 @@ exports.start = function(conf){
                     resp.writeHead(200, {
                         "Content-Type": mime.get(pathname) || 'text/html',
                         "Expires": expires,
+                        "Cache-Control": "max-age=" + conf.expires,
                         "Last-Modified": new Date( +stats.mtime )
                     });
 
