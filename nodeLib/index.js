@@ -73,6 +73,16 @@ exports.start = function(conf){
                 return;
             }
             fs.stat(pathname,function(error, stats){
+                if(stats){
+                    var expires = new Date();
+                    expires.setTime( expires.getTime() + (conf.expires || 0) );
+                    resp.writeHead(200, {
+                        "Content-Type": mime.get(pathname) || 'text/html',
+                        "Expires": expires,
+                        "Last-Modified": new Date( +stats.mtime ).toGMTString()
+                    });
+                }    
+                
                 if(stats && stats.isFile()){  //如果url对应的资源文件存在，根据后缀名写入MIME类型
                     if( req.method === "POST" ){    // POST请求 添加target参数以后, 使用 upload 插件进行解析。
                         req.data.target = pathurl;
@@ -80,14 +90,6 @@ exports.start = function(conf){
                         return;
                     }
 
-                    var expires = new Date();
-                    expires.setTime( expires.getTime() + (conf.expires || 0) );
-                    resp.writeHead(200, {
-                        "Content-Type": mime.get(pathname) || 'text/html',
-                        "Expires": expires,
-                        "Cache-Control": "max-age=" + conf.expires,
-                        "Last-Modified": new Date( +stats.mtime )
-                    });
 
                     if( !conf.cdn ){    // cdn 禁用启用
                         cdn.disabled( host[0] );

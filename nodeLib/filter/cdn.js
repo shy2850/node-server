@@ -12,7 +12,7 @@ exports.execute = function( req, resp, stats ) {
         return false;
     }else{
         var t = req.headers["if-modified-since"];
-        if ( t && mt === t ) {
+        if ( t && new Date(mt).toGMTString() == t ) {
             resp.writeHead(304, "Not Modified");
             resp.end();
         }else{
