@@ -1,6 +1,7 @@
 "use strict";
 var fs = require("fs"),
     mime = require("mime"),
+    zlib = require("zlib"),
     cdn = require("./cdn"), // cdn模块
     cssmin = require("cssmin");
 var autoprefixer;
@@ -10,16 +11,25 @@ try{
     autoprefixer = false;
 }
 
-var mini = {
+var output = function(str, resp){
+    if( resp.gzip ){
+        zlib.gzip(str, function(err, decoded){
+            cdn.set( resp, decoded );
+            resp.end( str );
+        });
+    }else{
+        cdn.set( resp, str );
+        resp.end( str );
+    }
+},
+mini = {
     js: function(str, resp){
         var resu = require("uglify-js").minify(str,{fromString: true});
-        cdn.set( resp, resu.code );
-        resp.end( resu.code );
+        output( resu.code, resp );
     },
     css: function(str, resp){
         var $css = cssmin(str);
-        cdn.set( resp, $css );
-        resp.end( $css );
+        output( $css, resp );
     },
     get: function(pathname, debug){
         var extType = pathname.split('.').pop();
@@ -31,8 +41,7 @@ var mini = {
             if(!debug && (m = mini[extType]) ){
                 m(str, resp);
             }else{
-                cdn.set( resp, str );
-                resp.end( str );
+                output(str, resp);
             }
         };
     }

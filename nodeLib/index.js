@@ -5,6 +5,7 @@ var CONF = require("./config/conf"),    //综合配置
     modules = require("./common/modules"),//支持的插件配置
     filter = require('./filter/filter'),//支持前置过滤器
     querystring = require("querystring"),
+    zlib = require("zlib"), 
     mime = require("mime"),    //MIME类型
     http = require("http"),
      url = require("url"),
@@ -72,12 +73,15 @@ exports.start = function(conf){
                 other(req, resp, handle, conf, pathurl);
                 return;
             }
+            resp.gzip = conf.gzip && mime.isTXT(pathname);
+
             fs.stat(pathname,function(error, stats){
                 if(stats){
                     var expires = new Date();
                     expires.setTime( expires.getTime() + (conf.expires || 0) );
                     resp.writeHead(200, {
-                        "Content-Type": mime.get(pathname) || 'text/html',
+                        "Content-Type": mime.get(pathname),
+                        "Content-Encoding": resp.gzip ? "gzip" : "utf-8",
                         "Expires": expires,
                         "Last-Modified": new Date( +stats.mtime ).toGMTString()
                     });
@@ -118,9 +122,14 @@ exports.start = function(conf){
                         });
                     }else{
                         rs.on("end", function(){
-                            cdn.set( resp, Buffer.concat(dataArr, s.length ), +stats.mtime );
+                            var cdnBuf = Buffer.concat(dataArr, s.length );
+                            cdn.set( resp, resp.gzip ? zlib.gzipSync(cdnBuf) : cdnBuf, +stats.mtime );
                         });
-                        rs.pipe(resp);
+                        if( resp.gzip ){
+                            rs.pipe( zlib.createGzip() ).pipe(resp);
+                        }else{
+                            rs.pipe(resp);
+                        }
                     }
                 } else if(conf.fs_mod && stats && stats.isDirectory()){  //如果当前url被成功映射到服务器的文件夹，创建一段列表字符串写出
                     require('./filter/directory').execute(req,resp,root,pathname,pathurl,conf,DEBUG);

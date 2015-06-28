@@ -1,5 +1,6 @@
 "use strict";
-var _ = require("underscore");
+var _ = require("underscore"),
+    zlib = require("zlib");
 
 var map = {}, hosts = [];
 exports.execute = function( req, resp, stats ) {
