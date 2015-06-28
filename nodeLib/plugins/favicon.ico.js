@@ -21,7 +21,7 @@ exports.execute = function(req, resp){
                 "Content-Type": mime.get("ico"),
                 "Content-Length": data.length,
                 "Cache-Control": "max-age=7200",
-                "Last-Modified": new Date( + new Date - 1000 * 60 ).toGMTString(),
+                "Last-Modified": new Date( "2015/06/28" ).toGMTString(),
                 "Expires": expires.toGMTString()
             });
             resp.end(data);

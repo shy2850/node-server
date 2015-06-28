@@ -5,7 +5,7 @@ var CONF = require("./config/conf"),    //综合配置
     modules = require("./common/modules"),//支持的插件配置
     filter = require('./filter/filter'),//支持前置过滤器
     querystring = require("querystring"),
-    zlib = require("zlib"), 
+    zlib = require("zlib"),
     mime = require("mime"),    //MIME类型
     http = require("http"),
      url = require("url"),
@@ -35,7 +35,7 @@ exports.start = function(conf){
 
         //包装request功能
         req.data = querystring.parse( url.parse(req.url).query );
-        req.util = {mime: mime, conf: conf, host: host[0], staticServer: "http://" + (staticConf.host||host[0]) + ":" + staticConf.port + "/"};
+        req.util = {mime: mime, conf: conf, host: host[0], staticServer: "http://" + ( staticConf.host || host[0] ) + ":" + staticConf.port + "/"};
         req.$ = {title: pathurl, fileList: [], needUpdate: serverInfo.needUpdate };
         resp.cdnPath = req.headers.host + req.url; // cdn 索引
         var DEBUG = req.data.debug === "true" || conf.debug; //DEBUG模式判断
@@ -85,8 +85,7 @@ exports.start = function(conf){
                         "Expires": expires,
                         "Last-Modified": new Date( +stats.mtime ).toGMTString()
                     });
-                }    
-                
+                }
                 if(stats && stats.isFile()){  //如果url对应的资源文件存在，根据后缀名写入MIME类型
                     if( req.method === "POST" ){    // POST请求 添加target参数以后, 使用 upload 插件进行解析。
                         req.data.target = pathurl;

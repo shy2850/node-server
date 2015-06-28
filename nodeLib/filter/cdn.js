@@ -1,7 +1,5 @@
 "use strict";
-var _ = require("underscore"),
-    zlib = require("zlib");
-
+var _ = require("underscore");
 var map = {}, hosts = [];
 exports.execute = function( req, resp, stats ) {
     var k = resp.cdnPath,
@@ -13,7 +11,7 @@ exports.execute = function( req, resp, stats ) {
         return false;
     }else{
         var t = req.headers["if-modified-since"];
-        if ( t && new Date(mt).toGMTString() == t ) {
+        if ( t && new Date(mt).toGMTString() === t ) {
             resp.writeHead(304, "Not Modified");
             resp.end();
         }else{

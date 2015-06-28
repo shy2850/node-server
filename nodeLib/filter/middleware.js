@@ -11,11 +11,14 @@ try{
     autoprefixer = false;
 }
 
-var output = function(str, resp){
+var out = function(str, resp){
     if( resp.gzip ){
         zlib.gzip(str, function(err, decoded){
+            if(err){
+                console.log( err );
+            }
             cdn.set( resp, decoded );
-            resp.end( str );
+            resp.end( decoded );
         });
     }else{
         cdn.set( resp, str );
@@ -25,11 +28,11 @@ var output = function(str, resp){
 mini = {
     js: function(str, resp){
         var resu = require("uglify-js").minify(str,{fromString: true});
-        output( resu.code, resp );
+        out( resu.code, resp );
     },
     css: function(str, resp){
         var $css = cssmin(str);
-        output( $css, resp );
+        out( $css, resp );
     },
     get: function(pathname, debug){
         var extType = pathname.split('.').pop();
@@ -41,7 +44,7 @@ mini = {
             if(!debug && (m = mini[extType]) ){
                 m(str, resp);
             }else{
-                output(str, resp);
+                out(str, resp);
             }
         };
     }
