@@ -133,29 +133,32 @@ $belong[/layout.vm]
             <p>支持通过配置 template 属性修改默认的模板引擎配置</p>
             <p>以 artTemplate 为例. 配置前在 <code>conf.js</code> 同级目录 安装artTemplate <code>npm install art-template</code></p>
             <pre class="language-javascript"><code>var artTemplate = require("art-template");
-    artTemplate.config('base', 'D:\\doc\\');// 设置模板根目录，默认为引擎所在目录
+    artTemplate.config('base', 'E:\\');// 设置模板根目录，默认为引擎所在目录
     artTemplate.config('compress', true);// 压缩输出
 
-exports["localhost"] = {
-    "root": "D:\\doc\\",
+
+exports.localhost = {
+    root: "E:\\",
     "template": {
         // 配置需要进行模板渲染的匹配, 默认 html,js,css,json 等所有文本型都被渲染
         filter: /\.html$/, 
         get: function(source/*源字符串*/, file/*源文件相对root路径*/, request, response){
             var path = file.replace(/^\/(.*?)\.\w+$/,'$1'),  // 去除 .html
                 json, data = {};
+            var render = artTemplate.compile(source, { // 根据模板字符串和文件路径(include需要)编译
+                filename:path
+            });
             try{
                 // 同文件名的json文件作为data数据。
-                json = require("fs").readFileSync( "D:\\doc\\" + path + ".json" ),
+                json = require("fs").readFileSync( "E:\\" + path + ".json" ),
                 data = JSON.parse(json);
             }catch(e){
                 console.log( e );
             }
             //渲染返回结果
-            return artTemplate( path, data );
+            return render( data );
         }
-    },
-    "expires": 0
+    }
 };</code></pre>
         <p>以下是直接下载 artTemplate 中 <a href="https://github.com/aui/artTemplate/tree/master/demo/node-template" target="_blank">demo</a> 的渲染效果截图</p>
         <p><img src="images/middleware-artTemplate.gif" alt="artTemplate 官方demo"></p>
