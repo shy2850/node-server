@@ -73,7 +73,7 @@ exports.start = function(conf){
                 other(req, resp, handle, conf, pathurl);
                 return;
             }
-            resp.gzip = conf.gzip && mime.isTXT(pathname.match(/\.\w+$/)[0]);
+            resp.gzip = conf.gzip && mime.isTXT(pathname);
 
             fs.stat(pathname,function(error, stats){
                 if(stats){
