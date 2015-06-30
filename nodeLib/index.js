@@ -65,6 +65,7 @@ exports.start = function(conf){
             try{    // 欢迎页面处理
                 if( conf.welcome && fs.statSync(pathname).isDirectory() ){
                     pathname += '/' + conf.welcome;
+                    resp.cdnPath = req.headers.host + pathname; // cdn 索引 需要修改
                 }
                 if( req.data["modify.check"] === "true" ){ // modify.check=true 时: 检测文件更新
                     filter.check(pathname, req.data.mtime, req, resp);
