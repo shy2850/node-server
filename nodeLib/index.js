@@ -73,7 +73,7 @@ exports.start = function(conf){
                 other(req, resp, handle, conf, pathurl);
                 return;
             }
-            resp.gzip = conf.gzip && mime.isTXT(pathname);
+            resp.gzip = conf.gzip && mime.isTXT(pathname.match(/\.\w+$/)[0]);
 
             fs.stat(pathname,function(error, stats){
                 if(stats){
@@ -120,11 +120,11 @@ exports.start = function(conf){
                             handle.execute(req,resp,root,s, mini ,DEBUG, conf);
                         });
                     }else{
-                        rs.on("end", function(){
-                            var cdnBuf = Buffer.concat(dataArr, s.length );
-                            cdn.set( resp, resp.gzip ? zlib.gzipSync(cdnBuf) : cdnBuf, +stats.mtime );
-                        });
                         if( resp.gzip ){
+                            rs.on("end", function(){
+                                var cdnBuf = Buffer.concat(dataArr, s.length );
+                                cdn.set( resp, resp.gzip ? zlib.gzipSync(cdnBuf) : cdnBuf, +stats.mtime );
+                            });
                             rs.pipe( zlib.createGzip() ).pipe(resp);
                         }else{
                             rs.pipe(resp);

@@ -143,8 +143,8 @@ exports.cdn = cdn;
 mime.get = function(path, fallback){
     if( /\bdo$/.test(path) ){
         return this.lookup(path, fallback || "text/html");
-    }else if( /\bcur$/.test(path) ){
-        return "";
+    }else if( /\bless$/.test(path) ){
+        return "text/css";
     }else{
         return this.lookup(path, fallback);
     }
