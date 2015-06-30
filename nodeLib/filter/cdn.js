@@ -15,6 +15,10 @@ exports.execute = function( req, resp, stats ) {
             resp.writeHead(304, "Not Modified");
             resp.end();
         }else{
+            resp.writeHead(200, {
+                "Content-Encoding": resp.gzip ? "gzip" : "utf-8",
+                "Content-Type": req.util.mime.get(req.$.title)
+            });
             resp.end( source.data );
         }
         return true;

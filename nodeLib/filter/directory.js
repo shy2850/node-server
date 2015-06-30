@@ -10,7 +10,10 @@ exports.execute = function(req, resp, root, pathname, pathurl, conf, DEBUG){
     }
     pathurl = pathurl.lastIndexOf('/') === pathurl.length - 1 ? pathurl : pathurl + "/";
     var type = req.data.type || "html";
-    resp.writeHead(200, {"Content-Type": mime.get( type, mime.get("js") )});
+    resp.writeHead(200, {
+        "Content-Type": mime.get( type, mime.get("js") ),
+        "Content-Encoding": resp.gzip ? "gzip" : "utf-8"
+    });
     fs.readdir(pathname, function(error, files){
         var urlSplit = pathurl.split("/"), list = [];
         if(urlSplit.length > 1){

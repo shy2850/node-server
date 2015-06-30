@@ -36,9 +36,9 @@ mini = {
     },
     get: function(pathname, debug){
         var extType = pathname.split('.').pop();
-        return function(str, resp, conf){
+        return function(str, resp){
             var m;
-            if( extType === "css" && conf && conf.autoprefix && autoprefixer ){
+            if( extType === "css" && resp.autoprefixer ){
                 str = autoprefixer.process( str ).css;
             }
             if(!debug && (m = mini[extType]) ){
@@ -49,21 +49,28 @@ mini = {
         };
     }
 };
+
+var middout = function(type, str, resp, debug){
+    resp.writeHead(200, {
+        "middleware-type": type,
+        "Content-Encoding": resp.gzip ? "gzip" : "utf-8",
+        "Content-Type": mime.get(type)
+    });
+    mini.get(type, debug)(str, resp);
+};
 var middleware = {
 	coffee: function(req, resp, rs, pathname, DEBUG){
         var scriptStr = require("coffee-script").compile( rs );
-        resp.writeHead(200, {"middleware-type": 'js', "Content-Type": mime.get('js')});   //用以build输出时转换后缀名
-        mini.get("js",DEBUG)(scriptStr, resp);
-	},
-	less: function(req, resp, rs, pathname, DEBUG){
+        middout("js", scriptStr, resp, DEBUG);
+    },
+    less: function(req, resp, rs, pathname, DEBUG){
         require("less").render(rs, {
             paths: [ pathname.replace(/(\/[^\/]+?)$/,"") ],
             compress: !DEBUG
         }, function (err, output) {
             if (err) { throw err; }
             else{
-                resp.writeHead(200, {"middleware-type": 'css', "Content-Type": mime.get('css')});
-                mini.get("css", DEBUG)(output.css, resp, req.util.conf);
+                middout("css", output.css, resp);
             }
         });
     },
@@ -76,25 +83,21 @@ var middleware = {
         }, function (err, output) {
             if (err) { throw err; }
             else{
-                resp.writeHead(200, {"middleware-type": 'css', "Content-Type": mime.get('css')});
-                mini.get("css", DEBUG)(output.css.toString(), resp, req.util.conf);
+                middout("css", output.css.toString(), resp);
             }
         });
     },
     jade: function(req, resp, rs){
-        resp.writeHead(200,{"middleware-type": 'html', "Content-Type": mime.get('html')});
         var output = require('jade').render(rs);
-        resp.end( output );
+        middout("html", output.toString(), resp);
     },
     md: function(req, resp, rs){
-        resp.writeHead(200,{"middleware-type": 'html', "Content-Type": mime.get('html')});
         var output = require('marked')(rs + '');
-        resp.end( '<style>code{padding:2px 8px;background:#eee;}</style>' + output );
+        middout("html", output, resp);
     },
     mdppt: function(req, resp, rs){
-        resp.writeHead(200,{"middleware-type": 'html', "Content-Type": mime.get('html')});
         var output = require('./nodePPT/index.js')(rs + '');
-        resp.end( output );
+        middout("html", output, resp);
     },
     ftl: function(req, resp, rs, pathname){
         resp.writeHead(200,{"middleware-type": 'html', "Content-Type": mime.get('html')});
@@ -114,7 +117,7 @@ var middleware = {
                 if(err1){
                     throw err1;
                 }else{
-                    resp.end( html );
+                    middout("html", html, resp);
                 }
                 fs.unlink(tmpUrl);
             });
@@ -140,14 +143,18 @@ exports.get = function(pathname){
 exports.mini = mini;
 exports.cdn = cdn;
 
+var middTypes = {
+    coffee: "js",
+    less: "css",
+    scss: "css",
+    jade: "html",
+    md: "html",
+    mdppt: "html",
+    ftl: "html"
+};
 mime.get = function(path, fallback){
-    if( /\bdo$/.test(path) ){
-        return this.lookup(path, fallback || "text/html");
-    }else if( /\bless$/.test(path) ){
-        return "text/css";
-    }else{
-        return this.lookup(path, fallback);
-    }
+    var extType = (path + "").split(".").pop();
+    return this.lookup( middTypes[extType] || path, fallback );
 };
 mime.isTXT = function(path, fallback){
     return /\b(php|jsp|asp|less|coffee|jade|mdppt)$/.test(path) || /\b(text|xml|javascript|json)\b/.test( this.get(path, fallback) );

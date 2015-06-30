@@ -38,6 +38,7 @@ exports.start = function(conf){
         req.util = {mime: mime, conf: conf, host: host[0], staticServer: "http://" + ( staticConf.host || host[0] ) + ":" + staticConf.port + "/"};
         req.$ = {title: pathurl, fileList: [], needUpdate: serverInfo.needUpdate };
         resp.cdnPath = req.headers.host + req.url; // cdn 索引
+        resp.autoprefixer = conf.autoprefixer;
         var DEBUG = req.data.debug === "true" || conf.debug; //DEBUG模式判断
 
         // 资源未找到时， 处理信息
@@ -73,10 +74,25 @@ exports.start = function(conf){
                 other(req, resp, handle, conf, pathurl);
                 return;
             }
-            resp.gzip = conf.gzip && mime.isTXT(pathname);
+            resp.gzip = conf.gzip && mime.isTXT(pathname) && !req.data._build_; //构建阶段禁用
 
             fs.stat(pathname,function(error, stats){
-                if(stats){
+                if(stats && stats.isFile()){  //如果url对应的资源文件存在，根据后缀名写入MIME类型
+                    if( req.method === "POST" ){    // POST请求 添加target参数以后, 使用 upload 插件进行解析。
+                        req.data.target = pathurl;
+                        modules.get("upload").execute(req,resp,root,handle,conf);
+                        return;
+                    }
+
+                    if( !conf.cdn || req.data._build_){    // cdn 禁用启用， 构建阶段禁用
+                        cdn.disabled( host[0] );
+                    }else{
+                        cdn.enable( host[0] );
+                        if( cdn.execute(req, resp, stats) ){
+                            return;
+                        }
+                    }
+
                     var expires = new Date();
                     expires.setTime( expires.getTime() + (conf.expires || 0) );
                     resp.writeHead(200, {
@@ -85,23 +101,6 @@ exports.start = function(conf){
                         "Expires": expires,
                         "Last-Modified": new Date( +stats.mtime ).toGMTString()
                     });
-                }
-                if(stats && stats.isFile()){  //如果url对应的资源文件存在，根据后缀名写入MIME类型
-                    if( req.method === "POST" ){    // POST请求 添加target参数以后, 使用 upload 插件进行解析。
-                        req.data.target = pathurl;
-                        modules.get("upload").execute(req,resp,root,handle,conf);
-                        return;
-                    }
-
-
-                    if( !conf.cdn ){    // cdn 禁用启用
-                        cdn.disabled( host[0] );
-                    }else{
-                        cdn.enable( host[0] );
-                        if( cdn.execute(req, resp, stats) ){
-                            return;
-                        }
-                    }
 
                     var rs = fs.createReadStream(pathname), s = '', dataArr = [], ware;
                     rs.on('error',function(err){

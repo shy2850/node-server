@@ -12,13 +12,10 @@ exports.execute = function(req, resp, root, mini, conf){
             result += fs.readFileSync( filePath,'utf-8');
         });
         resp.writeHead(200, {
-            "Content-Type": mime.get(extType)
+            "Content-Type": mime.get(extType),
+            "Content-Encoding": resp.gzip ? "gzip" : "utf-8"
         });
-        if( conf.debug ){
-            resp.end( result );
-        }else{
-            mini.get(extType)(result,resp);
-        }
+        mini.get(extType, conf.debug)(result,resp);
     }catch(e){
         resp.writeHead(500, {"Content-Type": "text/html"});
         resp.end( e.stack.toString().replace(/\n/g,"<br>") );
