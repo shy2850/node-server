@@ -17,7 +17,7 @@ exports.execute = function( req, resp, stats ) {
         }else{
             resp.writeHead(200, {
                 "Content-Encoding": resp.gzip ? "gzip" : "utf-8",
-                "Content-Type": req.util.mime.get(req.$.title)
+                "Content-Type": req.util.mime.get(k)
             });
             resp.end( source.data );
         }
