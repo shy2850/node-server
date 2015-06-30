@@ -26,7 +26,7 @@
 		temp = t.name.match(/\.([^\.\/]+)$/), 
 		type = temp ? temp[1] : "folder",
 		_blank = mime.isTXT(type) ? 'target="_blank"' : '',
-		_icon = mime.isTXT(type) ? '<a href="/prettify?'+t.href+'?handle=false&middleware=false&debug=true" target="_blank" class="see-to-source">源</a>' : '';
+		_icon = mime.isTXT(type) ? '<a href="/prettify?'+t.href+'?handle=false&middleware=false&debug=true&_build_=true" target="_blank" class="see-to-source">源</a>' : '';
 
 		_icon = type == 'psd' ? '<a href="/psd?'+t.href+'" target="_blank" class="see-to-source">稿</a>' : _icon;
 
