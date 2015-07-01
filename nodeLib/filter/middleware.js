@@ -38,7 +38,7 @@ mini = {
         var extType = pathname.split('.').pop();
         return function(str, resp){
             var m;
-            if( extType === "css" && resp.autoprefixer ){
+            if( "css" === (middTypes(extType) || extType) && resp.autoprefixer ){
                 str = autoprefixer.process( str ).css;
             }
             if(!debug && (m = mini[extType]) ){
