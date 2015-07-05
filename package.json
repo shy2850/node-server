@@ -8,16 +8,17 @@
     "formidable": ">=1.0.15",
     "marked": "^0.3.3",
     "mime": "*",
-    "node-sass": "^3.2.0",
     "uglify-js": ">=2.4.15",
     "underscore": ">=1.7.0",
     "wfquery": "*"
   },
   "devDependencies": {
+    "postcss": "^4.1.14",
     "autoprefixer-core": "^5.1.11",
     "jade": ">=1.7.0",
     "coffee-script": ">=1.8.0",
     "less": "2.0.0",
+    "node-sass": "^3.2.0",
     "highlight": "0.2.3",
     "psd": ">=1.0.2",
     "optipng-bin": ">=3.0.2",

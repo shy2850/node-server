@@ -4,8 +4,9 @@ var fs = require("fs"),
     zlib = require("zlib"),
     cdn = require("./cdn"), // cdn模块
     cssmin = require("cssmin");
-var autoprefixer;
+var postcss, autoprefixer;
 try{
+    postcss = require("postcss");
     autoprefixer = require("autoprefixer-core");
 }catch(e){
     autoprefixer = false;
@@ -39,12 +40,22 @@ mini = {
         return function(str, resp){
             var m;
             if( "css" === (middTypes[extType] || extType) && resp.autoprefixer ){
-                str = autoprefixer.process( str ).css;
-            }
-            if(!debug && (m = mini[extType]) ){
-                m(str, resp);
+                postcss([ autoprefixer({inline:false}) ]).process(str).then(function (result) {
+                    result.warnings().forEach(function (warn) {
+                        console.warn(warn.toString());
+                    });
+                    if(!debug && (m = mini[extType]) ){
+                        m(result.css, resp);
+                    }else{
+                        out(result.css, resp);
+                    }
+                });
             }else{
-                out(str, resp);
+                if(!debug && (m = mini[extType]) ){
+                    m(str, resp);
+                }else{
+                    out(str, resp);
+                }
             }
         };
     }
