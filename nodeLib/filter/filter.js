@@ -4,7 +4,7 @@ var fs = require("fs"),
 
 exports.execute = function(req, resp, conf){
     if( conf.filter && typeof conf.filter.get === "function" ){
-        conf.filter.get(req,resp);
+        return conf.filter.get(req,resp);
     }
 };
 

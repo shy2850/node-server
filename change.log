@@ -215,3 +215,6 @@
 
 --2015/07/05 v1.7.5
 	#autoprefixer 模块相关API修改, f2e-server增加postcss依赖并且做对应修改。
+
+--2015/07/28 v1.7.6
+	#修复filter引起的崩溃问题
