@@ -98,8 +98,13 @@ $.isFile = function(file){
  * @return {[type]}         [description]
  */
 $.writeFile = function(filepath, content) {
-    $.mkdir(path.dirname(filepath));
-    return fs.writeFileSync(filepath, content);
+    try{
+        $.mkdir(path.dirname(filepath));
+        return fs.writeFileSync(filepath, content);
+    }catch(e){
+        console.log( "nodePPT error:" );
+        console.log( e );
+    }
 }
 
 /**
