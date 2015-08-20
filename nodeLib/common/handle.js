@@ -1,6 +1,7 @@
 "use strict";
 var fs = require("fs"),
 	path = require("path"),
+    babel = require("babel"),
 	_ = require("underscore");
 exports.execute = function(req, resp, root, str, mini, debug, conf){
 	var belong = conf.placeholder,
@@ -32,6 +33,9 @@ exports.execute = function(req, resp, root, str, mini, debug, conf){
 		switch(typeof result){
 			case "function": result(); return;
 			case "string":
+				if( conf.babel && req.url.replace(/^([^?#]+).*$/,"$1").match(/\.js$/) ){
+	                result = babel.transform(result).code;
+	            }
 			default :
 				mini.get(req.$.title, debug)(result,resp,conf);
 		}

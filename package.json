@@ -1,9 +1,10 @@
 {
   "name": "f2e-server",
-  "version": "1.7.6",
+  "version": "1.7.7",
   "description": "a nodejs based file-system-server with easy-template-engine and several F2E-utils",
   "main": "node-server.js",
   "dependencies": {
+    "babel": "^5.8.21",
     "cssmin": ">=0.4.1",
     "formidable": ">=1.0.15",
     "marked": "^0.3.3",

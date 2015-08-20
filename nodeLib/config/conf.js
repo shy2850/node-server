@@ -11,7 +11,8 @@ var conf = {
     placeholder: "$[placeholder]",
     belong: "\\$belong\\[[\"\\s]*([^\"\\s]+)[\"\\s]*\\]",
     middleware: true,   //中间件支持, LESS/CoffeeScript 等支持
-    autoprefix: false,   //autoprefixer 支持
+    autoprefixer: false,   //autoprefixer 支持
+    babel: false,   // babel解析js
     debug: true,        //是否对js以及css文件进行简单压缩，debug:true表示不压缩
     cdn: false,
     "fs_mod": true,       //是否支持文件夹列表展示
