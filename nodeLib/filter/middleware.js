@@ -39,8 +39,8 @@ mini = {
         var extType = pathname.split('.').pop();
         return function(str, resp){
             var m;
-            if( "css" === (middTypes[extType] || extType) && resp.autoprefixer ){
-                postcss([ autoprefixer({inline:false}) ]).process(str).then(function (result) {
+            if( "css" === (middTypes[extType] || extType) && resp.autoprefixer && autoprefixer){
+                postcss([ autoprefixer({inline:false,browsers: ['> 1%', 'IE 7']}) ]).process(str).then(function (result) {
                     result.warnings().forEach(function (warn) {
                         console.warn(warn.toString());
                     });
