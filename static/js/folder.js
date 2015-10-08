@@ -1,7 +1,7 @@
 (function() {
   require.config({
     paths: {
-      wfQuery: "../../node_modules/wfquery/js/wfQuery"
+      wfQuery: "../../node_modules/wfquery/wfQuery"
     },
     shim: {
       clock:{
