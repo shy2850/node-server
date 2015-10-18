@@ -222,3 +222,9 @@
 --2015/08/20 v1.7.7
 	#添加babel支持 配置启用为 babel: true
 
+--2015/10/18 v1.8.0
+	#修改babel依赖
+	#修改mdppt为外部依赖，去除mdppt的相关demo
+	#设置npm-cli支持【global install】: $ f2eserver start 开启
+	#修改实时刷新插件为项目配置（livereload） 默认不开启, 使用jsonp模式更靠谱的支持了全浏览器设备
+	

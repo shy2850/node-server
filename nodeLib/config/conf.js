@@ -16,6 +16,7 @@ var conf = {
     debug: true,        //是否对js以及css文件进行简单压缩，debug:true表示不压缩
     cdn: false,
     "fs_mod": true,       //是否支持文件夹列表展示
+    livereload: false,   //是否监听文件变化刷新网页
     port: 80,           //服务器监听端口
     maxConnections: 1000,    //并发处理的最大连接数
     runJs: true,       //是否使用服务器模板引擎

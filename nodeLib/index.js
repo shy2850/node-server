@@ -67,10 +67,6 @@ exports.start = function(conf){
                     pathname += '/' + conf.welcome;
                     resp.cdnPath = req.headers.host + pathname; // cdn 索引 需要修改
                 }
-                if( req.data["modify.check"] === "true" ){ // modify.check=true 时: 检测文件更新
-                    filter.check(pathname, req.data.mtime, req, resp);
-                    return;
-                }
             }catch(e){
                 other(req, resp, handle, conf, pathurl);
                 return;
@@ -146,7 +142,6 @@ exports.start = function(conf){
     server.listen(conf.port);
     return server;
 };
-
 // 检测更新信息
 try{
     require('./config/update').execute(serverInfo);

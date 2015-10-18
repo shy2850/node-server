@@ -1,19 +1,21 @@
 {
   "name": "f2e-server",
-  "version": "1.7.8",
+  "version": "1.8.0",
   "description": "a nodejs based file-system-server with easy-template-engine and several F2E-utils",
   "main": "node-server.js",
   "dependencies": {
-    "babel": "^5.8.21",
+    "commander": "^2.9.0",
     "cssmin": ">=0.4.1",
     "formidable": ">=1.0.15",
     "marked": "^0.3.3",
     "mime": "*",
     "uglify-js": ">=2.4.15",
     "underscore": ">=1.7.0",
+    "watch": "^0.16.0",
     "wfquery": "*"
   },
   "devDependencies": {
+    "babel": "^5.8.21",
     "postcss": "^4.1.14",
     "autoprefixer-core": "^5.1.11",
     "jade": ">=1.7.0",
@@ -24,7 +26,8 @@
     "psd": ">=1.0.2",
     "optipng-bin": ">=3.0.2",
     "jpegtran-bin": ">=2.0.2",
-    "freemarker.js": ">=1.2.0"
+    "freemarker.js": ">=1.2.0",
+    "mdppt": "*"
   },
   "scripts": {
     "start": "node node-server.js explorer http://localhost",
@@ -43,6 +46,9 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/shy2850/node-server/issues"
+  },
+  "bin": {
+    "f2eserver": "./bin/f2e-server"
   },
   "homepage": "https://github.com/shy2850/node-server",
   "readme": "README.md",

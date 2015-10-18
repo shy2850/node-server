@@ -1,0 +1,24 @@
+#!/usr/bin/env node
+'use strict';
+var program = require('commander');
+var fs = require('fs');
+var _ = require('underscore');
+var base = require('../package.json');
+program
+    .version(base.version);//声明hi的版本号
+program
+    .command('start')//声明hi下有一个命令叫list
+    .description('start f2e-server')//给出list这个命令的描述
+    .action(function(options) {//list命令的实现体
+        var CONF = require('../nodeLib/config/conf');
+        var host = CONF.localhost;
+        try{
+            _.extend(CONF, require('./f2e-conf'));
+        }catch(e){
+            fs.writeFile( 'f2e-conf.js', 'exports["localhost"] = ' + JSON.stringify( CONF.localhost, null, 4 ) + ';\n' );
+        }
+        host.root = './';
+        require('../node-server.js');
+        require('child_process').exec('explorer http://localhost' + (host.port === 80 ? '' : (':' + host.port) ) );
+    });
+program.parse(process.argv);//开始解析用户输入的命令

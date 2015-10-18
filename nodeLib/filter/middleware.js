@@ -107,7 +107,9 @@ var middleware = {
         middout("html", output, resp);
     },
     mdppt: function(req, resp, rs){
-        var output = require('./nodePPT/index.js')(rs + '');
+        var mdppt = require('mdppt');
+        mdppt.cfg.base = req.util.staticServer + '/node_modules/mdppt/assets/';
+        var output = mdppt(rs + '');
         middout("html", output, resp);
     },
     ftl: function(req, resp, rs, pathname){
