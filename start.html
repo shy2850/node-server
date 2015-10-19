@@ -1,4 +1,4 @@
-$belong[/layout.vm]
+$belong[layout.vm]
 
 <section class="container row">
     <div class="col-md-3">
@@ -20,7 +20,7 @@ $belong[/layout.vm]
         
         <section id="install-server">
             <h2>f2e-server安装</h2>
-            <p>直接使用npm 安装</p>
+            <p>直接使用npm 安装（v1.8.2以后版本支持全局安装 npm install f2e-server -g）</p>
             <pre class="language-bash"><code>$ npm install f2e-server
 f2e-server@1.4.9 node_modules\f2e-server
 ├── cssmin@0.4.3
@@ -30,7 +30,7 @@ f2e-server@1.4.9 node_modules\f2e-server
 ├── underscore@1.8.2
 └── uglify-js@2.4.17 (uglify-to-browserify@1.0.2, async@0.2.10, yargs@1.3.source-map@0.1.34)
 </code></pre>
-            <p>如果需要使用f2e-server的完整功能, 进入安装目录</p>
+            <p>如果需要使用f2e-server的完整功能, 进入安装目录（注意全局安装的目录）</p>
             <pre class="language-bash"><code>$ cd node_modules/f2e-server/
 $ npm install
 f2e-server@1.4.9
@@ -56,6 +56,7 @@ f2e-server@1.4.9
 Server running at http://127.0.0.1:80   [localhost]
 Server running at http://127.0.0.1:2850 [staticconf]
 </code></pre>
+            <p>如果使用全局安装, 可以在指定目录中直接使用 <code>$ f2eserver start</code> 启动项目</p>
             <p>
                 服务启动 将自动打开本地默认浏览器 <code>explorer http://localhost</code> 如下 <br>
                 <!-- <img src="images/folder.gif" alt="文件夹列表展示"> -->
@@ -67,7 +68,7 @@ Server running at http://127.0.0.1:2850 [staticconf]
 
         <section id="my-project">
             <h2>项目根目录配置</h2>
-            <p>服务启动后, 将在node_modules目录自动生成conf.js配置文件:</p>
+            <p>服务启动后, 将在node_modules（全局安装启动， 同时在启动目录中生成）目录自动生成conf.js配置文件:</p>
             <pre class="language-javascript"><code>exports["localhost"] = {
     "root": "e:\\node_modules\\f2e-server\\",  //root 修改成自己的项目根目录
     "welcome": "",

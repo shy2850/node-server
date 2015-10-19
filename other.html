@@ -1,4 +1,4 @@
-$belong[/layout.vm]
+$belong[layout.vm]
 <style>
     .bg-warning{padding: .5em;}
     .bg-danger{padding: .5em;}
@@ -14,7 +14,7 @@ $belong[/layout.vm]
                 <li class="sidebar_head_li"><a href="#prettify">代码美化</a></li>
                 <li class="sidebar_head_li"><a href="#placeholder">图片占位</a></li>
                 <li class="sidebar_head_li"><a href="#crx">Chrome插件</a></li>
-                <li class="sidebar_head_li"><a href="#css-sprite">CSS-Sprite</a></li>
+                <li class="sidebar_head_li"><a href="#livereload">自动刷新</a></li>
             </ul>
         </div>
     </div>
@@ -123,7 +123,7 @@ $belong[/layout.vm]
             <p>f2e-server 内置一个chrome插件开发目录, 目前提供了两个简单的插件功能(后续可能提供更多功能)</p>
             <ol>
                 <li>浏览器二维码本地生成</li>
-                <li>html页面修改实时更新</li>
+                <li>css-sprite图片合并</li>
             </ol>
             <p>如何导入:</p>
             <ol>
@@ -148,24 +148,22 @@ $belong[/layout.vm]
                     <p><img src="images/other-crx-5.gif" alt="查看二维码"></p>
                 </li>
                 <li>
-                    页面自动刷新 需要在请求的查询参数中添加 <code>listen</code> 字段如：
-                    <p><img src="images/other-crx-6.gif" alt="页面自动刷新"></p>
-                    <p>可以看到 f2e-server 使用了阻塞式的请求来监听本地文件变化进行页面自动刷新</p>
+                    <h4>CSS-Sprite</h4>
+                    <p>f2e-server 内置的 css-sprite 通过chrome插件实现, 可以操作任意css文件</p>
+                    <p>在访问列表中查看css/less文件时, 点击如图链接:</p>
+                    <p><img src="images/other-crx-7.gif" alt="css-sprite链接"></p>
+                    <p>进入后先点击 <a href="javascript:void(0);" class="btn btn-success">Sprite</a> 保存合并图片, 再点击存储css文件</p>
+                    <p><img src="images/other-crx-8.gif" alt="css-sprite界面"></p>
+                    <p class="bg-warning">事实上：在css文件路径后面手动添加search参数 <code>css-sprite</code> 就可以开启</p>    
                 </li>
             </ol>
         </section>
 
-        <section id="css-sprite">
-            <h2>CSS-Sprite</h2>
-            <p>f2e-server 内置的 css-sprite 通过chrome插件实现, 可以操作任意css文件</p>
-            <p>在访问列表中查看css/less文件时, 点击如图链接:</p>
-            <p><img src="images/other-crx-7.gif" alt="css-sprite链接"></p>
-            <p>进入后先点击 <a href="javascript:void(0);" class="btn btn-success">Sprite</a> 保存合并图片, 再点击存储css文件</p>
-            <p><img src="images/other-crx-8.gif" alt="css-sprite界面"></p>
-            <p class="bg-warning">事实上：在css文件路径后面手动添加search参数 <code>css-sprite</code> 就可以开启</p>
-            <p>
-                下载: <a class="btn btn-success" role="button" href="downloads/baidu-shy2850.zip">百度首页 css-sprite 样例 </a>
-            </p>
+        <section id="livereload">
+            <h2>实时刷新</h2>
+            <p>在conf.js 文件中配置 <code>livereload: true</code> 项目下所有html/htm/mdppt文件支持检测自动刷新</p>
+            <p>如果只想针对特殊文件进行自动刷新，可以在访问url后面增加search参数 <code>listen=true</code></p>
+            <p class="bg-warning">项目文件夹下面任何文件文件夹变化都会触发刷新操作</p>
         </section>
 
 </div>
