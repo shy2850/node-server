@@ -1,19 +1,25 @@
 "use strict";
-var watch = require('watch');
+var chokidar = require('chokidar');
 var mime = require('mime');
+var _ = require('underscore');
 var roots = {};
+var timeStramp;
 
-exports.execute = function(req, resp, root){
+var watcher = chokidar.watch('./', {
+    ignored: /[\/\\]\./
+});
+watcher.on('all', function(event, path){
+    timeStramp = +new Date();
+});
+
+exports.execute = function(req, resp, root, handle, conf){
     if(!roots[root]){
-        roots[root] = +new Date();
-        watch.watchTree(root, function(){
-            roots[root] = +new Date();
-        });
+        roots[root] = true;
+        watcher.add(root);
     }
-
     var times = 0, t = Number(req.data.mtime);
     function fn(){
-        if(roots[root] === t){
+        if(timeStramp === t){
             times++;
             if(times < 60){
                 setTimeout(fn, 500);

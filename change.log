@@ -227,4 +227,7 @@
 	#修改mdppt为外部依赖，去除mdppt的相关demo
 	#设置npm-cli支持【global install】: $ f2eserver start 开启
 	#修改实时刷新插件为项目配置（livereload） 默认不开启, 使用jsonp模式更靠谱的支持了全浏览器设备
+
+--2015/10/19 v1.8.2
+	#livereload 支持从 watch 换用到 chokidar
 	
