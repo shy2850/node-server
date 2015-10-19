@@ -3,8 +3,8 @@ var CONF = require("./nodeLib/config/conf"),
     fs = require('fs'),
     os = require('os'),
     _ = require('underscore');
-//hosts写入, windows only, 可能需要管理员权限
-var hostsString = '127.0.0.1  ' + _.keys(CONF).join(' '),
+//hosts写入
+var hostsString = '127.0.0.1 ' + _.keys(CONF).join('\n127.0.0.1 '),
     hostsPath = os.type().match(/Windows/) ? 'C:\\Windows\\System32\\drivers\\etc\\hosts' : '/etc/hosts';
 if( process.argv[2] === 'reset' ){
     fs.rename( hostsPath + '.bak', hostsPath, function(err){

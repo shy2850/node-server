@@ -3,12 +3,12 @@ var chokidar = require('chokidar');
 var mime = require('mime');
 var _ = require('underscore');
 var roots = {};
-var timeStramp;
+var timeStramp = +new Date();
 
-var watcher = chokidar.watch('./', {
+var watcher = chokidar.watch('.', {
     ignored: /[\/\\]\./
 });
-watcher.on('all', function(event, path){
+watcher.on('change', function(event, path){
     timeStramp = +new Date();
 });
 
@@ -27,7 +27,7 @@ exports.execute = function(req, resp, root, handle, conf){
             }
         }
         resp.writeHead(200, {"Content-Type": mime.get('.js')});
-        resp.end( (req.data.callback || 'callback') + '(' + roots[root] + ');' )
+        resp.end( (req.data.callback || 'callback') + '(' + timeStramp + ');' )
     }
     fn();
 };

@@ -230,4 +230,8 @@
 
 --2015/10/19 v1.8.2
 	#livereload 支持从 watch 换用到 chokidar
+
+--2015/10/19 v1.8.3
+	#全局模式增加hosts等命令
+	#livereload 监听事件修改，只支持change
 	

@@ -2,23 +2,94 @@
 'use strict';
 var program = require('commander');
 var fs = require('fs');
+var os = require('os');
+var path = require('path');
 var _ = require('underscore');
 var base = require('../package.json');
+var CONF = require('../nodeLib/config/conf');
+var host = CONF.localhost;
+    host.root = process.cwd() + '\\';
+var hostsPath = os.type().match(/Windows/) ? 'C:\\Windows\\System32\\drivers\\etc\\hosts' : '/etc/hosts';
+
 program
-    .version(base.version);//声明hi的版本号
+    .version(base.version);
+
 program
-    .command('start')//声明hi下有一个命令叫list
-    .description('start f2e-server')//给出list这个命令的描述
-    .action(function(options) {//list命令的实现体
-        var CONF = require('../nodeLib/config/conf');
-        var host = CONF.localhost;
-        try{
-            _.extend(CONF, require('./f2e-conf'));
-        }catch(e){
-            fs.writeFile( 'f2e-conf.js', 'exports["localhost"] = ' + JSON.stringify( CONF.localhost, null, 4 ) + ';\n' );
-        }
-        host.root = './';
-        require('../node-server.js');
-        require('child_process').exec('explorer http://localhost' + (host.port === 80 ? '' : (':' + host.port) ) );
+    .command('start')
+    .description('启动服务器')
+    .action(function(options) {
+        fs.readFile('f2e-conf.js', function(error, str){
+            if(error){
+                fs.writeFile( 'f2e-conf.js', 'exports["localhost"] = ' + JSON.stringify( CONF.localhost, null, 4 ) + ';\n' );
+            }else{
+                var conf = new Function('var exports = {};' + str + ';return exports;')();
+                for(var k in conf){
+                    CONF[k] = _.extend({}, CONF[k], conf[k]);
+                }
+            }
+            require('../node-server.js');
+            require('child_process').exec('explorer http://localhost' + (host.port === 80 ? '' : (':' + host.port) ) );
+        });
     });
+
+program
+    .command('hosts')
+    .description('修改hosts文件')
+    .action(function(options) {
+        fs.readFile('f2e-conf.js', function(error, str){
+            if(error){
+                console.log(error);
+            }else{
+                var conf = new Function('var exports = {};' + str + ';return exports;')();
+                for(var k in conf){
+                    CONF[k] = _.extend({}, CONF[k], conf[k]);
+                }
+                var hostsString = '127.0.0.1 ' + _.keys(CONF).join('\n127.0.0.1 ');
+                fs.stat(hostsPath + '.bak', function(error, stat){
+                    if( stat && stat.isFile && stat.isFile() ){
+                        console.log( '\nhosts.bak is existed.  run: ' );
+                        console.warn( '  "f2eserver reset"' );
+                    }else{
+                        var hostsBak = fs.readFileSync( hostsPath ).toString().replace(/[\n\r]?127\.0\.0\.1[\s\S]+/g, '');
+                        fs.rename(hostsPath, hostsPath + '.bak', function(err){
+                            if( err ){
+                                console.log( err );
+                            }else{
+                                fs.writeFile(hostsPath, hostsBak + '\n' + hostsString, function(err1){
+                                    if(err1){
+                                        console.log(err1);
+                                    }else{
+                                        console.log( '  hosts backup in hosts.bak and Instead of new local-hosts config' );
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+program
+    .command('reset')
+    .description('还原hosts文件')
+    .action(function(options) {
+        fs.rename( hostsPath + '.bak', hostsPath, function(err){
+            if(err){
+                console.log( err );
+            }else{
+                console.log( 'reset hosts successfully' );
+            }
+        });
+    });
+
+program
+    .command('demos')
+    .description('提供一个示例项目: wfQuery, 通过Git下载')
+    .action(function(options) {
+        require('child_process').exec('git clone https://github.com/shy2850/wfQuery ' + host.root + 'wfQuery', function(e){
+            console.log( e );
+        });
+    });
+
 program.parse(process.argv);//开始解析用户输入的命令
