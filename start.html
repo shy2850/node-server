@@ -20,7 +20,7 @@ $belong[layout.vm]
         
         <section id="install-server">
             <h2>f2e-server安装</h2>
-            <p>直接使用npm 安装（v1.8.2以后版本支持全局安装 npm install f2e-server -g）</p>
+            <p>直接使用npm 安装（支持全局安装 npm install f2e-server -g）</p>
             <pre class="language-bash"><code>$ npm install f2e-server
 f2e-server@1.4.9 node_modules\f2e-server
 ├── cssmin@0.4.3
@@ -57,6 +57,20 @@ Server running at http://127.0.0.1:80   [localhost]
 Server running at http://127.0.0.1:2850 [staticconf]
 </code></pre>
             <p>如果使用全局安装, 可以在指定目录中直接使用 <code>$ f2eserver start</code> 启动项目</p>
+            <p>使用全局安装，还支持以下简单命令:</p>
+            <pre class="language-bash"><code>$ f2eserver -h
+  Usage: f2e-server [options] [command]
+
+  Commands:
+    start   启动服务器
+    hosts   修改hosts文件
+    reset   还原hosts文件
+    demos   提供一个示例项目: wfQuery, 通过Git下载
+
+  Options:
+    -h, --help     output usage information
+    -V, --version  output the version number
+</code></pre>
             <p>
                 服务启动 将自动打开本地默认浏览器 <code>explorer http://localhost</code> 如下 <br>
                 <!-- <img src="images/folder.gif" alt="文件夹列表展示"> -->
