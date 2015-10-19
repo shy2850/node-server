@@ -12,8 +12,7 @@ exports.execute = function(req, resp, root){
     }
 
     var times = 0, t = Number(req.data.mtime);
-    (function(){
-        var fn = arguments.callee;
+    function fn(){
         if(roots[root] === t){
             times++;
             if(times < 60){
@@ -23,5 +22,6 @@ exports.execute = function(req, resp, root){
         }
         resp.writeHead(200, {"Content-Type": mime.get('.js')});
         resp.end( (req.data.callback || 'callback') + '(' + roots[root] + ');' )
-    })();
+    }
+    fn();
 };
