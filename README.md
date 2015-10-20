@@ -1,31 +1,38 @@
 f2e-server 
 ==========
-点击进入 [f2e-server.com](http://f2e-server.com) 查看详细文档
-或
-[点击链接加入群【f2e-server】：](http://jq.qq.com/?_wv=1027&k=MqC52t)
 
 f2e-server 是基于nodejs平台的HTTP服务器，提供了基本的模板引擎以及常用的前端工具。
 
 a nodejs based http-server with easy-template-engine and several F2E-utils
 
-集成Node.js 环境版本下载: [百度网盘](http://pan.baidu.com/s/1mgwvcQ8)
-
-github: <https://github.com/shy2850/node-server.git/>
-
-简书文档: <http://www.jianshu.com/p/a1456b95baec/>
+点击进入 [f2e-server.com](http://f2e-server.com) 查看详细文档 或 [点击链接加入群【f2e-server】：](http://jq.qq.com/?_wv=1027&k=MqC52t)
 
 changelog: [change.log](change.log)
 
+## 全局安装
+f2e-server 1.8.3 以后支持全局安装
 
-* 安装 f2e-server : $ 
+* 安装: $ 
+	``npm install f2e-server -g``
+* 启动:$ 
+	``f2eserver start`` 服务启动后，会在当前目录自动生成 f2e-conf.js 文件, 可参考修改
+* 修改hosts:$ 
+	``f2eserver hosts`` 
+* 恢复hosts:$ 
+	``f2eserver reset``
+
+
+## 局部安装
+
+* 安装: $ 
 	``npm install f2e-server``
 * 进入服务器根目录: $ 
 	``cd node_modules/f2e-server``
-* 修改hosts[windows]:$ 
+* 启动:$ 
+	``npm start`` 服务启动后，会在f2e-server外层目录自动生成 conf.js 文件, 可参考修改
+* 修改 hosts:$ 
 	``node hosts`` 
-* 启动f2e-server服务:$ 
-	``npm start`` __服务启动后，会在f2e-server外层目录自动生成 conf.js 文件, 可参考修改__
-* 恢复hosts[windows]:$ 
+* 恢复 hosts:$ 
 	``node hosts reset`` 
 * 配置文件参考: [nodeLib/config/conf.js](nodeLib/config/conf.js) 
 
