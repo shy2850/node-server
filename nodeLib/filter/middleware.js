@@ -7,7 +7,7 @@ var fs = require("fs"),
 var postcss, autoprefixer;
 try{
     postcss = require("postcss");
-    autoprefixer = require("autoprefixer-core");
+    autoprefixer = require("autoprefixer");
 }catch(e){
     autoprefixer = false;
 }
@@ -40,16 +40,20 @@ mini = {
         return function(str, resp){
             var m;
             if( "css" === (middTypes[extType] || extType) && resp.autoprefixer && autoprefixer){
-                postcss([ autoprefixer({inline:false,browsers: ['> 1%', 'IE 7']}) ]).process(str).then(function (result) {
-                    result.warnings().forEach(function (warn) {
-                        console.warn(warn.toString());
+                if(autoprefixer){
+                    postcss([ autoprefixer({inline:false,browsers: ['> 1%', 'IE 7']}) ]).process(str).then(function (result) {
+                        result.warnings().forEach(function (warn) {
+                            console.warn(warn.toString());
+                        });
+                        if(!debug && (m = mini[extType]) ){
+                            m(result.css, resp);
+                        }else{
+                            out(result.css, resp);
+                        }
                     });
-                    if(!debug && (m = mini[extType]) ){
-                        m(result.css, resp);
-                    }else{
-                        out(result.css, resp);
-                    }
-                });
+                }else{
+                    console.error("autoprefixer 或 postcss 未安装, 自动前缀插件不可用！");
+                }
             }else{
                 if(!debug && (m = mini[extType]) ){
                     m(str, resp);
