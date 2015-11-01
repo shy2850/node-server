@@ -36,7 +36,7 @@ exports.execute = function(req, resp, root, handle, conf){
     root = $path.join(root, referer.pathname);
     var $root = conf.output,
         mime = req.util.mime,
-        buildFilder = conf.buildFilder || function(){ return true; };
+        buildFilter = conf.buildFilter || function(){ return true; };
 
     var build = function( path ){
         var path1 = path,
@@ -44,7 +44,7 @@ exports.execute = function(req, resp, root, handle, conf){
             joinPath = $path.join($root, path);
         fs.stat( $path.join(root, path), function(error, stats){
             //文本类型资源通过HTTP获取, 以确保跟开发环境资源相同
-            if(stats && stats.isFile && stats.isFile() && mime.isTXT(extType) && buildFilder(path) ){
+            if(stats && stats.isFile && stats.isFile() && mime.isTXT(extType) && buildFilter(path) ){
                 building = 1;
                 //console.log( referer.href + "/" + encodeURI(path) );
                 http.get( referer.href + "/" + encodeURI(path) + '?_build_=true', function(res) {

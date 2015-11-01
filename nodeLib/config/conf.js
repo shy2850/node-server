@@ -21,16 +21,16 @@ var conf = {
     maxConnections: 1000,    //并发处理的最大连接数
     runJs: true,       //是否使用服务器模板引擎
     output: "c:\\output\\",
-    buildFilder: function(filePath){
+    buildFilter: function(filePath){
         return !/\bnode_modules\b/.test( filePath );
     },
-    rename: function(filename/*, debug*/){ //构建完成后是否重命名文件
+    rename: function(filename/*, debug*/){ //构建完成后是否重命名文件（中间件重命名已经完成）
         // return debug ? filename : filename.replace(/\.(js|css)$/,".min.$1");
         return filename;
     },
     'nginx-http-concat': true,
     filter: {
-        get: function(){
+        get: function(/*req, resp*/){
             // console.log( arguments[0].url );  // 这个前置过滤器可以过滤所有服务端请求, 配置和agent类似
         }
     },
@@ -82,5 +82,5 @@ try{
         }
     }
 }catch(e){
-    console.log(e);
+    console.log("配置文件错误，使用默认配置！");
 }

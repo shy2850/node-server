@@ -81,7 +81,7 @@ var middleware = {
         }, function (err, output) {
             if (err) { throw err; }
             else{
-                middout("css", output.css, resp);
+                middout("css", output.css, resp, DEBUG);
             }
         });
     },
@@ -94,25 +94,25 @@ var middleware = {
         }, function (err, output) {
             if (err) { throw err; }
             else{
-                middout("css", output.css.toString(), resp);
+                middout("css", output.css.toString(), resp, DEBUG);
             }
         });
     },
-    jade: function(req, resp, rs){
-        var output = require('jade').render(rs);
-        middout("html", output.toString(), resp);
+    jade: function(req, resp, rs, pathname, DEBUG){
+        var output = require('jade').render(rs, {pretty: true});
+        middout("html", output.toString(), resp, DEBUG);
     },
-    md: function(req, resp, rs){
+    md: function(req, resp, rs, pathname, DEBUG){
         var output = require('marked')(rs + '');
-        middout("html", output, resp);
+        middout("html", output, resp, DEBUG);
     },
-    mdppt: function(req, resp, rs){
+    mdppt: function(req, resp, rs, pathname, DEBUG){
         var mdppt = require('mdppt');
         mdppt.cfg.base = req.util.staticServer + '/node_modules/mdppt/assets/';
         var output = mdppt(rs + '');
-        middout("html", output, resp);
+        middout("html", output, resp, DEBUG);
     },
-    ftl: function(req, resp, rs, pathname){
+    ftl: function(req, resp, rs, pathname, DEBUG){
         resp.writeHead(200,{"middleware-type": 'html', "Content-Type": mime.get('html')});
         var Freemarker = require('freemarker.js');
         var fm = new Freemarker({
@@ -130,7 +130,7 @@ var middleware = {
                 if(err1){
                     throw err1;
                 }else{
-                    middout("html", html, resp);
+                    middout("html", html, resp, DEBUG);
                 }
                 fs.unlink(tmpUrl);
             });

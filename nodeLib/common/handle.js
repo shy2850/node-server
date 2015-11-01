@@ -7,7 +7,7 @@ var livereload_code = fs.readFileSync( path.join( __dirname, '../../static/js/li
 
 
 exports.execute = function(req, resp, root, str, mini, debug, conf){
-    var belong = conf.placeholder,
+    var belong = "",
         include = new RegExp(conf.include),
         pathname = path.join(root, req.$.title).replace(/[^\\\/]+$/,"");
     var h = new RegExp(conf.belong).exec(str),
@@ -17,7 +17,7 @@ exports.execute = function(req, resp, root, str, mini, debug, conf){
         if(h){
             belong = fs.readFileSync( /^[\/\\]/.test(h[1]) ? path.join(root,h[1]) : path.join(pathname,h[1]), 'utf-8' );    //读取belong文本
             str = str.replace(h[0], "" );              //替换关键字
-            str = belong.replace("$[placeholder]",str);
+            str = belong.replace(conf.placeholder,str);
         }
         while( ( inc = str.match(include) ) ){
             str = str.replace( inc[0], fs.readFileSync( /^[\/\\]/.test(inc[1]) ? path.join(root,inc[1]) : path.join(pathname,inc[1]),'utf-8') );
@@ -39,7 +39,8 @@ exports.execute = function(req, resp, root, str, mini, debug, conf){
                 var ends = req.url.replace(/^([^?#]+).*$/,"$1");
                 if( conf.babel && ends.match(/\.js$/) ){
                     result = require("babel").transform(result).code;
-                }else if( (conf.livereload || req.data.listen) && ends.match(/(html|htm|mdppt)$/) ){
+                }
+                else if(req.data.listen || conf.livereload && ends.match(/(html|htm|mdppt|md|jade|ftl)$/) ){
                     result = result + '<script>'+livereload_code+'</script>'
                 }
             default :
