@@ -9,6 +9,7 @@ $belong[layout.vm]
             <ul class="nav">
                 <li class="sidebar_head_li"><a href="#combine">Combine支持(http-concat)</a></li>
                 <li class="sidebar_head_li"><a href="#autoprefix">CSS3自动前缀</a></li>
+                <li class="sidebar_head_li"><a href="#babel">ES6-ES5自动转换</a></li>
                 <li class="sidebar_head_li"><a href="#psd">psd文件解析</a></li>
                 <li class="sidebar_head_li"><a href="#upload">upload使用</a></li>
                 <li class="sidebar_head_li"><a href="#prettify">代码美化</a></li>
@@ -32,13 +33,14 @@ $belong[layout.vm]
 </code></pre>   
             <p class="bg-warning">combine只能对文本内容进行简单合并, 不能和模板引擎混杂使用</p>
         </section>
-
+    
         <section id="autoprefix">
             <h2>CSS3自动前缀</h2>
             <p>f2e-server 服务端提供了动态的添加最新完整CSS3浏览器前缀 【可用于构建阶段】</p>
             <p>要求：</p>
             <ul>
-                <li>安装 autoprefixer-core <code>npm install autoprefixer-core</code></li>
+                <li>安装 postcss <code>npm install postcss</code></li>
+                <li>安装 autoprefixer <code>npm install autoprefixer</code></li>
                 <li>在conf.js中对应服务下配置参数 <code>"autoprefixer": true</code></li>
             </ul>
             <p>如下源代码：</p>
@@ -62,6 +64,31 @@ $belong[layout.vm]
     -webkit-transform: rotateY(0deg);
             transform: rotateY(0deg);
 }</code></pre> 
+        </section>
+
+        <section id="babel">
+            <h2>ES6-ES5自动转换</h2>
+            <p>f2e-server 服务端提供了动态的支持ES6源代码直接转ES5 【可用于构建阶段】</p>
+            <p>要求：</p>
+            <ul>
+                <li>安装 babel <code>npm install babel</code></li>
+                <li>在conf.js中对应服务下配置参数 <code>"babel": true</code></li>
+            </ul>
+            <p>如下源代码：</p>
+            <pre class="language-javascript"><code>var [basket, b, c] = [{count:1, onSale: true}, 2, 3];
+$("#result").append(`
+  There are <b>${basket.count}</b> items
+   in your basket, <em>${basket.onSale}</em>
+  are on sale!
+`);</code></pre>   
+            <p>操作后结果代码：</p>
+            <pre class="language-javascript"><code>"use strict";
+
+var basket = { count: 1, onSale: true };
+var b = 2;
+var c = 3;
+
+$("#result").append("\n  There are <b>" + basket.count + "</b> items\n   in your basket, <em>" + basket.onSale + "</em>\n  are on sale!\n");</code></pre> 
         </section>
 
         <section id="psd">
