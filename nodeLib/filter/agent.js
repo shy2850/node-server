@@ -18,7 +18,7 @@ function doRequest(request, response, option, path, fws){
           headers["content-length"] = request.headers["content-length"];
       }
       var param = {    // 处理转发参数
-          host: option.host || request.util.host,
+          host: option.host || request.headers.host || request.util.host,
           port: option.port || 80,
           path: option.path ? option.path(location) : location.path,
         method: request.method,
