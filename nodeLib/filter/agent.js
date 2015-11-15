@@ -78,7 +78,10 @@ var mkdirs = function(dirpath, mode, callback) {
     } else {
       //尝试创建父目录，然后再创建当前目录
       mkdirs(require('path').dirname(dirpath), mode, function(){
-        fs.mkdirSync(dirpath, mode);
+        try{
+          fs.mkdirSync(dirpath, mode);
+        }catch(e){
+        }
         callback();
       });
     }
