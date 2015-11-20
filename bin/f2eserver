@@ -28,7 +28,6 @@ program
                 }
             }
             require('../node-server.js');
-            require('child_process').exec('explorer http://localhost' + (host.port === 80 ? '' : (':' + host.port) ) );
         });
     });
 

@@ -1,28 +1,28 @@
 {
   "name": "f2e-server",
-  "version": "1.8.8",
+  "version": "1.9.0",
   "description": "a nodejs based file-system-server with easy-template-engine and several F2E-utils",
   "main": "node-server.js",
   "dependencies": {
-    "chokidar": "^1.2.0",
-    "commander": "^2.9.0",
+    "chokidar": ">=1.2.0",
+    "commander": ">=2.9.0",
     "cssmin": ">=0.4.1",
     "formidable": ">=1.0.15",
-    "marked": "^0.3.3",
+    "marked": ">=0.3.3",
     "mime": "*",
     "uglify-js": ">=2.4.15",
     "underscore": ">=1.7.0",
     "wfquery": "*"
   },
   "devDependencies": {
-    "babel": "^5.8.21",
-    "postcss": "^4.1.14",
-    "autoprefixer-core": "^5.1.11",
+    "babel": ">=5.8.21",
+    "postcss": ">=4.1.14",
+    "autoprefixer-core": ">=5.1.11",
     "jade": ">=1.7.0",
     "coffee-script": ">=1.8.0",
-    "less": "2.0.0",
-    "node-sass": "^3.2.0",
-    "highlight": "0.2.3",
+    "less": ">=2.0.0",
+    "node-sass": ">=3.2.0",
+    "highlight": ">=0.2.3",
     "psd": ">=1.0.2",
     "optipng-bin": ">=3.0.2",
     "jpegtran-bin": ">=2.0.2",
@@ -30,7 +30,7 @@
     "mdppt": "*"
   },
   "scripts": {
-    "start": "node node-server.js explorer http://localhost",
+    "start": "node node-server.js start",
     "lint": "eslint -c eslint.json *.js nodeLib/*/*.js --no-ignore"
   },
   "repository": {
@@ -48,7 +48,7 @@
     "url": "https://github.com/shy2850/node-server/issues"
   },
   "bin": {
-    "f2eserver": "./bin/f2e-server"
+    "f2eserver": "./bin/f2eserver"
   },
   "homepage": "https://github.com/shy2850/node-server",
   "readme": "README.md",

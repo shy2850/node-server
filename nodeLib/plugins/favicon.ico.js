@@ -4,7 +4,6 @@ var path = require('path'),
     fs = require('fs');
 var favicon = path.join( __dirname , "/../../static/img/favicon.ico" );
 exports.execute = function(req, resp){
-    console.log( "call for favicon.ico" );
     if( req.headers["if-modified-since"] ){
         resp.writeHead(304, "Not Modified");
         resp.end();

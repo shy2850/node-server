@@ -3,28 +3,36 @@ var http = require('http'),
     https = require('https'),
     url = require('url'),
     fs = require('fs');
+var _ = require('underscore');
+var hostReg = /(https?\:\/\/)[^\/]+/;
 var cookies = {};
 
 function doRequest(request, response, option, path, fws){
-  var location = url.parse(path),
-      headers = {   //拼接headers数据，只处理必要的
-          "user-agent": request.headers["user-agent"] || "f2eBrowser",
-          "content-type": request.headers["content-type"] || "text/html",
-          cookie: option.cookie || cookies[option.host] || "",   //很多站点都是通过cookie进行SSO认证,可以自己在浏览器模拟
-          host: option.host || request.util.host,
-          accept: request.headers.accept || "*"
-      };
-      if( request.method === "POST" ){
-          headers["content-length"] = request.headers["content-length"];
-      }
-      var param = {    // 处理转发参数
-          host: option.host || request.headers.host || request.util.host,
-          port: option.port || 80,
-          path: option.path ? option.path(location) : location.path,
-        method: request.method,
-       headers: headers
-      };
-  return ( option.port === 443 ? https : http ).request(param,function(res){
+  var pathUrl = url.parse(path);
+  var protocol = option.protocol || "http";
+  var originHost = request.headers.host;
+  var headers = {
+      cookie: (option.mutiple ? cookies[option.host] : request.headers.cookie) || "",
+      host: option.host || request.headers.host,
+  };
+
+  if(request.headers.origin){
+      headers.origin = request.headers.origin.replace(hostReg, protocol + "://" + headers.host)
+  }
+  if(request.headers.referer){
+      headers.referer = request.headers.referer.replace(hostReg, protocol + "://" + headers.host)
+  }
+
+  _.extend(request.headers, headers);
+  var param = {    // 处理转发参数
+      host: headers.host,
+      port: option.port || 80,
+      path: option.path ? option.path(pathUrl) : pathUrl.path,
+    method: request.method,
+   headers: request.headers
+  };
+
+  return ( option.port === 443 ? https : http ).request(param, function(res){
         var ck = res.headers["set-cookie"],
             hck = cookies[option.host];
         if(ck){ // 远程cookie同步
@@ -41,7 +49,7 @@ function doRequest(request, response, option, path, fws){
           cookies[option.host] = hck;
         }
         if( res.statusCode === 302 ){ // 对于远程服务的302转发中的域名部分修改成本地域名
-          res.headers.location = res.headers.location.replace( /(https?:\/\/)[^\\\/]+/, "http://" + request.headers.host );
+          res.headers.location = res.headers.location.replace( /(https?:\/\/)[^\\\/]+/, "http://" + originHost );
         }
         response.writeHead(res.statusCode, res.headers);
         res.pipe(response);
@@ -63,14 +71,6 @@ function doRequest(request, response, option, path, fws){
     });
 }
 
-function execOpt (opt) {
-  if( opt.origin && !opt.host ){
-    var loc = url.parse( opt.origin );
-    opt.host = loc.hostname;
-    opt.port = loc.protocol === "https:" ? 443 : loc.port;
-  }
-}
-
 var mkdirs = function(dirpath, mode, callback) {
   fs.exists(dirpath, function(exists) {
     if(exists) {
@@ -89,9 +89,6 @@ var mkdirs = function(dirpath, mode, callback) {
 };
 
 exports.execute = function(request, response, option, path){
-  //配置解析: 支持通过 origin = http://xuan.news.cn/ 代替host和port配置，
-  //并解析协议为https:时，port自动设置为443.
-  execOpt(option);
 
   var fws = null;
   if( option.save === true ){

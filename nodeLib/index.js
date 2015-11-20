@@ -46,7 +46,7 @@ exports.start = function(conf){
             var m = modules.get( _pathurl.replace('/','') );
             if(m){
                 m.execute(_req,_resp,_conf.root,_handle,_conf);
-            }else if(_conf.agent && _conf.agent.get && (agent = _conf.agent.get(_pathurl) ) ){   // 代理过滤
+            }else if(_conf.agent && _conf.agent.get && (agent = _conf.agent.get(_pathurl, _req, _resp, _conf) ) ){   // 代理过滤
                 require('./filter/agent').execute(_req,_resp,agent,_req.url);
             }else{
                 _resp.writeHead(404, {"Content-Type": "text/html"});

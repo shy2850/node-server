@@ -10,4 +10,6 @@ for(var k in CONF){
     console.log("Server running at http://127.0.0.1:" + CONF[k].port + '\t[' + k + ']');
 }
 
-if(extCmd){ require('child_process').exec( extCmd ); }
+if(extCmd === "start"){
+	require('child_process').exec( "explorer http://localhost" );
+}
