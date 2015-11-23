@@ -35,7 +35,7 @@ function doRequest(request, response, option, path, fws){
   return ( option.port === 443 ? https : http ).request(param, function(res){
         var ck = res.headers["set-cookie"],
             hck = cookies[option.host];
-        if(ck){ // 远程cookie同步
+        if(ck && option.mutiple ){ // 远程cookie同步
           [].slice.call(ck).forEach(function(item){
             var m = item.split(";")[0],
                 key = m.split("=")[0],

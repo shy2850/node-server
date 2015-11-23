@@ -1,6 +1,5 @@
 (function(){
-
-	var src = '/livereload?mtime={mtime}&t={t}&callback={callback}';
+	var src = 'http://' + location.host + '/livereload?mtime={mtime}&t={t}&callback={callback}';
 	var param = {
 		mtime: 0,
 		t: +new Date,
