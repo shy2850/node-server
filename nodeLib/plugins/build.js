@@ -11,7 +11,7 @@ var building = 0;
 var i = 0, builded = false, l = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 setInterval(function(){
     l[i] = building;
-    if( _.filter(l, function(n){ return !!n; }).length ){
+    if( _.find(l, function(n){ return !!n; }) ){
         if( i === 0 ){
             builded = true;
             console.log( 'building......' );
@@ -28,11 +28,43 @@ try{
     optipng = require('optipng-bin');
     jpegtran = require('jpegtran-bin').path;
 }catch(e){
-    console.log( "optipng-bin & jpegtran-bin is not installed. \n building will run without Image minified!" );
+    // console.log( "optipng-bin & jpegtran-bin is not installed. \n building will run without Image minified!" );
 }
 
+var buildFile = function(pathname, conf, callback){
+    building = 1;
+    var pathname1 = pathname;
+    var outputFile = $path.join(conf.output, pathname);
+    http.get('http://' + conf.host + '/' + encodeURI(pathname) + '?_build_=true', function(res){
+        var type;
+        if(type = res.headers['middleware-type']){
+            pathname1 = path.replace(/[^\.]+$/,type);     //对应 middleware 里面的type
+        }
+        try{
+            var fws = fs.createWriteStream( outputFile );
+            res.pipe( fws ).on('finish',function(){
+                building = 0;
+                callback();
+            });
+        }catch(e){
+            console.log(e);
+        }
+    }).on('error', function(e){
+        console.log('build error for: ' + pathname);
+        console.log(e);
+        building = 0;
+    });
+};
+exports.buildFile = buildFile;
 exports.execute = function(req, resp, root, handle, conf){
-    var referer = url.parse( req.headers.referer );
+    if( _.find(l, function(n){ return !!n; }) ){
+        console.log('building......');
+        resp.end(JSON.stringify({
+            error: '构建中...'
+        }));
+        return;
+    }
+    var referer = url.parse( req.headers.referer || req.url );
     root = $path.join(root, referer.pathname);
     var $root = conf.output,
         mime = req.util.mime,
@@ -40,11 +72,10 @@ exports.execute = function(req, resp, root, handle, conf){
 
     var build = function( path ){
         var path1 = path,
-            extType = $path.extname(path).substring(1),
             joinPath = $path.join($root, path);
         fs.stat( $path.join(root, path), function(error, stats){
             //文本类型资源通过HTTP获取, 以确保跟开发环境资源相同
-            if(stats && stats.isFile && stats.isFile() && mime.isTXT(extType) && buildFilter(path) ){
+            if(stats && stats.isFile && stats.isFile() && mime.isTXT(path) && buildFilter(path) ){
                 building = 1;
                 //console.log( referer.href + "/" + encodeURI(path) );
                 http.get( referer.href + "/" + encodeURI(path) + '?_build_=true', function(res) {
@@ -52,9 +83,9 @@ exports.execute = function(req, resp, root, handle, conf){
                     if(type){
                         path1 = path.replace(/[^\.]+$/,type);     //对应 middleware 里面的type
                     }
-                    path1 = conf.rename ? conf.rename(path1, conf.debug) : path1;
-                    fs.rename( joinPath, $path.join($root, path1), function(err){
-                        var fws = fs.createWriteStream( $root + path1 );
+                    var newPath = $path.join($root, path1);
+                    fs.rename( joinPath, newPath, function(err){
+                        var fws = fs.createWriteStream( newPath );
                         if(err){
                             console.log(err);
                         }else{
@@ -63,8 +94,9 @@ exports.execute = function(req, resp, root, handle, conf){
                             });
                         }
                     });
-                }).on('error',function(){
-                    console.log( 'build error for: ' + path );
+                }).on('error',function(e){
+                    console.log('build error for: ' + pathname);
+                    console.log(e);
                 });
             }else if(stats && stats.isDirectory && stats.isDirectory()){ // 文件夹内递归需要构建
                 fs.readdir( $path.join(root, path), function(error1, files){
@@ -134,7 +166,7 @@ exports.execute = function(req, resp, root, handle, conf){
                     });
                 }else{
                     resp.end(JSON.stringify({
-                        error: '目录不存在: ' + $root,
+                        error: err2,
                         command: 'xcopy ' + root.replace(/(.*?)[\\\/]$/,'$1') + ' ' + $root + ' /e/d/s'
                     }));
                 }

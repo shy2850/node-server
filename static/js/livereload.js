@@ -1,5 +1,6 @@
 (function(){
-	var src = 'http://' + location.host + '/livereload?mtime={mtime}&t={t}&callback={callback}';
+	var host = document.scripts[document.scripts.length - 1].getAttribute('data-host');
+	var src = 'http://' + (host || location.host) + '/livereload?mtime={mtime}&t={t}&callback={callback}';
 	var param = {
 		mtime: 0,
 		t: +new Date,
@@ -24,7 +25,7 @@
 		
 	}
 
-	window.f2eserver_livereload = function(time){
+	window[param.callback] = function(time){
 		if( param.mtime && param.mtime !== +time){
 			location.reload();
 		}else{

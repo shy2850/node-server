@@ -3,15 +3,21 @@ var fs = require("fs"),
     path = require("path"),
     _ = require("underscore");
 
-var livereload_code = fs.readFileSync( path.join( __dirname, '../../static/js/livereload.js') );
-
+var livereload_code = require("uglify-js")
+    .minify(
+        fs.readFileSync(
+            path.join( __dirname, '../../static/js/livereload.js')
+        ).toString(),{
+            fromString: true
+        }).code;
 
 exports.execute = function(req, resp, root, str, mini, debug, conf){
     var belong = "",
         include = new RegExp(conf.include),
         pathname = path.join(root, req.$.title).replace(/[^\\\/]+$/,"");
     var h = new RegExp(conf.belong).exec(str),
-        inc;
+        inc,
+        host = req.headers.host;
 
     try{
         if(h){
@@ -40,8 +46,10 @@ exports.execute = function(req, resp, root, str, mini, debug, conf){
                 if( conf.babel && ends.match(/\.js$/) ){
                     result = require("babel").transform(result).code;
                 }
-                else if(req.data.listen || conf.livereload && ends.match(/(html|htm|mdppt|md|jade|ftl)$/) ){
-                    result = result + '<script>'+livereload_code+'</script>'
+                else if(req.data.listen){
+                    result = result + '<script data-host="'+host+'">'+livereload_code+'</script>';
+                }else if(conf.livereload && conf.livereload.inject && conf.livereload.inject(req.$.title) ){
+                    result = result + '<script data-host="'+host+'">'+livereload_code+'</script>';
                 }
             default :
                 mini.get(req.$.title, debug)(result,resp,conf);

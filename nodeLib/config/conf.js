@@ -17,6 +17,25 @@ var conf = {
     cdn: false,
     "fs_mod": true,       //是否支持文件夹列表展示
     livereload: false,   //是否监听文件变化刷新网页
+    // 支持映射关联文件构建
+    /*
+    livereload: {
+        inject: function(pathname){
+            // 只在html文件中插入livereload代码
+            return pathname.match(/\.html/);
+        },
+        relative: function(pathname){
+            var root = conf.root;
+            if(pathname.match(/layout\.html/)){
+                // 如果是layout.html修改， pages文件夹下面所有管理的文件都需要修改。
+                return fs.readdirSync(path.join(root, 'pages'))
+                .map(function(filename){
+                    return 'pages/' + filename;
+                });
+            }
+        }        
+    },
+    */
     port: 80,           //服务器监听端口
     maxConnections: 1000,    //并发处理的最大连接数
     runJs: true,       //是否使用服务器模板引擎
@@ -50,13 +69,13 @@ var conf = {
 exports.localhost = conf.extend({});
 
 exports.staticconf = conf.extend({ //不要删除或者修改这个服务
-    host: "",
+    host: "localhost:2850",
     port: 2850,
     debug: false,
     cdn: true,
     expires: 1000 * 60 * 60 * 24,
     filter: {
-        get: function(req, resp){
+        get1: function(req, resp){
             if( req.url.match(/^[\\\/]?(config|upload|nodeLib\/html)([\/\\])*/) ){
                 resp.writeHead(403,{"content-type": "text/html"});
                 resp.end('<h2 style="text-align:center">禁止访问</h2>');

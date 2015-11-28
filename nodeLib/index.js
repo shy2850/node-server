@@ -26,6 +26,7 @@ exports.start = function(conf){
         }else if( (host[1] | 0) === 80 ){
             conf = CONF.localhost;
         }
+        conf.host = conf.host || req.headers.host;
         root = conf.root;
         if( typeof filter.execute(req,resp,conf) !== "undefined"){
             return false;   //有返回值的时候, 防止继续运行
@@ -35,7 +36,7 @@ exports.start = function(conf){
 
         //包装request功能
         req.data = querystring.parse( url.parse(req.url).query );
-        req.util = {mime: mime, conf: conf, host: host[0], staticServer: "http://" + ( staticConf.host || host[0] ) + ":" + staticConf.port + "/"};
+        req.util = {mime: mime, conf: conf, host: host[0], staticServer: "http://" + staticConf.host + "/"};
         req.$ = {title: pathurl, fileList: [], needUpdate: serverInfo.needUpdate };
         resp.cdnPath = req.headers.host + req.url; // cdn 索引
         resp.autoprefixer = conf.autoprefixer;

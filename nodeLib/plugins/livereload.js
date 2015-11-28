@@ -1,20 +1,51 @@
 "use strict";
 var chokidar = require('chokidar');
 var mime = require('mime');
+var http = require('http');
 var _ = require('underscore');
-var roots = {};
+var build = require('./build');
+
+var confs = {};
 var timeStramp = +new Date();
 
-var watcher = chokidar.watch('.', {
+var watcher = chokidar.watch(null, {
     ignored: /[\/\\]\./
 });
-watcher.on('change', function(event, path){
-    timeStramp = +new Date();
-});
 
-exports.execute = function(req, resp, root, handle, conf){
-    if(!roots[root]){
-        roots[root] = true;
+var listenner = function(path){
+    var conf;
+    for(var root in confs){
+        if(!path.indexOf(root)){
+            conf = confs[root];
+        }
+    }
+    if(conf.livereload){
+        if (!path.indexOf(conf.root)) {
+            var pathname = path.replace(conf.root, '');
+            build.buildFile(pathname, conf, function(){
+                timeStramp = +new Date();
+            });
+
+            var mapSource;
+            if(conf.livereload.relative && (mapSource = conf.livereload.relative(pathname)) ){
+                if(({}).toString.call(mapSource) === "[object Array]"){
+                    mapSource.forEach(function(p){
+                        build.buildFile(p, conf, function(){
+                            timeStramp = +new Date();
+                        });
+                    });
+                }
+            }
+        }
+    }else{
+        timeStramp = +new Date();
+    }
+};
+watcher.on('change', listenner).on('add', listenner);
+
+exports.execute = function(req, resp, root, handle, $conf){
+    if(!confs[root]){
+        confs[root] = $conf;
         watcher.add(root);
     }
     var times = 0, t = Number(req.data.mtime);
