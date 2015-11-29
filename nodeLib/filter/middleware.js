@@ -1,9 +1,19 @@
 "use strict";
 var fs = require("fs"),
     mime = require("mime"),
+    path = require("path"),
     zlib = require("zlib"),
     cdn = require("./cdn"), // cdn模块
     cssmin = require("cssmin");
+
+var livereload_code = require("uglify-js")
+    .minify(
+        fs.readFileSync(
+            path.join( __dirname, '../../static/js/livereload.js')
+        ).toString(),{
+            fromString: true
+        }).code;
+
 var postcss, autoprefixer;
 try{
     postcss = require("postcss");
@@ -37,9 +47,11 @@ mini = {
     },
     get: function(pathname, debug){
         var extType = pathname.split('.').pop();
+        var mimeType = mime.get(pathname);
         return function(str, resp){
             var m;
-            if( "css" === (middTypes[extType] || extType) && resp.autoprefixer && autoprefixer){
+            var conf = resp.util.conf;
+            if("text/css" === mimeType && resp.autoprefixer && autoprefixer){
                 if(autoprefixer){
                     postcss([ autoprefixer({inline:false,browsers: ['> 1%', 'IE 7']}) ]).process(str).then(function (result) {
                         result.warnings().forEach(function (warn) {
@@ -55,6 +67,12 @@ mini = {
                     console.error("autoprefixer 或 postcss 未安装, 自动前缀插件不可用！");
                 }
             }else{
+                if(conf.babel && "text/javascript" === mimeType){
+                    str = require("babel").transform(str).code;
+                }
+                if(resp.data.listen || conf.livereload && conf.livereload.inject && conf.livereload.inject(pathname)){
+                    str = str + '<script data-host="' + conf.host + '">' + livereload_code + '</script>';
+                }
                 if(!debug && (m = mini[extType]) ){
                     m(str, resp);
                 }else{

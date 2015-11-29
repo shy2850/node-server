@@ -35,8 +35,8 @@ exports.start = function(conf){
         var pathname = root + pathurl;
 
         //包装request功能
-        req.data = querystring.parse( url.parse(req.url).query );
-        req.util = {mime: mime, conf: conf, host: host[0], staticServer: "http://" + staticConf.host + "/"};
+        resp.data = req.data = querystring.parse( url.parse(req.url).query );
+        resp.util = req.util = {mime: mime, conf: conf, host: host[0], staticServer: "http://" + staticConf.host + "/"};
         req.$ = {title: pathurl, fileList: [], needUpdate: serverInfo.needUpdate };
         resp.cdnPath = req.headers.host + req.url; // cdn 索引
         resp.autoprefixer = conf.autoprefixer;
