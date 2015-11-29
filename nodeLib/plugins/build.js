@@ -38,7 +38,7 @@ var buildFile = function(pathname, conf, callback){
     http.get('http://' + conf.host + '/' + encodeURI(pathname) + '?_build_=true', function(res){
         var type;
         if(type = res.headers['middleware-type']){
-            pathname1 = path.replace(/[^\.]+$/,type);     //对应 middleware 里面的type
+            pathname1 = pathname.replace(/[^\.]+$/,type);     //对应 middleware 里面的type
         }
         try{
             var fws = fs.createWriteStream( outputFile );
