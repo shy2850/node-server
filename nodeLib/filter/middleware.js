@@ -187,6 +187,8 @@ var middTypes = {
     mdppt: "html",
     ftl: "html"
 };
+exports.middTypes = middTypes;
+
 mime.get = function(path, fallback){
     var extType = (path + "").split(".").pop();
     return this.lookup( middTypes[extType] || path, fallback );

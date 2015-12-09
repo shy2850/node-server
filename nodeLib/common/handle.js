@@ -20,6 +20,9 @@ exports.execute = function(req, resp, root, str, mini, debug, conf){
             str = str.replace( inc[0], fs.readFileSync( /^[\/\\]/.test(inc[1]) ? path.join(root,inc[1]) : path.join(pathname,inc[1]),'utf-8') );
         }
 
+        // 需要设置重命名
+        str = require("./rename").execute(req, resp, root, str, mini, debug, conf);
+
         var result = str;
         if(conf.runJs){        //完全使用underscore内置template引擎
             if( !conf.template || !conf.template.get || (conf.template.filter && !conf.template.filter.test(req.$.title) ) ){

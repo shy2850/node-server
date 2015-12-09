@@ -43,10 +43,21 @@ var conf = {
     buildFilter: function(filePath){
         return !/\bnode_modules\b/.test( filePath );
     },
-    rename: function(filename/*, debug*/){ //构建完成后是否重命名文件（中间件重命名已经完成）
-        // return debug ? filename : filename.replace(/\.(js|css)$/,".min.$1");
-        return filename;
-    },
+    /*
+    renameMap: [
+        {
+            reg: /^\//, // 把绝对路径都改成带域名的
+            release: "http://localhost/"
+        },
+        {   // renameMap 过滤管道
+            // 依次匹配正则进行替换, 
+            // 所有配置的正则都会经过, 
+            // 最后还会附加中间件(如:less)的rename
+            reg: /src\/css\/([\w\-]+)/,  
+            release: "dist/css/$1"
+        }
+    ],
+    */
     'nginx-http-concat': true,
     filter: {
         get: function(/*req, resp*/){
