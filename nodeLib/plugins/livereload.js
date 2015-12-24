@@ -41,7 +41,10 @@ var listenner = function(path){
         timeStramp = +new Date();
     }
 };
-watcher.on('change', listenner).on('add', listenner);
+watcher.on('change', function(path){
+    console.log('changed: ' + decodeURI(path));
+    listenner(path);
+}).on('add', listenner);
 
 exports.execute = function(req, resp, root, handle, $conf){
     if(!confs[root]){

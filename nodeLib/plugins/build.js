@@ -34,12 +34,13 @@ try{
 var buildFile = function(pathname, conf, callback){
     building = 1;
     var pathname1 = pathname;
-    var outputFile = $path.join(conf.output, pathname);
-    http.get('http://' + conf.host + '/' + encodeURI(pathname) + '?_build_=true', function(res){
+    var url = 'http://' + conf.host + ':' + conf.port + '/' + decodeURI(pathname) + '?_build_=true';
+    http.get(url, function(res){
         var type;
         if(type = res.headers['middleware-type']){
             pathname1 = pathname.replace(/[^\.]+$/,type);     //对应 middleware 里面的type
         }
+        var outputFile = $path.join(conf.output, pathname1);
         try{
             var fws = fs.createWriteStream( outputFile );
             res.pipe( fws ).on('finish',function(){
