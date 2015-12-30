@@ -78,12 +78,12 @@ $belong[layout.vm]
     &lt;script src="$<%='rename'%>[/libs/seajs/2.3.0/sea.js]">&lt;/script>
     &lt;link rel="stylesheet" href="$<%='rename'%>[./css/mobile.less]">
     &lt;link rel="stylesheet" href="$<%='rename'%>[/css/reset.less]">
-    &lt;link rel="stylesheet" href="$<%='rename'%>[/src/css/reset.less]">
+    &lt;link rel="stylesheet" href="$<%='rename'%>[src/css/reset.less]">
 &lt;/head>
 &lt;body>
 &lt;/body>
 &lt;/html></code></pre>
-            <p>更复杂的配置:如果想要设置更复杂的改写规则可进行如下配置:</p>
+            <p>更复杂的配置: 如果想要设置更复杂的改写规则可进行如下配置:</p>
             <pre class="language-javascript"><code>exports["localhost"] = {
     "root": "d:\\doc\\",
     "middleware": true,     // 开启中间件支持 默认为true
@@ -103,20 +103,29 @@ $belong[layout.vm]
             // 所有配置的正则都会经过, 
             // 最后还会附加中间件(如:less)的rename
             reg: /src\/css\/([\w\-]+)/,  
-            release: "dist/css/$1"
+            release: "dist/css/$1",
+            withBuild: true
+        },
+        {
+            // 添加MD5重命名文件
+            // 凡是添加了 withBuild 参数均被构建环节使用
+            reg: /^[^\\\/].*\.css$/,
+            withBuild: 'md5'
         }
     ],
 };</code></pre>
-            <p>构建的目标代码如下:</p>
+            <p>构建的目标代码如下: 
+                <strong style="color:red;">千万注意： buildFilter和renameMap在构建环节是关联的, 在buildFilter屏蔽的路径将不能被renameMap构建</strong>
+                </p>
             <pre class="language-markup"><code>&lt;!DOCTYPE html>
 &lt;html lang="en">
 &lt;head>
     &lt;meta charset="UTF-8">
     &lt;title>Document&lt;/title>
     &lt;script src="http://localhost/libs/seajs/2.3.0/sea.js">&lt;/script>
-    &lt;link rel="stylesheet" href="./css/mobile.css">
+    &lt;link rel="stylesheet" href="./css/mobile_08353c6.css">
     &lt;link rel="stylesheet" href="http://localhost/css/reset.css">
-    &lt;link rel="stylesheet" href="http://localhost/dist/css/reset.css">
+    &lt;link rel="stylesheet" href="dist/css/reset_d3c2a19.css">
 &lt;/head>
 &lt;body>
 &lt;/body>
