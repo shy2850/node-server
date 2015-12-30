@@ -66,9 +66,24 @@ $belong[layout.vm]
         </section>
 
         <section id="rename">
-            <h2>中间件资源/重命名</h2>
+            <h2>资源重命名</h2>
             <p>中间件的 <code>middleware-type</code> 设置会被项目输出响应到, 在输出时修改成指定文件后缀名。</p>
-            <p>我们仍然可以修改文件名映射关系, 例如我们将需要压缩的文件, 统一在后缀名前添加 ".min"</p>
+            <p> <span class="bg-warning">new</span>: renameMap 支持在html等文本文件中设定src可被构建时改写, 已经内置了中间件的重命名</p>
+            <p>需要在代码中使用特殊的标记进行开启,<span class="bg-warning">less后缀构建时候会修改成.css</span></p>
+            <pre class="language-markup"><code>&lt;!DOCTYPE html>
+&lt;html lang="en">
+&lt;head>
+    &lt;meta charset="UTF-8">
+    &lt;title>Document&lt;/title>
+    &lt;script src="$<%='rename'%>[/libs/seajs/2.3.0/sea.js]">&lt;/script>
+    &lt;link rel="stylesheet" href="$<%='rename'%>[./css/mobile.less]">
+    &lt;link rel="stylesheet" href="$<%='rename'%>[/css/reset.less]">
+    &lt;link rel="stylesheet" href="$<%='rename'%>[/src/css/reset.less]">
+&lt;/head>
+&lt;body>
+&lt;/body>
+&lt;/html></code></pre>
+            <p>更复杂的配置:如果想要设置更复杂的改写规则可进行如下配置:</p>
             <pre class="language-javascript"><code>exports["localhost"] = {
     "root": "d:\\doc\\",
     "middleware": true,     // 开启中间件支持 默认为true
@@ -78,10 +93,34 @@ $belong[layout.vm]
         //如果路径中含有node_modules 则只是复制文件，不通过服务器进行编译处理
         return !path.match(/node_modules/); 
     },
-    rename: function(filename){ //构建完成后是否重命名文件
-        return filename.replace(/\.(js|css)$/,".min.$1");
-    }
+    renameMap: [
+        {
+            reg: /^\//, // 把绝对路径都改成带域名的
+            release: "http://localhost/"
+        },
+        {   // renameMap 过滤管道
+            // 依次匹配正则进行替换, 
+            // 所有配置的正则都会经过, 
+            // 最后还会附加中间件(如:less)的rename
+            reg: /src\/css\/([\w\-]+)/,  
+            release: "dist/css/$1"
+        }
+    ],
 };</code></pre>
+            <p>构建的目标代码如下:</p>
+            <pre class="language-markup"><code>&lt;!DOCTYPE html>
+&lt;html lang="en">
+&lt;head>
+    &lt;meta charset="UTF-8">
+    &lt;title>Document&lt;/title>
+    &lt;script src="http://localhost/libs/seajs/2.3.0/sea.js">&lt;/script>
+    &lt;link rel="stylesheet" href="./css/mobile.css">
+    &lt;link rel="stylesheet" href="http://localhost/css/reset.css">
+    &lt;link rel="stylesheet" href="http://localhost/dist/css/reset.css">
+&lt;/head>
+&lt;body>
+&lt;/body>
+&lt;/html></code></pre>
         </section>
 </div>
 <div class="page_bottom col-md-9 pull-right">
