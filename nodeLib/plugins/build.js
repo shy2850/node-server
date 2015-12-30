@@ -6,6 +6,8 @@ var $path = require('path'),
     http = require('http'),
     exec = require('child_process').exec,
     execFile = require('child_process').execFile;
+
+var rename = require('../common/rename');
 var building = 0;
 //两秒内没有新的build,则build finished
 var i = 0, builded = false, l = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -36,10 +38,7 @@ var buildFile = function(pathname, conf, callback){
     var pathname1 = pathname;
     var url = 'http://' + conf.host + ':' + conf.port + '/' + decodeURI(pathname) + '?_build_=true';
     http.get(url, function(res){
-        var type;
-        if(type = res.headers['middleware-type']){
-            pathname1 = pathname.replace(/[^\.]+$/,type);     //对应 middleware 里面的type
-        }
+        pathname1 = rename.buildRename(pathname, $path.join(conf.root, pathname), conf);
         var outputFile = $path.join(conf.output, pathname1);
         try{
             var fws = fs.createWriteStream( outputFile );
@@ -58,6 +57,13 @@ var buildFile = function(pathname, conf, callback){
 };
 exports.buildFile = buildFile;
 exports.execute = function(req, resp, root, handle, conf){
+    if(!req.data._on_force_build_ && conf.livereload && conf.livereload.inject) {
+        resp.end(JSON.stringify({
+            code: -1,
+            error: '项目已经开启livereload, 是否仍然进行构建？'
+        }));
+        return;
+    }
     if( _.find(l, function(n){ return !!n; }) ){
         console.log('building......');
         resp.end(JSON.stringify({
@@ -80,10 +86,7 @@ exports.execute = function(req, resp, root, handle, conf){
                 building = 1;
                 //console.log( referer.href + "/" + encodeURI(path) );
                 http.get( referer.href + "/" + encodeURI(path) + '?_build_=true', function(res) {
-                    var type = res.headers['middleware-type'];
-                    if(type){
-                        path1 = path.replace(/[^\.]+$/,type);     //对应 middleware 里面的type
-                    }
+                    path1 = rename.buildRename(path, $path.join(root, path), conf);
                     var newPath = $path.join($root, path1);
                     fs.rename( joinPath, newPath, function(err){
                         var fws = fs.createWriteStream( newPath );

@@ -17,13 +17,29 @@
       }else{
         $.ajax({
           url: '/build',
-          dataType: 'json',
           success: function(res) {
-            if (res.error) {
-              return alert('输出失败');
-            } else {
-              return alert('复制成功：' + res.command);
+            if (!res.error) {
+              alert('复制成功：' + res.command);
             }
+            else if (res.code === -1){
+              if(confirm(res.error)){
+                $.ajax({
+                  url: '/build?_on_force_build_=true',
+                  success: function ($res) {
+                    alert($res.error ? ('输出失败：' + $res.error) : ('复制成功：' + $res.command));
+                  },
+                  error: function(){
+                    alert('输出失败！')
+                  }
+                });
+              }
+            }
+            else {
+              alert('输出失败:' + res.error);
+            }
+          },
+          error: function(){
+            alert('输出失败！')
           }
         });
       }

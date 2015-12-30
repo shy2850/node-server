@@ -85,7 +85,6 @@ mini = {
 
 var middout = function(type, str, resp, debug){
     resp.writeHead(200, {
-        "middleware-type": type,
         "Content-Encoding": resp.gzip ? "gzip" : "utf-8",
         "Content-Type": mime.get(type)
     });
