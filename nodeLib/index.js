@@ -36,7 +36,12 @@ exports.start = function(conf){
 
         //包装request功能
         resp.data = req.data = querystring.parse( url.parse(req.url).query );
-        resp.util = req.util = {mime: mime, conf: conf, host: host[0], staticServer: "http://" + staticConf.host + "/"};
+        resp.util = req.util = {
+            mime: mime,
+            conf: conf,
+            host: host[0],
+            staticServer: "http://" + (staticConf.host || (host[0] + ':' + staticConf.port)) + "/"
+        };
         req.$ = {title: pathurl, fileList: [], needUpdate: serverInfo.needUpdate };
         resp.cdnPath = req.headers.host + req.url; // cdn 索引
         resp.autoprefixer = conf.autoprefixer;

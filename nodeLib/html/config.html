@@ -1,83 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="pragma" content="no-cache">
-	<title>服务器配置</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="pragma" content="no-cache">
+    <title>服务器配置</title>
 </head>
 <body>
 <script>
 <%
 var conf = request.util.conf,
-	p;
+    p;
 if( (p = request.post) && p.root ){
-	var items = ['root','welcome','notFound','fs_mod','folder','middleware','debug','gzip','cdn','output','nginx-http-concat','autoprefixer'];
-	items.map(function(item,i){
-		if(typeof p[item] === 'undefined'){
-			p[item] = false;
-		}
-		request.util.conf[item] = p[item];
-	});
-	print(';window.close();');
+    var items = [
+        'root',
+        'welcome',
+        'babel',
+        'notFound',
+        'fs_mod',
+        'middleware',
+        'debug',
+        'gzip',
+        'cdn',
+        'output',
+        'nginx-http-concat',
+        'autoprefixer',
+        'livereload'
+    ];
+    items.map(function(item,i){
+        if(typeof p[item] === 'undefined'){
+            p[item] = false;
+        }
+        switch(item){
+            case 'livereload':
+                if(p[item] && !request.util.conf.livereload){
+                    request.util.conf.livereload = request.util.conf._livereload || {
+                        inject: function(pathname){
+                            return pathname.match(/\.(html|md|mdppt)$/);
+                        }
+                    };
+                }else if(!p[item] && request.util.conf.livereload){
+                    request.util.conf._livereload = request.util.conf.livereload;
+                    request.util.conf.livereload = false;
+                }
+                break;
+            default:
+                request.util.conf[item] = p[item];
+        }
+    });
+    print(';window.close();');
 }
 %>
 </script>
 <form action="" method="post">
-	<table>
-		<tr><th>项目</th><th>配置</th></tr>
-		<tr>
-			<td>根目录:</td>
-			<td><input type="text" name="root" value="<%=conf.root%>"></td>
-		</tr>
-		<tr>
-			<td>欢迎页面:</td>
-			<td><input type="text" name="welcome" value="<%=conf.welcome%>"></td>
-		</tr>
-		<tr>
-			<td>404页面:</td>
-			<td><input type="text" name="notFound" value="<%=conf.notFound%>"></td>
-		</tr>
-		<tr>
-			<td>开启文件列表:</td>
-			<td><input type="checkbox" name="fs_mod" <%if(conf.fs_mod){%>checked="checked"<%}%> ></td>
-		</tr>
-		<tr>
-			<td>文件列表页面:</td>
-			<td><input type="text" name="folder" value="<%=conf.folder%>"></td>
-		</tr>
-		<tr>
-			<td>中间件支持:</td>
-			<td><input type="checkbox" name="middleware" <%if(conf.middleware){%>checked="checked"<%}%> ></td>
-		</tr>
-		<tr>
-			<td>autoprefix支持:</td>
-			<td><input type="checkbox" name="autoprefixer" <%if(conf.autoprefixer){%>checked="checked"<%}%> ></td>
-		</tr>
-		<tr>
-			<td>开发模式(不压缩):</td>
-			<td><input type="checkbox" name="debug" <%if(conf.debug){%>checked="checked"<%}%> ></td>
-		</tr>
-		<tr>
-			<td>开启gzip:</td>
-			<td><input type="checkbox" name="gzip" <%if(conf.gzip){%>checked="checked"<%}%> ></td>
-		</tr>
-		<tr>
-			<td>开启CDN:</td>
-			<td><input type="checkbox" name="cdn" <%if(conf.cdn){%>checked="checked"<%}%> ></td>
-		</tr>
-		<tr>
-			<td>输出文件夹:</td>
-			<td><input type="text" name="output" value="<%=conf.output%>"></td>
-		</tr>
-		<tr>
-			<td>开启nginx合并:</td>
-			<td><input type="checkbox" name="nginx-http-concat" <%if(conf['nginx-http-concat']){%>checked="checked"<%}%> ></td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td><input type="submit" value="提交"></td>
-		</tr>
-	</table>
+    <table>
+        <tr><th>项目</th><th>配置</th></tr>
+        <tr>
+            <td>根目录:</td>
+            <td><input type="text" name="root" value="<%=conf.root%>"></td>
+        </tr>
+        <tr>
+            <td>欢迎页面:</td>
+            <td><input type="text" name="welcome" value="<%=conf.welcome%>"></td>
+        </tr>
+        <tr>
+            <td>404页面:</td>
+            <td><input type="text" name="notFound" value="<%=conf.notFound%>"></td>
+        </tr>
+        <tr>
+            <td>开启文件列表:</td>
+            <td><input type="checkbox" name="fs_mod" <%if(conf.fs_mod){%>checked="checked"<%}%> ></td>
+        </tr>
+        <tr>
+            <td>中间件支持:</td>
+            <td><input type="checkbox" name="middleware" <%if(conf.middleware){%>checked="checked"<%}%> ></td>
+        </tr>
+        <tr>
+            <td>autoprefix支持:</td>
+            <td><input type="checkbox" name="autoprefixer" <%if(conf.autoprefixer){%>checked="checked"<%}%> ></td>
+        </tr>
+        <tr>
+            <td>ES6支持:</td>
+            <td><input type="checkbox" name="babel" <%if(conf.babel){%>checked="checked"<%}%> ></td>
+        </tr>
+        <tr>
+            <td>开发模式(不压缩):</td>
+            <td><input type="checkbox" name="debug" <%if(conf.debug){%>checked="checked"<%}%> ></td>
+        </tr>
+        <tr>
+            <td>开启gzip:</td>
+            <td><input type="checkbox" name="gzip" <%if(conf.gzip){%>checked="checked"<%}%> ></td>
+        </tr>
+        <tr>
+            <td>开启CDN:</td>
+            <td><input type="checkbox" name="cdn" <%if(conf.cdn){%>checked="checked"<%}%> ></td>
+        </tr>
+        <tr>
+            <td>实时刷新:</td>
+            <td><input type="checkbox" name="livereload" <%if(conf.livereload){%>checked="checked"<%}%> ></td>
+        </tr>
+        <tr>
+            <td>输出文件夹:</td>
+            <td><input type="text" name="output" value="<%=conf.output%>"></td>
+        </tr>
+        <tr>
+            <td>开启nginx合并:</td>
+            <td><input type="checkbox" name="nginx-http-concat" <%if(conf['nginx-http-concat']){%>checked="checked"<%}%> ></td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td><input type="submit" value="提交"></td>
+        </tr>
+    </table>
 </form>
 </body>
 </html>

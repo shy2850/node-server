@@ -135,7 +135,8 @@ exports.execute = function(req, resp, root, handle, conf){
         });
     };
 
-    exec('del ' + $root + '* /s/q',function(err){
+    // exec('del ' + $root + '* /s/q',function(err){
+    exec('dir',function(err){
         if(!err){
             exec('xcopy ' + root.replace(/(.*?)[\\\/]$/,'$1') + ' ' + $root + ' /e/d/s', function (error) {
                 if (!error) {
@@ -152,7 +153,8 @@ exports.execute = function(req, resp, root, handle, conf){
                 }));
             });
         }else{
-            exec('rm -rf ' + $root + '/*',function(err2){
+            // exec('rm -rf ' + $root + '/*',function(err2){
+            exec('ls',function(err2){
                 if(!err2){
                     exec('cp -Rf ' + root + '* ' + $root,function(err3){
                         if (!err3) {

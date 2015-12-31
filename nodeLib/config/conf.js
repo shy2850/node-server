@@ -80,7 +80,6 @@ var conf = {
 exports.localhost = conf.extend({});
 
 exports.staticconf = conf.extend({ //不要删除或者修改这个服务
-    host: "localhost:2850",
     port: 2850,
     debug: false,
     cdn: true,
