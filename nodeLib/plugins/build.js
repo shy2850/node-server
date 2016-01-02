@@ -86,20 +86,24 @@ exports.execute = function(req, resp, root, handle, conf){
                 building = 1;
                 //console.log( referer.href + "/" + encodeURI(path) );
                 http.get( referer.href + "/" + encodeURI(path) + '?_build_=true', function(res) {
-                    path1 = rename.buildRename(path, $path.join(root, path), conf);
-                    var newPath = $path.join($root, path1);
-                    fs.rename( joinPath, newPath, function(err){
-                        var fws = fs.createWriteStream( newPath );
-                        if(err){
-                            console.log(err);
-                        }else{
-                            res.pipe( fws ).on('finish',function(){
-                                building = 0;
-                            });
-                        }
-                    });
+                    if(res.statusCode === 200){
+                        path1 = rename.buildRename(path, $path.join(root, path), conf);
+                        var newPath = $path.join($root, path1);
+                        fs.rename( joinPath, newPath, function(err){
+                            var fws = fs.createWriteStream( newPath );
+                            if(err){
+                                console.log(err);
+                            }else{
+                                res.pipe( fws ).on('finish',function(){
+                                    building = 0;
+                                });
+                            }
+                        });
+                    }else{
+                        console.log('build error for: ' + path);
+                    }
                 }).on('error',function(e){
-                    console.log('build error for: ' + pathname);
+                    console.log('build error for: ' + path);
                     console.log(e);
                 });
             }else if(stats && stats.isDirectory && stats.isDirectory()){ // 文件夹内递归需要构建
