@@ -8,7 +8,7 @@ var _ = require('underscore');
 var base = require('../package.json');
 var CONF = require('../nodeLib/config/conf');
 var host = CONF.localhost;
-    host.root = process.cwd() + '\\';
+    host.root = path.join(process.cwd(), '/');
 var hostsPath = os.type().match(/Windows/) ? 'C:\\Windows\\System32\\drivers\\etc\\hosts' : '/etc/hosts';
 
 program
@@ -19,13 +19,20 @@ program
     .description('启动服务器')
     .action(function(options) {
         fs.readFile('f2e-conf.js', function(error, str){
+            var conf;
             if(error){
-                fs.writeFile( 'f2e-conf.js', 'exports["localhost"] = ' + JSON.stringify( CONF.localhost, null, 4 ) + ';\n' );
+                conf = {
+                    localhost: {
+                        root: host.root,
+                        port: host.port
+                    }
+                };
+                fs.writeFile( 'f2e-conf.js', 'exports["localhost"] = ' + JSON.stringify(conf.localhost, null, 4) + ';\n' );
             }else{
-                var conf = new Function('var exports = {};' + str + ';return exports;')();
-                for(var k in conf){
-                    CONF[k] = _.extend({}, CONF[k], conf[k]);
-                }
+                conf = new Function('var exports = {};' + str + ';return exports;')();
+            }
+            for(var k in conf){
+                CONF[k] = CONF.localhost.extend(conf[k]);
             }
             require('../node-server.js');
         });

@@ -264,3 +264,8 @@
 	#修复staticConf在folder页面的host配置问题
 	#添加 ES6, livereload(支持默认的inject) 在config配置页面的支持, 去掉folder页面路径等修改较少的配置
 	#重要修改: build构建默认不再删除源目录文件(只是覆盖同名文件)
+
+--2016/01/03 v1.9.8
+	#全局安装全面兼容Linux/unix操作系统
+	#自动生成的默认配置参数只保留 root,port,output
+	#

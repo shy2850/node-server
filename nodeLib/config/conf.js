@@ -99,7 +99,11 @@ var confPath = path.join( __dirname, "../../../conf.js" );
 var stat = fs.existsSync( confPath );
 
 if( !stat ){
-    fs.writeFileSync( confPath, 'exports["localhost"] = ' + JSON.stringify( exports.localhost, null, 4 ) + ';\n' );
+    fs.writeFileSync( confPath, 'exports["localhost"] = ' + JSON.stringify( {
+        root: conf.root,
+        port: conf.port,
+        output: conf.output
+    }, null, 4 ) + ';\n' );
 }
 try{
     var $conf = require('../../../conf.js');

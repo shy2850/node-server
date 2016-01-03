@@ -64,7 +64,7 @@ mini = {
                         }
                     });
                 }else{
-                    console.error("autoprefixer 或 postcss 未安装, 自动前缀插件不可用！");
+                    console.error("autoprefixer-core 未安装, 自动前缀插件不可用！");
                 }
             }else{
                 if(conf.babel && "text/javascript" === mimeType){
@@ -187,6 +187,7 @@ var middTypes = {
     ftl: "html"
 };
 exports.middTypes = middTypes;
+exports.middleware = middleware;
 
 mime.get = function(path, fallback){
     var extType = (path + "").split(".").pop();
