@@ -1,6 +1,6 @@
 {
   "name": "f2e-server",
-  "version": "1.9.10",
+  "version": "1.9.12",
   "description": "a nodejs based file-system-server with easy-template-engine and several F2E-utils",
   "main": "node-server.js",
   "dependencies": {
@@ -15,9 +15,8 @@
     "wfquery": "*"
   },
   "devDependencies": {
-    "babel": ">=5.8.21",
-    "postcss": ">=4.1.14",
-    "autoprefixer": "^6.2.3",
+    "babel": "5.8.34",
+    "autoprefixer": "6.2.3",
     "jade": ">=1.7.0",
     "coffee-script": ">=1.8.0",
     "less": ">=2.0.0",

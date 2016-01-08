@@ -67,8 +67,9 @@ mini = {
                     console.error("autoprefixer-core 未安装, 自动前缀插件不可用！");
                 }
             }else{
-                if(conf.babel && "text/javascript" === mimeType){
+                if(conf.babel && "application/javascript" === mimeType){
                     str = require("babel").transform(str).code;
+                    console.log(str);
                 }
                 if(resp.data.listen || conf.livereload && conf.livereload.inject && conf.livereload.inject(pathname)){
                     str = str + '<script data-host="' + conf.host + '">' + livereload_code + '</script>';
