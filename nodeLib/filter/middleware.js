@@ -69,7 +69,6 @@ mini = {
             }else{
                 if(conf.babel && "application/javascript" === mimeType){
                     str = require("babel").transform(str).code;
-                    console.log(str);
                 }
                 if(resp.data.listen || conf.livereload && conf.livereload.inject && conf.livereload.inject(pathname)){
                     str = str + '<script data-host="' + conf.host + '">' + livereload_code + '</script>';
