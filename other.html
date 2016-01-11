@@ -71,23 +71,57 @@ $belong[layout.vm]
             <p>要求：</p>
             <ul>
                 <li>安装 babel <code>npm install babel</code></li>
-                <li>在conf.js中对应服务下配置参数 <code>"babel": true</code></li>
+                <li>在conf.js中对应服务下配置参数 <code>"babel": {}</code></li>
             </ul>
             <p>如下源代码：</p>
-            <pre class="language-javascript"><code>var [basket, b, c] = [{count:1, onSale: true}, 2, 3];
-$("#result").append(`
-  There are <b>${basket.count}</b> items
-   in your basket, <em>${basket.onSale}</em>
-  are on sale!
-`);</code></pre>   
+            <pre class="language-javascript"><code>var React = require('react');
+var ReactDOM = require('react-dom');
+ReactDOM.render(
+  <h1>Hello, world!</h1>,
+  document.getElementById('example')
+);
+export const a = 123;</code></pre>   
             <p>操作后结果代码：</p>
-            <pre class="language-javascript"><code>"use strict";
+            <pre class="language-javascript"><code>'use strict';
 
-var basket = { count: 1, onSale: true };
-var b = 2;
-var c = 3;
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+var React = require('react');
+var ReactDOM = require('react-dom');
+ReactDOM.render(React.createElement(
+  'h1',
+  null,
+  'Hello, world!'
+), document.getElementById('example'));
+var a = 123;
+exports.a = a;</code></pre>
+            <p>babel支持更复杂的配置, 参考babel5的完整options(如:配置amd封装):</p>
+            <pre class="language-javascript"><code>exports["localhost"] = {
+    "root": "/Users/baidu/github/",
+    babel: {
+        query: {
+            modules: 'amd'
+        } 
+    }
+};</code></pre>
+            <p>操作后结果代码：</p>
+            <pre class="language-javascript"><code>define(['exports'], function (exports) {
+  'use strict';
 
-$("#result").append("\n  There are <b>" + basket.count + "</b> items\n   in your basket, <em>" + basket.onSale + "</em>\n  are on sale!\n");</code></pre> 
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  var React = require('react');
+  var ReactDOM = require('react-dom');
+  ReactDOM.render(React.createElement(
+    'h1',
+    null,
+    'Hello, world!'
+  ), document.getElementById('example'));
+  var a = 123;
+  exports.a = a;
+});</code></pre>
         </section>
 
         <section id="psd">
