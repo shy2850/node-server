@@ -29,10 +29,15 @@ program
                 };
                 fs.writeFile( 'f2e-conf.js', 'exports["localhost"] = ' + JSON.stringify(conf.localhost, null, 4) + ';\n' );
             }else{
-                conf = new Function('var exports = {};' + str + ';return exports;')();
+                conf = new Function("require", 'var exports = {};' + str + ';return exports;')(require);
             }
             for(var k in conf){
-                CONF[k] = CONF.localhost.extend(conf[k]);
+                if (k !== 'setup') {
+                    CONF[k] = CONF.localhost.extend(conf[k]);
+                }
+                else {
+                    CONF[k] = conf[k];
+                }
             }
             require('../node-server.js');
         });

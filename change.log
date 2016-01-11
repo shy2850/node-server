@@ -275,4 +275,10 @@
 --2016/01/09 v1.9.12
 	#修改babel依赖 5.8.34版本 不使用babel6， 方便repl模式直接调用
 
+--2016/01/11 v1.10.0
+	#重构middleware, 提供register注册插件
+	#增加全局setup方法，可以在内部增加middleware.register等插件
+	#提供babel更复杂的配置支持
+	#修改全局cli, 支持配置文件使用require
+
 	

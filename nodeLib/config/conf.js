@@ -108,7 +108,10 @@ if( !stat ){
 try{
     var $conf = require('../../../conf.js');
     for(var k in $conf){
-        if( k === "staticconf" ){
+        if( k === "setup" ){
+            exports.setup = $conf[k];
+        }
+        else if( k === "staticconf" ){
             exports[k] = conf.extend.call( exports.staticconf, $conf[k] );
         }else{
             exports[k] = conf.extend( $conf[k] );

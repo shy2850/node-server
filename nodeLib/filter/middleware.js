@@ -2,6 +2,7 @@
 var fs = require("fs"),
     mime = require("mime"),
     path = require("path"),
+    _ = require("underscore"),
     zlib = require("zlib"),
     cdn = require("./cdn"), // cdn模块
     cssmin = require("cssmin");
@@ -68,7 +69,9 @@ mini = {
                 }
             }else{
                 if(conf.babel && "application/javascript" === mimeType){
-                    str = require("babel").transform(str).code;
+                    str = require("babel").transform(str, _.extend({}, conf.babel, {
+                        sourceRoot: pathname
+                    })).code;
                 }
                 if(resp.data.listen || conf.livereload && conf.livereload.inject && conf.livereload.inject(pathname)){
                     str = str + '<script data-host="' + conf.host + '">' + livereload_code + '</script>';
@@ -91,73 +94,11 @@ var middout = function(type, str, resp, debug){
     mini.get(type, debug)(str, resp);
 };
 var middleware = {
-	coffee: function(req, resp, rs, pathname, DEBUG){
-        var scriptStr = require("coffee-script").compile( rs );
-        middout("js", scriptStr, resp, DEBUG);
-    },
-    less: function(req, resp, rs, pathname, DEBUG){
-        require("less").render(rs, {
-            paths: [ pathname.replace(/(\/[^\/]+?)$/,"") ],
-            compress: !DEBUG
-        }, function (err, output) {
-            if (err) { throw err; }
-            else{
-                middout("css", output.css, resp, DEBUG);
-            }
-        });
-    },
-    scss: function(req, resp, rs, pathname, DEBUG){
-        require('node-sass').render({
-            file: pathname,
-            outFile: pathname.replace(/(\.scss)$/,".css"),
-            includePaths: [ pathname.replace(/(\/[^\/]+?)$/,"") ],
-            outputStyle: (!DEBUG ? "compressed" : "expanded")
-        }, function (err, output) {
-            if (err) { throw err; }
-            else{
-                middout("css", output.css.toString(), resp, DEBUG);
-            }
-        });
-    },
-    jade: function(req, resp, rs, pathname, DEBUG){
-        var output = require('jade').render(rs, {pretty: true});
-        middout("html", output.toString(), resp, DEBUG);
-    },
-    md: function(req, resp, rs, pathname, DEBUG){
-        var output = require('marked')(rs + '');
-        middout("html", output, resp, DEBUG);
-    },
-    mdppt: function(req, resp, rs, pathname, DEBUG){
-        var mdppt = require('mdppt');
-        mdppt.cfg.base = req.util.staticServer + '/node_modules/mdppt/assets/';
-        var output = mdppt(rs + '');
-        middout("html", output, resp, DEBUG);
-    },
-    ftl: function(req, resp, rs, pathname, DEBUG){
-        resp.writeHead(200,{"middleware-type": 'html', "Content-Type": mime.get('html')});
-        var Freemarker = require('freemarker.js');
-        var fm = new Freemarker({
-            viewRoot: req.util.conf.root,
-            options: {}
-        });
-        var dataObj = JSON.parse( fs.readFileSync( pathname.replace(/\.ftl/,".json") ) ),
-            tmp = req.$.title + '.tmp',
-            tmpUrl = req.util.conf.root + tmp;
-        fs.writeFile( tmpUrl, rs, function(err){
-            if(err){
-                throw err;
-            }
-            fm.render( tmp, dataObj, function(err1, html) {
-                if(err1){
-                    throw err1;
-                }else{
-                    middout("html", html, resp, DEBUG);
-                }
-                fs.unlink(tmpUrl);
-            });
-        });
-    }
 };
+var middTypes = {
+};
+exports.mini = mini;
+exports.cdn = cdn;
 exports.get = function(pathname){
     var extType = pathname.split('.').pop(),
         fn = middleware[extType];
@@ -174,25 +115,105 @@ exports.get = function(pathname){
         }
     };
 };
-exports.mini = mini;
-exports.cdn = cdn;
 
-var middTypes = {
-    coffee: "js",
-    less: "css",
-    scss: "css",
-    jade: "html",
-    md: "html",
-    mdppt: "html",
-    ftl: "html"
+var register = function (ext, type, render) {
+    middTypes[ext] = type;
+    middleware[ext] = function(req, resp, rs, pathname, DEBUG){
+        if (!render) {
+            return middout(type, rs, resp, DEBUG);
+        }
+
+        var resultStr = render.call({
+            out: function (str){
+                middout(type, str, resp, DEBUG);
+            }
+        }, req, resp, rs, pathname, DEBUG);
+        if (typeof resultStr === 'string') {
+            middout(type, resultStr, resp, DEBUG);
+        }
+    };
+
 };
+
+register('less', 'css', function(req, resp, rs, pathname, DEBUG){
+    var out = this.out;
+    require("less").render(rs, {
+        paths: [ pathname.replace(/(\/[^\/]+?)$/,"") ],
+        compress: !DEBUG
+    }, function (err, output) {
+        if (err) { throw err; }
+        else{
+            out(output.css);
+        }
+    });
+});
+
+register('scss', 'css', function(req, resp, rs, pathname, DEBUG){
+    var out = this.out;
+    require('node-sass').render({
+        file: pathname,
+        outFile: pathname.replace(/(\.scss)$/,".css"),
+        includePaths: [ pathname.replace(/(\/[^\/]+?)$/,"") ],
+        outputStyle: (!DEBUG ? "compressed" : "expanded")
+    }, function (err, output) {
+        if (err) { throw err; }
+        else{
+            out(output.css.toString());
+        }
+    });
+});
+
+register('jade', 'html', function(req, resp, rs, pathname, DEBUG){
+    var output = require('jade').render(rs, {pretty: true});
+    this.out(output.toString());
+});
+register('md', 'html', function(req, resp, rs, pathname, DEBUG){
+    var output = require('marked')(rs + '');
+    this.out('<meta charset="utf-8"/>' + output);
+});
+register('mdppt', 'html', function(req, resp, rs, pathname, DEBUG){
+    var mdppt = require('mdppt');
+    mdppt.cfg.base = req.util.staticServer + '/node_modules/mdppt/assets/';
+    var output = mdppt(rs + '');
+    this.out(output);
+});
+register('coffee', 'js', function(req, resp, rs, pathname, DEBUG){
+    var scriptStr = require("coffee-script").compile( rs );
+    this.out(scriptStr);
+});
+register('ftl', 'html', function(req, resp, rs, pathname, DEBUG){
+    var out = this.out;
+    var Freemarker = require('freemarker.js');
+    var fm = new Freemarker({
+        viewRoot: req.util.conf.root,
+        options: {}
+    });
+    var dataObj = JSON.parse( fs.readFileSync( pathname.replace(/\.ftl/,".json") ) ),
+        tmp = req.$.title + '.tmp',
+        tmpUrl = req.util.conf.root + tmp;
+    fs.writeFile( tmpUrl, rs, function(err){
+        if(err){
+            throw err;
+        }
+        fm.render( tmp, dataObj, function(err1, html) {
+            if(err1){
+                throw err1;
+            }else{
+                out(html);
+            }
+            fs.unlink(tmpUrl);
+        });
+    });
+});
+
 exports.middTypes = middTypes;
 exports.middleware = middleware;
+exports.register = register;
 
 mime.get = function(path, fallback){
     var extType = (path + "").split(".").pop();
     return this.lookup( middTypes[extType] || path, fallback );
 };
 mime.isTXT = function(path, fallback){
-    return /\b(php|jsp|asp|less|coffee|jade|mdppt)$/.test(path) || /\b(text|xml|javascript|json)\b/.test( this.get(path, fallback) );
+    return /\b(php|jsp|asp)$/.test(path) || /\b(text|xml|javascript|json)\b/.test( this.get(path, fallback) );
 };
