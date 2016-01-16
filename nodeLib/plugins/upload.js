@@ -15,7 +15,7 @@ exports.execute = function(req, resp, root, handle, conf, modelPath){
         resp.end(uploadBase);
     }
     try{
-        form.uploadDir = req.data.uploadUrl ? ( root + "/" + req.data.uploadUrl + "/" ) : path.join( __dirname, "/../../static/" ); //上传路径
+        form.uploadDir = path.join(root, req.data.uploadUrl || req.$.title.replace(/[^\\\/]+$/, ''), '/'); //上传路径
         uploadModel = req.data.target ? (root + "/" + req.data.target) : (modelPath || uploadModel);
         form.on('field', function(field, value) {
             fields[field] = value;
@@ -27,9 +27,14 @@ exports.execute = function(req, resp, root, handle, conf, modelPath){
             })
             .on('end', function() {
                 files.map(function(file){
-                    fs.rename(file.file.path, form.uploadDir + file.file.name, function (err) {
-                        if(err){ throw err; }
-                    });
+                    if (conf.uploadFile) {
+                        fs.rename(file.file.path, form.uploadDir + file.file.name, function (err) {
+                            if(err){ throw err; }
+                        });
+                    }
+                    else {
+                        fs.unlink(file.file.path);
+                    }
                 });
                 req.post = fields;
                 req.files = files;

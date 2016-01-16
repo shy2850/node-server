@@ -24,14 +24,17 @@ exports.execute = function(req, resp, root, str, mini, debug, conf){
         str = require("./rename").execute(req, resp, root, str, mini, debug, conf);
 
         var result = str;
-        if(conf.runJs){        //完全使用underscore内置template引擎
+        if(conf.runJs){try{ //模板引擎渲染
             if( !conf.template || !conf.template.get || (conf.template.filter && !conf.template.filter.test(req.$.title) ) ){
                 var compiled = _.template(str);
                 result = compiled({request: req, response: resp, require: require});
             }else{
                 result = conf.template.get(str, req.$.title, req, resp, require);
             }
-        }
+        }catch(compileError){
+            console.log(compileError);
+            console.log(req.$.title + ": 模板引擎渲染异常！ ");
+        }}
 
         switch(typeof result){
             case "function": result(); return;

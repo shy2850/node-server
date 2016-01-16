@@ -3,20 +3,23 @@ var path = require('path'),
     fs = require('fs');
 var conf = {
     root: path.join(__dirname, '../../'), //服务器索引的根目录，可配置为任意本地地址
-    welcome: "", //使用欢迎页面的文件名，为空时，表示不使用欢迎页面
-    notFound: path.join( __dirname , "/../html/404.html" ),      //访问的资源不存在是，跳转的页面配置
+    port: 80,           //服务器监听端口
+    handle: true,       //是否开启服务器动态脚本 （基本的include/belong/模板引擎/压缩功能等均依赖此配置）
+    runJs: true,        //是否使用服务器模板引擎
+    uploadFile: false,  //是否开启文件上传保存
+    middleware: true,   //中间件支持, LESS/CoffeeScript 等支持
+    autoprefixer: false,//autoprefixer 支持
+    babel: false,       //babel解析js
+    debug: true,        //是否对js以及css文件进行简单压缩，debug:true表示不压缩
+    cdn: false,         //针对线上运行服务器配置, 缓存资源到运行内存减少硬盘IO
+    "fs_mod": true,     //是否支持文件夹列表展示
+    welcome: "", //使用欢迎页面的文件名，不为空时，fs_mod可能失效
+    notFound: path.join( __dirname , "/../html/404.html" ),      //访问的资源不存在时跳转的页面配置
     folder: path.join( __dirname , "/../html/folder.html" ),     //显示文件夹列表时候的配置页面
-    handle: true,       //是否开启服务器动态脚本
     include: "\\$include\\[[\"\\s]*([^\"\\s]+)[\"\\s]*\\]",
     placeholder: "$[placeholder]",
     belong: "\\$belong\\[[\"\\s]*([^\"\\s]+)[\"\\s]*\\]",
-    middleware: true,   //中间件支持, LESS/CoffeeScript 等支持
-    autoprefixer: false,   //autoprefixer 支持
-    babel: false,   // babel解析js
-    debug: true,        //是否对js以及css文件进行简单压缩，debug:true表示不压缩
-    cdn: false,
-    "fs_mod": true,       //是否支持文件夹列表展示
-    livereload: false,   //是否监听文件变化刷新网页
+    livereload: false,  //是否监听文件变化刷新网页, 详细配置如下
     // 支持映射关联文件构建
     /*
     livereload: {
@@ -36,15 +39,13 @@ var conf = {
         }        
     },
     */
-    port: 80,           //服务器监听端口
     maxConnections: 1000,    //并发处理的最大连接数
-    runJs: true,       //是否使用服务器模板引擎
     output: "c:\\output\\",
     buildFilter: function(filePath){
         return !/\bnode_modules\b/.test( filePath );
     },
+    renameMap: [    //  html页面中使用$rename[]的资源修改, 如果配置了withBuild属性将在构建时候对文件进行对应重命名, 
     /*
-    renameMap: [
         {
             reg: /^\//, // 把绝对路径都改成带域名的
             release: "http://localhost/"
@@ -54,17 +55,39 @@ var conf = {
             // 所有配置的正则都会经过, 
             // 最后还会附加中间件(如:less)的rename
             reg: /src\/css\/([\w\-]+)/,  
-            release: "dist/css/$1"
+            release: "dist/css/$1",
+            withBuild: true
+        },
+        {
+            // 添加MD5重命名文件
+            // 凡是添加了 withBuild 参数均被构建环节使用
+            reg: /^[^\\\/].*\.css$/,
+            withBuild: 'md5'
         }
-    ],
     */
-    'nginx-http-concat': true,
+    ],
+    'nginx-http-concat': true,  // 支持
     filter: {
         get: function(/*req, resp*/){
-            // console.log( arguments[0].url );  // 这个前置过滤器可以过滤所有服务端请求, 配置和agent类似
+            // console.log( arguments[0].url );  // 这个前置过滤器可以过滤所有服务端请求
         }
     },
-    agent: {},
+    agent: {},  // 代理复杂配置，匹配路径从另外服务器获取资源并可以修改响应信息
+    /*
+    agent: {
+        get: function(path){
+            if( path.match(/node-server/) ){
+                return {
+                    host: "raw.githubusercontent.com",
+                    port: 443,
+                    setHeaders: function(headers){
+                        delete headers['x-frame-options']
+                    }
+                }
+            }
+        }
+    },
+    */
     extend: function(o){
         var res = {};
         for( var i in this ){
