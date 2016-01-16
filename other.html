@@ -134,11 +134,8 @@ exports.a = a;</code></pre>
         <section id="upload">
             <h2>upload使用</h2>
             <p>前端开发调试中可能会遇到文件上传调试的功能, f2e-server 为文件上传提供了比较方便的功能</p>
-            <p>简单文件上传直接提交POST数据到 <code>/upload</code> 路径下就可以了(文件将默认上传到 <code>static</code> 目录下)。 可以参见: 
-                <a href="https://github.com/shy2850/node-server/blob/master/nodeLib/html/uploadOK.html" target="_blank">nodeLib/html/uploadOK.html</a></p>
-            <p>你也可以修改 文件上传的目录 或者 数据输出页面:</p>
-            <p>GET请求头设置 <code>uploadDir</code>: 文件上传的目录</p>
-            <p>GET请求头设置 <code>target</code>: 数据输出页面(参考uploadOK.html使用模板引擎修改)</p>
+            <p>在conf.js相应服务下配置 <code>upliadFile: true</code> 将可以在服务器下保存文件</p>
+            <p>返回文件保存信息页面： &lt;%=JSON.stringify(request.files)%&gt;</p>
         </section>
     
         <section id="prettify">

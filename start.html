@@ -15,7 +15,7 @@ $belong[layout.vm]
     <div class="page_content col-md-9" role="main">
         <section id="install-nodejs">
             <h2>Node.js安装</h2>
-            <p>f2e-server 基于Node.js环境运行, 稳定依赖版本是v0.12.0。 请到 <a href="https://nodejs.org/" target="_blank">官方网站</a> 下载安装</p>
+            <p>f2e-server 基于Node.js环境运行。 请到 <a href="https://nodejs.org/" target="_blank">官方网站</a> 下载安装</p>
         </section>
         
         <section id="install-server">
@@ -82,7 +82,7 @@ Server running at http://127.0.0.1:2850 [staticconf]
 
         <section id="my-project">
             <h2>项目根目录配置</h2>
-            <p>服务启动后, 将在node_modules（全局安装启动， 同时在启动目录中生成）目录自动生成conf.js配置文件:</p>
+            <p>服务启动后, 将在node_modules目录自动生成conf.js配置文件（全局安装启动， 同时在启动目录中生成f2e-conf.js配置文件）:</p>
             <pre class="language-javascript"><code>exports["localhost"] = {
     "root": "e:\\node_modules\\f2e-server\\",  //root 修改成自己的项目根目录
     "welcome": "",
