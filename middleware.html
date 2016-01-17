@@ -19,17 +19,18 @@ $belong[layout.vm]
         <section id="introduce">
             <h2>简介</h2>
             <p>f2e-server 通过中间件的方式支持动态的编译LESS/CoffeeScript/Jade/Markdown等类型代码</p>
+            <p>建议了解一下markdown, less, jade等, 这里主要针对这些类型文本进行的编译</p>
         </section>
         
         <section id="install">
-            <h2>安装使用</h2>
+            <h2>安装使用 <span class="not-important bg-primary">下载版已经全部安装插件</span></h2>
             <p>在安装目录中使用 <code>$ npm install</code> 命令将package.json中的开发依赖全部安装</p>
             <p>或者分别安装 less、 coffee-script、jade、markdown、freemarker.js</p>
             <p>
                 安装完成开启服务器, 在服务器下直接访问指定后缀名资源，将能够获取编译后的结果 <code>查看如下 phone.less </code>
             </p>
             <p><iframe src="http://webfuture.cn/wfQuery/demo/arrangement" frameborder="0" style="width:100%;height:300px;"></iframe></p>
-            <p>如果需要对需要编译的源文本进行简单修改, 可使用如下配置:</p>
+            <p>如果需要对需要编译的源文本进行简单修改（绝大多数场景不需要）, 可使用如下配置:</p>
             <pre class="language-javascript"><code>exports["localhost"] = {
     "root": "D:\\doc\\",
     "middleware": {

@@ -15,6 +15,8 @@ $belong[layout.vm]
     <div class="page_content col-md-9" role="main">
         <section id="introduce">
             <h2>简介</h2>
+            <p>书写静态页面时候，我们常常会需要循环类似的HTML结构，以及一个项目中公用的页面片段，
+            模板引擎部分主要就是为了解决这种HTML等资源的代码公用问题而产生的。</p>
             <p>f2e-server使用 <a href="http://underscorejs.org/#template" target="_blank">underscore.template</a>, 作为默认的模板引擎, 因为它足够简单。</p>
             <p>默认的： <code>&lt;%%&gt;</code> 中间的部分是服务端执行的代码, <code>&lt;%=%&gt;</code>是将服务端对象的toString()拼接到响应中, <code>&lt;%-%&gt;</code>HTML-escape</p>
             <p>例如：</p>
@@ -34,11 +36,21 @@ $belong[layout.vm]
     &lt;li&gt;代理&lt;/li&gt;
     &lt;li&gt;其他&lt;/li&gt;
 &lt;/ul&gt;</code></pre>
+            <p>当然你可以书写更复杂的循环结构，然而只需要修改元数据就能批量生产，从而避免了大量重复冗余的HTML代码
+            （最重要的：你可以使用项目输出功能将书写的源码输出成为普通的HTML文件, 而且css,js等所有文本类型资源均被支持）</p>
         </section>
         
         <section id="include">
             <h2>模板引用和包含</h2>
-            <p>如下图所示代码片段</p>
+            <p>如果说: 上述的模板引擎是为了在一个页面内部快速公共化代码， 引用和包含则方便了整个项目组织代码片段： <br>
+            如下图所示代码片段: </p>
+            <ul>
+                <li>include是为了获取一个公共代码片段拿来拼接使用, 例如你的很多页面都使用到了
+                    <code>header.html</code> 中的片段</li>
+                <li>另外，如果你的项目中很多页面都具有相同的头和尾, 也就是说所有页面的基本框架是一样的,
+                    belong则可以引入一个公共的模板页面，把目前文件的html代码放在模板中生成一个完整的页面</li>
+                <li>关于模板引用和包含，可以参见 f2e-server.com 源码实例: <a href="https://github.com/shy2850/node-server/tree/gh-pages" target="_blank">https://github.com/shy2850/node-server/tree/gh-pages</a></li>
+            </ul>
             <p>page.html</p>
             <pre class="language-javascript"><code>&#36;belong[layout.html]
 &lt;ul&gt;
@@ -81,7 +93,7 @@ $belong[layout.vm]
 &lt;/ul&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
-            <p>你还可以修改<code>conf.js</code> 中相关配置，支持不同的关键字替换内容</p>
+            <p>你还可以修改<code>conf.js</code> 中相关配置，支持不同的关键字替换内容 <span class="not-important bg-primary">(扩展功能, 可不做了解)</span></p>
             <p>include和belong字段可以配置正则字符串或者正则对象, 其中的第一组分组获得的结果即为索引文件名</p>
             <pre class="language-javascript"><code>exports[localhost] = {
     include: "\\$include\\[[\"\\s]*([^\"\\s]+)[\"\\s]*\\]",
@@ -91,7 +103,7 @@ $belong[layout.vm]
         </section>
 
         <section id="request">
-            <h2>服务端内置对象</h2>
+            <h2>服务端内置对象 <span class="not-important bg-primary">(扩展功能, 可不做了解)</span></h2>
             <ul class="task-list">
                 <li>request: 包转完成的当前请求
                     <ul class="task-list">
@@ -129,7 +141,7 @@ $belong[layout.vm]
         </section>
 
         <section id="diy">
-            <h2>自定义引擎 v1.7.1</h2>
+            <h2>自定义引擎 <span class="not-important bg-primary">(扩展功能, 可不做了解)</span></h2>
             <p>支持通过配置 template 属性修改默认的模板引擎配置</p>
             <p>以 artTemplate 为例. 配置前在 <code>conf.js</code> 同级目录 安装artTemplate <code>npm install art-template</code></p>
             <pre class="language-javascript"><code>var artTemplate = require("art-template");

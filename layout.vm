@@ -49,6 +49,9 @@ $include[header.htm]
         height: 40px;
         line-height: 40px;  
     }
+    .not-important{
+        font: normal 14px/2 'Microsoft Yahei';
+    }
 </style>
   $[placeholder]
   <section class="container row">

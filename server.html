@@ -1,6 +1,8 @@
 $belong[layout.vm]
 <style>
-    .bg-primary{padding: .5em;border-radius: 6px;}
+    .bg-warning{padding: .5em;}
+    .bg-danger{padding: .5em;}
+</style>
 </style>
 <section class="container row">
     <div class="col-md-3">
@@ -9,7 +11,7 @@ $belong[layout.vm]
                 <li class="sidebar_head_li"><a href="#introduce">简介</a></li>
                 <li class="sidebar_head_li"><a href="#base-conf">基本配置</a></li>
                 <li class="sidebar_head_li"><a href="#host-conf">域名路由</a></li>
-                <li class="sidebar_head_li"><a href="#filter-conf">过滤器</a></li>
+                <li class="sidebar_head_li"><a href="#filter-conf">过滤器(扩展)</a></li>
             </ul>
         </div>
     </div>
@@ -19,20 +21,16 @@ $belong[layout.vm]
             <h2>简介</h2>
             <p>基本的服务器功能, 除了按照指定的MIME输出请求数据, 有可能需要基本的文件夹列表展示、404页面配置，甚至多端口多服务等功能。</p>
         </section>
-        
         <section id="base-conf">
             <h2>基本配置</h2>
-            <p>基本服务器功能, 可以配置欢迎页面文件名, 404页面完整路径</p>
+            <p>基本服务器功能，配置localhost服务, 意味着：
+            开启服务器后在浏览器直接访问 <a href="http://localhost" target="_blank">http://localhost</a> 将能看到对应root目录文件夹的展示</p>
             <pre class="language-javascript"><code>exports["localhost"] = {
     "root": "e:\\node_modules\\f2e-server\\",  //root 修改成自己的项目根目录
-    "welcome": "index.html",    // 开启欢迎页面  为空时不开启  
-    "notFound": "e:\\node_modules\\f2e-server\\nodeLib\\html\\404.html",  //系统内置了一个404页面, 支持修改
-    "fs_mod": true,  //是否开启文件夹列表展示
     "port": 80,     // 修改端口号 【默认80端口】
-    "maxConnections": 1000  // 当前主机服务支持最大并发链接数
 };
 </code></pre>
-            <p>如果需要配置多个端口服务，只需要复制一组，只需要注意修改端口号即可:</p>
+            <p>有的时候我们不只是关注一个项目文件夹, 如果需要配置多个项目文件夹, 需要复制多份配置文件分别改名字并且修改端口号即可:</p>
             <pre class="language-javascript"><code>exports["localhost"] = {
     root: "E:\\"
 };
@@ -45,6 +43,7 @@ exports["localhost2"] = {
     port: 8043
 };
 </code></pre>
+            <p>这样就能分别通过 <code>http://localhost</code>,<code>http://localhost:8080</code>,<code>http://localhost:8043</code> 来分别访问每个项目</p>
         </section>
 
         <section id="host-conf">
@@ -62,17 +61,20 @@ exports["test.news.cn"] = {
 </code></pre>
             <p>已经配置的多个服务使用了同一个端口[默认的80], 我们期望通过域名来分别索引就需要进行域名解析</p>
             <p>因为本地域名解析需要修改系统的hosts文件来实现, f2e-server提供了一个hosts程序，快捷修改windows系统目录中的hosts文件【需要足够权限】</p>
+            <p class="bg-danger">全局安装使用: <code>f2eserver hosts</code>, 如果是绿色非安装版点击 <code>hosts.cmd</code></p>
             <pre class="language-bash"><code>$ node hosts.js
   hosts backup in hosts.bak and Instead of new local-hosts config
 </code></pre>
             <p>
                 如果看到以上信息, 说明你的hosts自动配置完成，同时之前你正在使用的hosts配置备份在hosts.bak中 <br>
-                使用 <code>node hosts.js reset</code> 可以讲备份文件还原
+                使用 <code>node hosts.js reset</code> 可以将备份文件还原 
+                (全局安装 使用<code>f2eserver reset</code>还原) 非安装版点击 <code>hosts-reset.cmd</code></p>
             </p>
+            <p class="bg-warning">推荐使用80端口的多域名的配置方式配置项目</p>
         </section>
 
         <section id="filter-conf">
-            <h2>使用过滤器</h2>
+            <h2>使用过滤器<span class="not-important bg-primary">(扩展功能, 可不做了解)</span></h2>
             <p>使用服务器过滤器, 可以批量地处理很多特例情况, 如下：</p>
             <p><span class="bg-primary"> 例 </span>： 访问服务器目录 <code>/dist/*</code> 下面的资源时, 需要获取 <code>/src/</code> 下面的对应资源</p>
             <pre class="language-javascript"><code>exports["localhost"] = {
