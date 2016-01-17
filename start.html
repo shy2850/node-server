@@ -1,29 +1,4 @@
 $belong[layout.vm]
-<style>
-    .baiduyun-holder{
-        background: #fff;
-    }
-    .baiduyun-frame{
-        padding: 0;
-        width: 750px;
-        max-width: 100%;
-        height: 300px;
-        margin: 0 auto;
-        line-height: 32px;
-        position: relative;
-        overflow: hidden;
-        background: #fff;
-    }
-    .baiduyun-frame iframe{
-        width: 780px;
-        height: 400px;
-        position: absolute;
-        overflow: hidden;
-        right: -28px;
-        top: -70px;
-        z-index: 1;
-    }
-</style>
 <section class="container row">
     <div class="col-md-3">
         <div id="sidebar" class="my_sidebar">
@@ -40,17 +15,14 @@ $belong[layout.vm]
     <div class="page_content col-md-9" role="main">
         <section id="download-zip">
             <h2>绿色版下载</h2>
-            <p>windows用户可以直接从百度云下载 内置node运行环境压缩包使用</p>
-            <div class="baiduyun-holder">
-                <div class="baiduyun-frame"><iframe src="http://pan.baidu.com/s/1i4eWzAH" frameborder="0"></iframe></div>
-            </div>
+            <p>windows用户可以直接从 <a href="http://pan.baidu.com/s/1jGPvJuQ#path=%252Ff2e-server" target="_blank"> 百度云下载 </a> 内置node运行环境压缩包使用</p>
             <p class="bg-danger" style="padding:.5em 1em;">
-            提供绿色非安装版是为了让不了解node/npm环境的用户更方便的安装和使用, 已经集成了所有插件包, 几点说明:
+            提供绿色非安装版是为了让不了解node/npm环境的用户更方便的安装和使用, 已经集成了所有插件包:
             </p>
-            <ol>
+            <ul>
                <li>通过 <code>start.cmd</code> 启动服务</li>
                <li>通过 <code>hosts.cmd</code> 以及 <code>hosts-reset.cmd</code> 修改和恢复hosts文件 （请使用管理员权限运行）</li> 
-            </ol>
+            </ul>
         </section>
         <section id="install-nodejs">
             <h2>Node.js安装</h2>
