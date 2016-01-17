@@ -15,5 +15,5 @@ for(var k in CONF){
 }
 
 if(extCmd === "start"){
-	require('child_process').exec( "explorer http://localhost" );
+	require('child_process').exec( "explorer http://localhost:" + CONF.localhost.port );
 }
