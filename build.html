@@ -65,6 +65,7 @@ $belong[layout.vm]
     // 使用tinify压缩图片（每个key每月有500个免费额度，多出要收费）
     tinify: {
         key: 'lZeAUGvTOuFSIwp0GtNqTYpib1eUTVDe',
+        minSize: 60 * 1024, // 默认图片大于60k才开始进行压缩
         filter: function (path) {
             return path.match(/big.*\.png$/);
         }
