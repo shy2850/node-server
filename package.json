@@ -12,6 +12,7 @@
     "marked": ">=0.3.3",
     "mdppt": "*",
     "mime": "*",
+    "tinify": "^1.2.0",
     "uglify-js": ">=2.4.15",
     "underscore": ">=1.7.0",
     "wfquery": "*"
@@ -24,8 +25,7 @@
     "jade": ">=1.7.0",
     "less": ">=2.0.0",
     "node-sass": ">=3.2.0",
-    "psd": ">=1.0.2",
-    "tinify": "^1.2.0"
+    "psd": ">=1.0.2"
   },
   "scripts": {
     "start": "node node-server.js start",

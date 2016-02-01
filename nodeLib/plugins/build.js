@@ -48,8 +48,7 @@ var tinifyImg = function (conf, path) {
     
     var rs = fs.readFileSync(input);
     var key = md5(rs);
-    if (!tinified[key]) {
-        console.log(path);
+    if (!tinified[key] && rs.length > (conf.tinify.minSize || 60 * 1024)) {
         building = 1;
         var source = tinify.fromFile(input);
         source.toFile(output, function (err) {
