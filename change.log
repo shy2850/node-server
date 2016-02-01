@@ -285,4 +285,9 @@
 	#文件上传添加启动参数配置 uploadFile: true ，不配置接收但不保存文件，解决线上运行时严重安全漏洞。
 	#修改文件上传路径配置： 默认为接收post请求页面所在的路径，仍然支持修改uploadUrl参数
 	#修改模板引擎渲染异常时，只在控制台提示错误，继续输出源码且保留压缩等操作
+
+--2016/02/01 v1.10.5
+	#图片压缩完全使用收费的 [tinify](https://tinypng.com), 配置参数 {key: '', filter: function(pathname){}};
+	 申请KEY的地址 [https://tinypng.com/developers](https://tinypng.com/developers);
+	#babel5依赖提升为安装依赖
 	

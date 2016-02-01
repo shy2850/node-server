@@ -1,32 +1,31 @@
 {
   "name": "f2e-server",
-  "version": "1.10.4",
+  "version": "1.10.5",
   "description": "a nodejs based file-system-server with easy-template-engine and several F2E-utils",
   "main": "node-server.js",
   "dependencies": {
+    "babel": "5.8.34",
     "chokidar": ">=1.2.0",
     "commander": ">=2.9.0",
     "cssmin": ">=0.4.1",
     "formidable": ">=1.0.15",
     "marked": ">=0.3.3",
+    "mdppt": "*",
     "mime": "*",
     "uglify-js": ">=2.4.15",
     "underscore": ">=1.7.0",
     "wfquery": "*"
   },
   "devDependencies": {
-    "babel": "5.8.34",
     "autoprefixer": "6.2.3",
-    "jade": ">=1.7.0",
     "coffee-script": ">=1.8.0",
+    "freemarker.js": ">=1.2.0",
+    "highlight": ">=0.2.3",
+    "jade": ">=1.7.0",
     "less": ">=2.0.0",
     "node-sass": ">=3.2.0",
-    "highlight": ">=0.2.3",
     "psd": ">=1.0.2",
-    "optipng-bin": ">=3.0.2",
-    "jpegtran-bin": ">=2.0.2",
-    "freemarker.js": ">=1.2.0",
-    "mdppt": "*"
+    "tinify": "^1.2.0"
   },
   "scripts": {
     "start": "node node-server.js start",

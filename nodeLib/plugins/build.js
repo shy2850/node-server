@@ -25,13 +25,49 @@ setInterval(function(){
     i = (i + 1) % l.length;
 },200);
 
-var optipng, jpegtran;
-try{
-    optipng = require('optipng-bin');
-    jpegtran = require('jpegtran-bin').path;
-}catch(e){
-    // console.log( "optipng-bin & jpegtran-bin is not installed. \n building will run without Image minified!" );
+var crypto = require('crypto');
+function md5 (text) {
+  return crypto.createHash('md5').update(text).digest('hex');
 }
+var tinifiedPath = $path.join(__dirname, '../../../tinified.json');
+var tinified = {};
+if (!fs.existsSync(tinifiedPath)) {
+    fs.writeFileSync( tinifiedPath, '{}');
+}
+else {
+    tinified = JSON.parse(fs.readFileSync(tinifiedPath));
+}
+var tinifyImg = function (conf, path) {
+    if (conf.tinify.filter && !conf.tinify.filter(path)) {
+        return;
+    }
+    var tinify = require('tinify');
+    tinify.key = conf.tinify.key;
+    var input = $path.join(conf.output, path);
+    var output = $path.join(conf.root, path);
+    
+    var rs = fs.readFileSync(input);
+    var key = md5(rs);
+    if (!tinified[key]) {
+        console.log(path);
+        building = 1;
+        var source = tinify.fromFile(input);
+        source.toFile(output, function (err) {
+            if (err) {
+                console.log('tinify error:');
+                console.log(err);
+            }
+            else {
+                var res = fs.readFileSync(output);
+                tinified[md5(res)] = 1;
+                fs.writeFileSync(tinifiedPath, JSON.stringify(tinified));
+                fs.writeFileSync(input, res);
+            }
+            building = 0;
+        });
+    }
+
+};
 
 var buildFile = function(pathname, conf, callback){
     building = 1;
@@ -115,26 +151,9 @@ exports.execute = function(req, resp, root, handle, conf){
                 return;
             }
 
-            if( !jpegtran ){
-                return; // 图片压缩工具为安装， 不进行图片压缩。
-            }
-
-            if( mime.get(path) === "image/png" ){ // 使用 optipng-bin 进行图片压缩
-                building = 1;
-                execFile(optipng, ['-out', joinPath, joinPath], function (err) {
-                    building = 0;
-                    if (err) {
-                        console.log(err);
-                    }
-                });
-            }else if( mime.get(path) === "image/jpeg" ){ // 使用 jpegtran-bin 进行图片压缩
-                building = 1;
-                execFile(jpegtran, ['-outfile', joinPath, joinPath], function (err) {
-                    building = 0;
-                    if (err) {
-                        console.log(err);
-                    }
-                });
+            // 使用tinify压缩图片
+            if (/image\/.*/.test(mime.get(path)) && buildFilter(path) && conf.tinify){
+                tinifyImg(conf, path);
             }
         });
     };
