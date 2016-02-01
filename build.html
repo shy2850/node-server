@@ -51,7 +51,7 @@ $belong[layout.vm]
 
         <section id="filter">
             <h2>过滤处理</h2>
-            <p>f2e-server 默认会将当前项目所有文件和文件夹先复制到指定目录, 然后再依次使用模板引擎进行编译、中间件编译、压缩模块压缩等</p>
+            <p>f2e-server 默认会将当前项目所有文件和文件夹先复制到指定目录, 然后再依次使用模板引擎进行编译、中间件编译、压缩模块压缩, <a href="https://tinypng.com/developers" target="_blank">图片压缩</a> 等</p>
             <p>如果其中只有部分目录和文件需要进行编译, 大部分文件只是需要复制的话, 可以设置buildFilter参数：</p>
             <pre class="language-javascript"><code>exports["localhost"] = {
     "root": "d:\\doc\\",
@@ -59,8 +59,15 @@ $belong[layout.vm]
     "debug": fasle,         // debug设置为false, 将进行js和css压缩
     "output": "c:\\output\\",  //项目输出到指定文件夹
     "buildFilter": function(path){
-        //如果路径中含有node_modules 则只是复制文件，不通过服务器进行编译处理
+        //如果路径中含有node_modules 则只是复制文件，不通过服务器进行编译处理（包括不走tinify压缩）
         return !path.match(/node_modules/); 
+    },
+    // 使用tinify压缩图片（每个key每月有500个免费额度，多出要收费）
+    tinify: {
+        key: 'lZeAUGvTOuFSIwp0GtNqTYpib1eUTVDe',
+        filter: function (path) {
+            return path.match(/big.*\.png$/);
+        }
     }
 };</code></pre>
         </section>
