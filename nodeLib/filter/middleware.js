@@ -71,8 +71,8 @@ mini = {
                 if(conf.babel && "application/javascript" === mimeType){
                     str = require("babel-core").transform(str, _.extend({
                         presets: ["es2015", "react"],
-                        filename: pathname.replace(/^[\\\/]+/, '')
-                        sourceRoot: conf.root,
+                        filename: pathname.replace(/^[\\\/]+/, ''),
+                        sourceRoot: conf.root
                     }, conf.babel)).code;
                 }
                 if(resp.data.listen || conf.livereload && conf.livereload.inject && conf.livereload.inject(pathname)){
