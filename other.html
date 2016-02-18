@@ -69,11 +69,16 @@ $belong[layout.vm]
             <h2>ES6-ES5自动转换</h2>
             <p>f2e-server 服务端提供了动态的支持ES6源代码直接转ES5 【可用于构建阶段】</p>
             <ul>
-                <li>安装 babel 
+                <li>安装 babel
                     <ol>
                         <li><code>npm install babel-core</code></li>
                         <li><code>npm install babel-preset-es2015</code></li>
                         <li><code>npm install babel-preset-react</code></li>
+                        <li>0.11.0之前的免安装版本已经内置</li>
+                        <li>
+                            如果是0.11.0以上免安装版本, 请下载分享目录下面的 <code>babel-preset.zip</code>
+                            解压到 <code>f2e-server/f2e-server/node_modules/</code> 文件夹下面
+                        </li>
                     </ol>
                 </li>
                 <li>在conf.js中对应服务下配置参数 <code>"babel": {}</code></li>
