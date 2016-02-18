@@ -68,10 +68,16 @@ $belong[layout.vm]
         <section id="babel">
             <h2>ES6-ES5自动转换</h2>
             <p>f2e-server 服务端提供了动态的支持ES6源代码直接转ES5 【可用于构建阶段】</p>
-            <p>要求： <span class="bg-warning">babel6对repl模式支持不友好,请安装babel5(支持 -g)</span></p>
             <ul>
-                <li>安装 babel <code>npm install babel@5</code></li>
+                <li>安装 babel 
+                    <ol>
+                        <li><code>npm install babel-core</code></li>
+                        <li><code>npm install babel-preset-es2015</code></li>
+                        <li><code>npm install babel-preset-react</code></li>
+                    </ol>
+                </li>
                 <li>在conf.js中对应服务下配置参数 <code>"babel": {}</code></li>
+                <li>完整的babel配置文件可以参考: <a href="http://babeljs.io/docs/usage/options/" target="_blank">http://babeljs.io/docs/usage/options/</a></li>
             </ul>
             <p>如下源代码：</p>
             <pre class="language-javascript"><code>var React = require('react');
