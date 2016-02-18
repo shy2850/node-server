@@ -52,7 +52,7 @@ mini = {
         return function(str, resp){
             var m;
             var conf = resp.util.conf;
-            if("text/css" === mimeType && resp.autoprefixer && autoprefixer){
+            if("text/css" === mimeType && resp.autoprefixer){
                 if(autoprefixer){
                     postcss([ autoprefixer({inline:false,browsers: ['> 1%', 'IE 7']}) ]).process(str).then(function (result) {
                         result.warnings().forEach(function (warn) {
@@ -65,13 +65,15 @@ mini = {
                         }
                     });
                 }else{
-                    console.error("autoprefixer-core 未安装, 自动前缀插件不可用！");
+                    console.error("autoprefixer 或 postcss 未安装, 自动前缀插件不可用！");
                 }
             }else{
                 if(conf.babel && "application/javascript" === mimeType){
-                    str = require("babel").transform(str, _.extend({}, conf.babel, {
-                        sourceRoot: pathname
-                    })).code;
+                    str = require("babel-core").transform(str, _.extend({
+                        presets: ["es2015", "react"],
+                        filename: pathname.replace(/^[\\\/]+/, '')
+                        sourceRoot: conf.root,
+                    }, conf.babel)).code;
                 }
                 if(resp.data.listen || conf.livereload && conf.livereload.inject && conf.livereload.inject(pathname)){
                     str = str + '<script data-host="' + conf.host + '">' + livereload_code + '</script>';

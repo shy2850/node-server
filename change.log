@@ -290,4 +290,9 @@
 	#图片压缩完全使用收费的 [tinify](https://tinypng.com), 配置参数 {key: '', minSize: 60*1024, filter: function(pathname){}};
 	 申请KEY的地址 [https://tinypng.com/developers](https://tinypng.com/developers);
 	#babel5依赖提升为安装依赖
+
+--2016/02/18 v1.10.8
+	#babel升级为babel6, 安装依赖 babel-core, 开发依赖 babel-preset-es2015 和 babel-preset-react
+	#autoprefixer依赖配置postcss
+
 	
