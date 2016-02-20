@@ -138,8 +138,15 @@ try{
             exports[k] = conf.extend.call( exports.staticconf, $conf[k] );
         }else{
             exports[k] = conf.extend( $conf[k] );
+            try {
+                var currentConf = require(path.join(exports[k].root, 'f2e-conf.js')).localhost;
+                delete currentConf.root;
+                exports[k] = exports[k].extend(currentConf);
+            }catch(e){
+            }
         }
     }
 }catch(e){
     console.log("配置文件错误，使用默认配置！");
+    console.error(e);
 }

@@ -295,4 +295,7 @@
 	#babel升级为babel6, 安装依赖 babel-core, 开发依赖 babel-preset-es2015 和 babel-preset-react
 	#autoprefixer依赖配置postcss
 
+--2016/02/18 v1.11.1
+	#babel 添加开发依赖 babel-plugin-transform-es2015-modules-amd
+	#更新免安装版本为 dedupe 模块包
 	
