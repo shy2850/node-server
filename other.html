@@ -71,18 +71,15 @@ $belong[layout.vm]
             <ul>
                 <li>安装 babel
                     <ol>
-                        <li><code>npm install babel-core</code></li>
                         <li><code>npm install babel-preset-es2015</code></li>
                         <li><code>npm install babel-preset-react</code></li>
-                        <li>0.11.0之前的免安装版本已经内置</li>
-                        <li>
-                            如果是0.11.0以上免安装版本, 请下载分享目录下面的 <code>babel-preset.zip</code>
-                            解压到 <code>f2e-server/f2e-server/node_modules/</code> 文件夹下面
-                        </li>
                     </ol>
                 </li>
                 <li>在conf.js中对应服务下配置参数 <code>"babel": {}</code></li>
                 <li>完整的babel配置文件可以参考: <a href="http://babeljs.io/docs/usage/options/" target="_blank">http://babeljs.io/docs/usage/options/</a></li>
+                <li class="bg-warning">babel6需要npm3以上版本的 dedupe 支持。</li>
+                <li>如果使用插件不在es2015/react中需要另外安装。</li>
+                <li>一个例子： <a href="http://www.jianshu.com/p/4e13f252b4d6">http://www.jianshu.com/p/4e13f252b4d6</a></li>
             </ul>
             <p>如下源代码：</p>
             <pre class="language-javascript"><code>var React = require('react');
