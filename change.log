@@ -299,4 +299,6 @@
 	#配置文件支持直接检索项目根目录下的 f2e-conf.js 合并配置项
 	#babel 添加开发依赖 babel-plugin-transform-es2015-modules-amd
 	#更新免安装版本为 dedupe 模块包
-	
+
+--2016/03/06 v1.11.2
+	#psd预览提供更多功能： 支持元素拖拽、删除，ctrl+s保存图片等功能

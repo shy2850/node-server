@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head><%var $ = request.$, mime = request.util.mime, staticServer = request.util.staticServer;%>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title><%=$.title%></title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+        #main {
+            display: block;
+            margin: 10px auto;
+            position: relative;
+            width: auto;
+            text-align: center;
+            background: #fff;
+        }
+        #main .base {
+            visibility: hidden;
+        }
+        #main .bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;top: 0;
+        }
+        .imgs img {
+            position: absolute;
+            border: 0;
+        }
+        .imgs img:hover {
+            box-shadow: 0 0 10px #00f;
+            background: #fff;
+        }
+        .imgs img:focus {
+            cursor: move;
+        }
+        #main .download{
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 60px;
+            height: 24px;
+            line-height: 24px;
+            text-align: center;
+            background: green;
+            text-decoration: none;
+            color: #fff;
+            z-index: -1;
+        }
+    </style>
+    <!--[if lt IE 9]>
+    <script>window.close();</script>
+    <![endif]-->
+    <!--[if !IE | (gte IE 9)]><!-->
+    <script data-main="<%=staticServer%>static/js/psd.js" src="<%=staticServer%>static/js/require.min.js"></script>
+    <!--<![endif]-->
+</head>
+<body>
+    <div id="main">
+        <img src="<%=$.title.replace(/psd$/, 'png')%>" alt="<%=$.title%>" class="base">
+        <canvas class="bg"></canvas>
+        <div class="bg imgs"></div>
+        <a href="javascript:void(0);" class="download" target="_blank">下载</a>
+    </div>
+</body>
+</html>

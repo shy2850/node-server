@@ -1,24 +1,49 @@
 "use strict";
 var url = require('url'),
     mime = require('mime'),
-    fs = require('fs');
+    fs = require('fs'),
+    mini = require("./../filter/middleware").mini;
+
 
 function saveAllLayers( psd, path, resp){
     try{
         fs.mkdir( path.replace(/([^\\\/]*?)\.png$/i,'$1') ,function(){
+            var doc = psd.tree().export().document;
+            var all = {
+                width: doc.width,
+                height: doc.height,
+                layers: []
+            };
             psd.layers.forEach(function(t, i){
-                t.image.saveAsPng( path.replace(/([^\\\/]*?)\.png$/i,'$1/' + i + '.' + t.legacyName.replace(/\W+/g,'_') + '.png') );
+                if (t.width && t.height) {
+                    var name = i + '.' + t.legacyName.replace(/\W+/g,'_');
+                    t.image.saveAsPng( path.replace(/([^\\\/]*?)\.png$/i,'$1/' + name + '.png') );
+                    all.layers.push(function (t, name) {
+                        var prop = {name: name};
+                        for (var k in t) {
+                            switch (typeof t[k]) {
+                                case 'number':
+                                case 'string':
+                                case 'boolean':
+                                    prop[k] = t[k];
+                            }
+                        }
+                        return prop;
+                    }(t, name));
+                }
             });
+
+            var str = JSON.stringify(all, undefined, 2);
+            fs.writeFile( path.replace(/([^\\\/]*?)\.png$/i,'$1/layers.json'), str);
         });
-        var str = JSON.stringify( psd.tree().export(), undefined, 2 ); //JSON.stringify(psd.layers, undefined, 4);
-        fs.writeFile( path.replace(/([^\\\/]*?)\.png$/i,'$1/layers.json'), str);
+        // var str = JSON.stringify( psd.tree().export(), undefined, 2 );
     }catch(e){
         resp.writeHead(500, {"Content-Type": "text/html"});
         resp.end( e.stack.toString().replace(/\n/g,"<br>") );
     }
 }
 
-function getPng(path, pngPath, resp){
+function getPng(path, pngPath, resp, cbk){
     var psd;
     fs.readFile(pngPath, function(err, data){
         if(err){
@@ -27,22 +52,26 @@ function getPng(path, pngPath, resp){
                 return p.image.saveAsPng( pngPath );
             }).then(function(){
                 setTimeout(function(){
-                    saveAllLayers( psd, pngPath, resp);
+                    saveAllLayers( psd, pngPath, resp, cbk);
                 },0);
-                getPng(path, pngPath, resp);
+                getPng(path, pngPath, resp, cbk);
             });
         }else{
-            resp.writeHead(200, {
-                "Content-Type": mime.get('png')
-            });
-            resp.end(data);
+            cbk();
         }
     });
 }
 
-exports.execute = function(req, resp, root){
-    var path = root + decodeURI( url.parse( req.url ).query),
+exports.execute = function(req, resp, root, handle, config){
+    var query = decodeURI( url.parse( req.url ).query),
+        path = root + query,
         pngPath = path.replace(/([^\\\/]*?)\.psd$/i,'$1.png');
+    getPng(path, pngPath, resp, function () {
+        req.$.title = query;
+        
+var psdTemplate = fs.readFileSync( require('path').join( __dirname, "/../html/psd.html" ), 'utf-8');
 
-    getPng(path, pngPath, resp);
+        resp.writeHead(200, {'content-type': 'text/html'});
+        handle.execute(req, resp, root, psdTemplate, mini, true, config);
+    });
 };

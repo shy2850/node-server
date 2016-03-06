@@ -14,8 +14,8 @@ var conf = {
     cdn: false,         //针对线上运行服务器配置, 缓存资源到运行内存减少硬盘IO
     "fs_mod": true,     //是否支持文件夹列表展示
     welcome: "", //使用欢迎页面的文件名，不为空时，fs_mod可能失效
-    notFound: path.join( __dirname , "/../html/404.html" ),      //访问的资源不存在时跳转的页面配置
-    folder: path.join( __dirname , "/../html/folder.html" ),     //显示文件夹列表时候的配置页面
+    notFound: path.join( __dirname , "../html/404.html" ),      //访问的资源不存在时跳转的页面配置
+    folder: path.join( __dirname , "../html/folder.html" ),     //显示文件夹列表时候的配置页面
     include: "\\$include\\[[\"\\s]*([^\"\\s]+)[\"\\s]*\\]",
     placeholder: "$[placeholder]",
     belong: "\\$belong\\[[\"\\s]*([^\"\\s]+)[\"\\s]*\\]",
