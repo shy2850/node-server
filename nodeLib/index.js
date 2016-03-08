@@ -29,7 +29,7 @@ exports.start = function(conf){
         }else if( (host[1] | 0) === 80 ){
             conf = CONF.localhost;
         }
-        conf.host = conf.host || req.headers.host;
+        conf.hostname = conf.host || req.headers.host;
         root = conf.root;
         if( typeof filter.execute(req,resp,conf) !== "undefined"){
             return false;   //有返回值的时候, 防止继续运行

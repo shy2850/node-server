@@ -76,7 +76,7 @@ mini = {
                     }, conf.babel)).code;
                 }
                 if(resp.data.listen || conf.livereload && conf.livereload.inject && conf.livereload.inject(pathname)){
-                    str = str + '<script data-host="' + conf.host + '">' + livereload_code + '</script>';
+                    str = str + '<script data-host="' + conf.hostname + '">' + livereload_code + '</script>';
                 }
                 if(!debug && (m = mini[extType]) ){
                     m(str, resp);

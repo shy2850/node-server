@@ -71,7 +71,7 @@ var tinifyImg = function (conf, path) {
 var buildFile = function(pathname, conf, callback){
     building = 1;
     var pathname1 = pathname;
-    var url = 'http://' + conf.host + ':' + conf.port + '/' + decodeURI(pathname) + '?_build_=true';
+    var url = 'http://' + conf.hostname + '/' + decodeURI(pathname) + '?_build_=true';
     http.get(url, function(res){
         pathname1 = rename.buildRename(pathname, $path.join(conf.root, pathname), conf);
         var outputFile = $path.join(conf.output, pathname1);

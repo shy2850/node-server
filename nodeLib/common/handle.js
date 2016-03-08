@@ -8,8 +8,7 @@ exports.execute = function(req, resp, root, str, mini, debug, conf){
         include = new RegExp(conf.include),
         pathname = path.join(root, req.$.title).replace(/[^\\\/]+$/,"");
     var h = new RegExp(conf.belong).exec(str),
-        inc,
-        host = req.headers.host;
+        inc;
     try{
         if(h){
             belong = fs.readFileSync( /^[\/\\]/.test(h[1]) ? path.join(root,h[1]) : path.join(pathname,h[1]), 'utf-8' );    //读取belong文本

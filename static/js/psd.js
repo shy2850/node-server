@@ -1,3 +1,4 @@
+window.onerror = function (e) {alert(e)};
 require.config({
     paths: {
          wfQuery: "../../node_modules/wfquery/wfQuery"
@@ -5,7 +6,7 @@ require.config({
 });
 
 define('psd/init', ['wfQuery', 'requestAFrame'], function ($, R) {
-    var Z_INDEX = 100000;
+    var Z_INDEX = 10000;
     var prefix = document.title.replace(/\.psd$/,'/');
     var main = $('#main');
     var items = main.children();
@@ -57,17 +58,19 @@ define('psd/init', ['wfQuery', 'requestAFrame'], function ($, R) {
                 var init = $(this).data('init');
                 $(this).css(init);
                 e.preventDefault();
-            }).on('mousedown', 'img', function (e) {
-                if (e.ctrlKey) {
-                    // target.push(e.target);
-                }else {
+            }).on('click', 'img', function (e) {
+                if (mousedown) {
+                    target = [];
+                    $(e.target).trigger('blur');
+                }
+                else {
                     target = [e.target];
                 }
                 client = {
                     x: e.clientX,
                     y: e.clientY
                 };
-                mousedown = true;
+                mousedown = !mousedown;
             }).on('mousemove', function (e) {
                 var current = {
                     x: e.clientX,
@@ -85,11 +88,7 @@ define('psd/init', ['wfQuery', 'requestAFrame'], function ($, R) {
                     }
                 }
                 client = current;
-            }).on('mouseup', function (e) {
-                // if (!e.ctrlKey) {
-                    target = [];
-                // }
-                mousedown = false;
+                e.preventDefault();
             }).on('keydown', 'img',  function (e) {
                 var t = $(this);
                 var left = t.css('left');

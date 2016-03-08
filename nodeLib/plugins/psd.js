@@ -4,6 +4,7 @@ var url = require('url'),
     fs = require('fs'),
     mini = require("./../filter/middleware").mini;
 
+var psdTemplate = fs.readFileSync( require('path').join( __dirname, "/../html/psd.html" ), 'utf-8');
 
 function saveAllLayers( psd, path, resp){
     try{
@@ -63,15 +64,20 @@ function getPng(path, pngPath, resp, cbk){
 }
 
 exports.execute = function(req, resp, root, handle, config){
-    var query = decodeURI( url.parse( req.url ).query),
+    var query = decodeURI( url.parse( req.url ).query).replace(/\.\w+$/, '') + '.psd',
         path = root + query,
         pngPath = path.replace(/([^\\\/]*?)\.psd$/i,'$1.png');
-    getPng(path, pngPath, resp, function () {
-        req.$.title = query;
-        
-var psdTemplate = fs.readFileSync( require('path').join( __dirname, "/../html/psd.html" ), 'utf-8');
-
-        resp.writeHead(200, {'content-type': 'text/html'});
-        handle.execute(req, resp, root, psdTemplate, mini, true, config);
+    fs.exists(path, function (exists) {
+        if (exists) {
+            getPng(path, pngPath, resp, function () {
+                req.$.title = query;
+                resp.writeHead(200, {'content-type': 'text/html'});
+                handle.execute(req, resp, root, psdTemplate, mini, true, config);
+            });
+        }
+        else {
+            resp.writeHead(404, {"Content-Type": "text/html"});
+            resp.end("psd 资源不存在");
+        }
     });
 };
