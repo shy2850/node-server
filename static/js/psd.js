@@ -1,4 +1,3 @@
-window.onerror = function (e) {alert(e)};
 require.config({
     paths: {
          wfQuery: "../../node_modules/wfquery/wfQuery"
@@ -57,6 +56,7 @@ define('psd/init', ['wfQuery', 'requestAFrame'], function ($, R) {
             imgs.on('contextmenu', 'img', function (e) {
                 var init = $(this).data('init');
                 $(this).css(init);
+                mousedown = false;
                 e.preventDefault();
             }).on('click', 'img', function (e) {
                 if (mousedown) {
