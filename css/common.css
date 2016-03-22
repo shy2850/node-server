@@ -123,12 +123,24 @@ section.container:last-child{
     padding-left: 30px;
     font-size: 90%;
 }
-.my_sidebar iframe {
+.my_sidebar .ads {
     position: absolute;
     margin-top: 15px;
     right: 15px;
+    width: 120px;
 }
-.my_sidebar.affix iframe {
+.my_sidebar .ads a {
+    display: block;
+    height: 30px;
+    font: normal 12px/30px "微软雅黑";
+    overflow: hidden;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    background: #424242;
+    text-shadow: none; 
+}
+.my_sidebar.affix .ads {
     right: 0;
 }
 /* 侧边菜单结束 */
