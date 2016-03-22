@@ -81,9 +81,6 @@ section.container:last-child{
     .my_sidebar.affix {
         position: fixed;
     }
-    .my_sidebar iframe {
-        right: 0;
-    }
 }
 @media (min-width: 992px){
     .my_sidebar .nav > .active > ul {
@@ -130,6 +127,9 @@ section.container:last-child{
     position: absolute;
     margin-top: 15px;
     right: 15px;
+}
+.my_sidebar.affix iframe {
+    right: 0;
 }
 /* 侧边菜单结束 */
 
