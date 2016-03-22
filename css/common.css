@@ -131,8 +131,9 @@ section.container:last-child{
 }
 .my_sidebar .ads a {
     display: block;
-    height: 30px;
-    font: normal 12px/30px "微软雅黑";
+    height: 29px;
+    font: normal 12px/29px "微软雅黑";
+    margin-bottom: 1px;
     overflow: hidden;
     text-align: center;
     text-decoration: none;
