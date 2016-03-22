@@ -123,6 +123,11 @@ section.container:last-child{
     padding-left: 30px;
     font-size: 90%;
 }
+.my_sidebar iframe {
+    position: absolute;
+    margin-top: 20px;
+    right: 15px;
+}
 /* 侧边菜单结束 */
 
 
