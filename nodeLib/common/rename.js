@@ -22,12 +22,13 @@ var renameReg = /\$rename\[([^\]]+)\]/g;
 exports.execute = function(req, resp, root, str, mini, debug, conf){
     var build = req.data._build_;
     var renameMap = conf.renameMap || [];
+    var reg = conf.renameReg || renameReg;
 
     if(build){
         if(conf.middleware){
             renameMap = renameMap.concat(middlewareRename);
         }
-        return str.replace(renameReg, function(all, p){
+        return str.replace(reg, function(all, p){
             var temp = p + "";
             renameMap.forEach(function(r){
                 if(r.withBuild === 'md5'){
@@ -48,10 +49,10 @@ exports.execute = function(req, resp, root, str, mini, debug, conf){
     }
 };
 
-exports.buildRename = function (pathname, sourceUrl, conf) {
+exports.buildRename = function (pathname, sourceUrl, conf, needBuild) {
     var renameMap = conf.renameMap || [];
     var renamePath = pathname;
-    if(conf.middleware){
+    if(conf.middleware && needBuild){
         renameMap = renameMap.concat(middlewareRename);
     }
     renameMap.filter(function (r) {
@@ -62,6 +63,9 @@ exports.buildRename = function (pathname, sourceUrl, conf) {
             renamePath = renamePath.replace(md5ReplaceReg, '$1_' + md5(fileStr).substring(0,7) + '$2');
         }else{
             renamePath = renamePath.replace(r.reg, r.release);
+            if(pathname !== renamePath) {
+                // console.log(pathname + "\n" + renamePath);
+            }
         }
     });
     return renamePath;

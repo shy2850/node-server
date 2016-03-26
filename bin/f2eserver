@@ -29,7 +29,7 @@ program
                 };
                 fs.writeFile( 'f2e-conf.js', 'exports["localhost"] = ' + JSON.stringify(conf.localhost, null, 4) + ';\n' );
             }else{
-                conf = new Function("require", 'var exports = {};' + str + ';return exports;')(require);
+                conf = new Function("require", "__dirname", 'var exports = {};' + str + ';return exports;')(require, host.root);
             }
             for(var k in conf){
                 if (k !== 'setup') {

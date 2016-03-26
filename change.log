@@ -306,3 +306,8 @@
 --2016/03/06 v1.11.3
 	#psd预览页面体验修改
 	#conf.host 功能修改，区分配置host, 方便livereload，staticconf调用等等
+
+--2016/03/27 v1.11.4
+	#build修改filter和重命名分离
+	#全局f2e-conf.js配置文件支持__dirname, 并添加语法错误提示
+	#$rename配置支持通过conf.renameReg 修改默认的查找例如: renameReg: /([^"]+)\?__rename(?=")/g
