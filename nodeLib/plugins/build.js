@@ -116,31 +116,22 @@ exports.execute = function(req, resp, root, handle, conf){
         var path1 = path,
             joinPath = $path.join($root, path),
             newPath = joinPath;
-        fs.stat( $path.join(root, path), function(error, stats){
+        var fromPath = $path.join(root, path);
+        fs.stat(fromPath, function(error, stats){
             //文本类型资源通过HTTP获取, 以确保跟开发环境资源相同
             if(stats && stats.isFile && stats.isFile() && mime.isTXT(path)){
                 path1 = rename.buildRename(path, $path.join(root, path), conf, needBuild);
                 var needBuild = buildFilter(path1);
                 // needBuild &&　console.log(path1);
-                // 增加逻辑buildFilter返回false时候删除资源
-                if (needBuild === false) {
-                    return fs.unlink(joinPath);
-                }
                 newPath = $path.join($root, path1);
                 //console.log( referer.href + "/" + encodeURI(path) );
                 if (needBuild) {
                     building = 1;
                     http.get( referer.href + "/" + encodeURI(path) + '?_build_=true', function(res) {
                         if(res.statusCode === 200){
-                            fs.rename( joinPath, newPath, function(err){
-                                var fws = fs.createWriteStream( newPath );
-                                if(err){
-                                    console.log(err);
-                                }else{
-                                    res.pipe( fws ).on('finish',function(){
-                                        building = 0;
-                                    });
-                                }
+                            var fws = fs.createWriteStream( newPath );
+                            res.pipe( fws ).on('finish',function(){
+                                building = 0;
                             });
                         }else{
                             console.log('build error for: ' + path);
@@ -150,15 +141,19 @@ exports.execute = function(req, resp, root, handle, conf){
                         console.log(e);
                     });
                 }
-                else if (joinPath !== newPath) {
-                    fs.rename( joinPath, newPath, function(err){
-                        if(err){
-                            console.log(err);
-                        }
+                else if (needBuild !== false){
+                    fs.writeFile(newPath, fs.readFileSync(fromPath), function (err) {
+                        console.log(err);
+                        building = 0;
                     });
                 }
             }else if(stats && stats.isDirectory && stats.isDirectory()){ // 文件夹内递归需要构建
-                fs.readdir( $path.join(root, path), function(error1, files){
+                try {
+                    fs.mkdirSync(newPath);
+                }
+                catch (e) {
+                }
+                fs.readdir(fromPath, function(error1, files){
                     for ( var k in files) {        //对应下级目录或资源文件
                         build(path + '/' + files[k]);
                     }
@@ -172,11 +167,15 @@ exports.execute = function(req, resp, root, handle, conf){
             }
         });
     };
-
+    resp.end(JSON.stringify({
+        error: false,
+        command: '开始构建...'
+    }));
+    return build('');
     // exec('del ' + $root + '* /s/q',function(err){
     exec('dir',function(err){
         if(!err){
-            var bash = 'xcopy ' + root.replace(/(.*?)[\\\/]$/,'$1') + ' ' + $root + ' /e/d/s/y';
+            var bash = 'xcopy ' + root.replace(/(.*?)[\\\/]$/,'$1') + ' ' + $root + ' /e/s/y';
             exec(bash, function (error) {
                 if (!error) {
                     try{
@@ -186,9 +185,10 @@ exports.execute = function(req, resp, root, handle, conf){
                         console.error(e);
                     }
                 }
+                console.log(error);
                 resp.end(JSON.stringify({
                     error: error,
-                    command: 'xcopy ' + root.replace(/(.*?)[\\\/]$/,'$1') + ' ' + $root + ' /e/d/s/y'
+                    command: 'xcopy ' + root.replace(/(.*?)[\\\/]$/,'$1') + ' ' + $root + ' /e/s/y'
                 }));
             });
         }else{

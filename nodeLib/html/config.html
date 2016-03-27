@@ -14,7 +14,6 @@ if( (p = request.post) && p.root ){
     var items = [
         'root',
         'welcome',
-        'babel',
         'notFound',
         'fs_mod',
         'middleware',
@@ -78,10 +77,10 @@ if( (p = request.post) && p.root ){
             <td>autoprefix支持:</td>
             <td><input type="checkbox" name="autoprefixer" <%if(conf.autoprefixer){%>checked="checked"<%}%> ></td>
         </tr>
-        <tr>
+        <!-- <tr>
             <td>ES6支持:</td>
             <td><input type="checkbox" name="babel" <%if(conf.babel){%>checked="checked"<%}%> ></td>
-        </tr>
+        </tr> -->
         <tr>
             <td>开发模式(不压缩):</td>
             <td><input type="checkbox" name="debug" <%if(conf.debug){%>checked="checked"<%}%> ></td>

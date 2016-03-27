@@ -5,6 +5,7 @@ var fs = require("fs"),
     _ = require("underscore"),
     zlib = require("zlib"),
     cdn = require("./cdn"), // cdn模块
+    babel = require("babel-core"),
     cssmin = require("cssmin");
 
 var livereload_code = require("uglify-js")
@@ -68,13 +69,6 @@ mini = {
                     console.error("autoprefixer 或 postcss 未安装, 自动前缀插件不可用！");
                 }
             }else{
-                if(conf.babel && "application/javascript" === mimeType){
-                    str = require("babel-core").transform(str, _.extend({
-                        presets: ["es2015", "react"],
-                        filename: pathname.replace(/^[\\\/]+/, ''),
-                        sourceRoot: conf.root
-                    }, conf.babel)).code;
-                }
                 if(resp.data.listen || conf.livereload && conf.livereload.inject && conf.livereload.inject(pathname)){
                     str = str + '<script data-host="' + conf.hostname + '">' + livereload_code + '</script>';
                 }
@@ -182,6 +176,14 @@ register('mdppt', 'html', function(req, resp, rs, pathname, DEBUG){
 register('coffee', 'js', function(req, resp, rs, pathname, DEBUG){
     var scriptStr = require("coffee-script").compile( rs );
     this.out(scriptStr);
+});
+register('jsx', 'js', function (req, resp, rs, pathname, DEBUG) {
+    var res = babel.transform(rs + '', _.extend({
+        presets: ["react"],
+        filename: pathname.replace(/^[\\\/]+/, ''),
+        sourceRoot: req.util.conf.root
+    }, req.util.conf.babel)).code;
+    return res;
 });
 register('ftl', 'html', function(req, resp, rs, pathname, DEBUG){
     var out = this.out;

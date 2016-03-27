@@ -19,7 +19,7 @@ var listenner = function(path){
             conf = confs[root];
         }
     }
-    if(conf.livereload){
+    if(conf && conf.livereload){
         if (!path.indexOf(conf.root)) {
             var pathname = path.replace(conf.root, '');
             build.buildFile(pathname, conf, function(){

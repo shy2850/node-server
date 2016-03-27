@@ -16,7 +16,7 @@ var conf = {
     welcome: "", //使用欢迎页面的文件名，不为空时，fs_mod可能失效
     notFound: path.join( __dirname , "../html/404.html" ),      //访问的资源不存在时跳转的页面配置
     folder: path.join( __dirname , "../html/folder.html" ),     //显示文件夹列表时候的配置页面
-    include: "\\$include\\[[\"\\s]*([^\"\\s]+)[\"\\s]*\\]",
+    include: "\\$include\\[[\"'\\s]*([^\"'\\s]+)[\"'\\s]*\\]",
     placeholder: "$[placeholder]",
     belong: "\\$belong\\[[\"\\s]*([^\"\\s]+)[\"\\s]*\\]",
     livereload: false,  //是否监听文件变化刷新网页, 详细配置如下
@@ -141,11 +141,16 @@ try{
             var f2eConfPath = path.join(exports[k].root, 'f2e-conf.js');
             if (fs.existsSync(f2eConfPath)) {
                 try {
-                    var currentConf = require(f2eConfPath).localhost;
-                    delete currentConf.root;
-                    exports[k] = exports[k].extend(currentConf);
+                    var currentConf = require(f2eConfPath);
+                    var localConf = currentConf.localhost;
+                    delete localConf.root;
+                    exports[k] = exports[k].extend(localConf);
+                    if(currentConf.setup) {
+                        exports.setup = currentConf.setup;
+                    }
                 }catch(e){
-                    console.log("配置文件错误，使用默认配置！： n" + f2eConfPath);
+                    console.log(e);
+                    console.log("配置文件语法错误！：\n" + f2eConfPath);
                 }
             }
         }
