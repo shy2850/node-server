@@ -83,9 +83,15 @@ mini = {
 };
 
 var middout = function(type, str, resp, debug){
+    var conf = resp.util.conf;
+    var version = resp.util.version;
+    var expires = new Date();
+    expires.setTime( expires.getTime() + (conf.expires || 0) );
     resp.writeHead(200, {
         "Content-Encoding": resp.gzip ? "gzip" : "utf-8",
-        "Content-Type": mime.get(type)
+        "Content-Type": mime.get(type),
+        "Expires": expires.toUTCString(),
+        "Server": version
     });
     mini.get(type, debug)(str, resp);
 };

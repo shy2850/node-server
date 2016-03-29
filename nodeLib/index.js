@@ -13,6 +13,7 @@ var CONF = require("./config/conf"),    //综合配置
 var staticConf = CONF.staticconf,                //静态文件服务器配置
     mini = middleware.mini,
     cdn = middleware.cdn,
+    version = 'f2e-server ' + require('../package.json').version,
     serverInfo = {needUpdate: false};        //服务器相关的一些参数。
 exports.handle = handle;
 exports.middleware = middleware;
@@ -40,6 +41,7 @@ exports.start = function(conf){
         //包装request功能
         resp.data = req.data = querystring.parse( url.parse(req.url).query );
         resp.util = req.util = {
+            version: version,
             mime: mime,
             conf: conf,
             host: host[0],
@@ -104,8 +106,9 @@ exports.start = function(conf){
                     resp.writeHead(200, {
                         "Content-Type": mime.get(pathname),
                         "Content-Encoding": resp.gzip ? "gzip" : "utf-8",
-                        "Expires": expires,
-                        "Last-Modified": new Date( +stats.mtime )
+                        "Expires": expires.toUTCString(),
+                        "Server": version,
+                        "Last-Modified": new Date( +stats.mtime ).toUTCString()
                     });
 
                     var rs = fs.createReadStream(pathname), s = '', dataArr = [], ware;

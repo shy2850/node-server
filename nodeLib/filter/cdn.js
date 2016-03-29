@@ -11,13 +11,19 @@ exports.execute = function( req, resp, stats ) {
         return false;
     }else{
         var t = req.headers["if-modified-since"];
-        if ( t && new Date(mt).toGMTString() === t ) {
+        if ( t && new Date(mt).toUTCString() === t ) {
             resp.writeHead(304, "Not Modified");
             resp.end();
         }else{
+            var conf = resp.util.conf;
+            var version = resp.util.version;
+            var expires = new Date();
+            expires.setTime( expires.getTime() + (conf.expires || 0) );
             resp.writeHead(200, {
                 "Content-Encoding": resp.gzip ? "gzip" : "utf-8",
-                "Content-Type": req.util.mime.get(k.split("?")[0])
+                "Content-Type": req.util.mime.get(k.split("?")[0]),
+                "Expires": expires.toUTCString(),
+                "Server": version
             });
             resp.end( source.data );
         }

@@ -130,7 +130,10 @@ li a:hover{
                 var expires = new Date(); 
                 expires.setTime( expires.getTime() + 1000*60*60*24 );
 
-                response.writeHead(200, {"Content-Type": "text/css",Expires:expires});
+                response.writeHead(200, {
+                  "Content-Type": "text/css",
+                  Expires: expires.toUTCString()
+                });
                 
                 files.map(function(file){
                   file = file.replace('.gif','');
