@@ -7,7 +7,7 @@
     }
   });
 
-  require(["wfQuery"], function($) {
+  require(["wfquery"], function($) {
     $("#output").on("click", function() {
       if( !window.confirm('项目输出将首先复制所有当前根目录文件到目标目录\n请确保磁盘空间充足!') ){
         return;
