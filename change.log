@@ -316,5 +316,6 @@
 	#【重要修改】 去除默认对所有js设置babel启用，只是采用中间件模式支持 .jsx 文件编译，示例可以参考：
 		[https://github.com/shy2850/mcafe](https://github.com/shy2850/mcafe)
 
---2016/03/29 v1.11.5
-	#紧急修复mime返回空问题
+--2016/03/29 v1.11.6
+	#修复mime返回空问题
+	#header中 Date.toGMTString() 编码不识别问题
