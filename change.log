@@ -315,3 +315,6 @@
 	#$rename配置支持通过conf.renameReg 修改默认的查找例如: renameReg: /([^"]+)\?__rename(?=")/g
 	#【重要修改】 去除默认对所有js设置babel启用，只是采用中间件模式支持 .jsx 文件编译，示例可以参考：
 		[https://github.com/shy2850/mcafe](https://github.com/shy2850/mcafe)
+
+--2016/03/29 v1.11.5
+	#紧急修复mime返回空问题
