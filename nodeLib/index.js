@@ -105,7 +105,7 @@ exports.start = function(conf){
                         "Content-Type": mime.get(pathname),
                         "Content-Encoding": resp.gzip ? "gzip" : "utf-8",
                         "Expires": expires,
-                        "Last-Modified": new Date( +stats.mtime ).toGMTString()
+                        "Last-Modified": new Date( +stats.mtime )
                     });
 
                     var rs = fs.createReadStream(pathname), s = '', dataArr = [], ware;
