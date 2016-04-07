@@ -109,23 +109,29 @@ exports.execute = function(req, resp, root, handle, conf){
     var referer = url.parse( req.headers.referer || req.url );
     root = $path.join(root, referer.pathname);
     var $root = conf.output,
+        buildInterval = conf.buildInterval || 10,
         mime = req.util.mime,
         buildFilter = conf.buildFilter || function(){ return true; };
 
     var build = function( path ){
-        var path1 = path,
-            joinPath = $path.join($root, path),
-            newPath = joinPath;
+        var joinPath = $path.join($root, path);
         var fromPath = $path.join(root, path);
+
+        // 先获取真实构建目录, 在判断是否构建, 根目录需要直接返回 needBuild:true
+        var path1 = rename.buildRename(path, fromPath, conf);
+        var needBuild = !path ? true : buildFilter(path1);
+        // needBuild &&　console.log(path1);
+        if (needBuild === false) {
+            // 如果路径匹配直接是false, 就不再构建了
+            return;
+        }
+        var newPath = $path.join($root, path1);
+
         fs.stat(fromPath, function(error, stats){
             //文本类型资源通过HTTP获取, 以确保跟开发环境资源相同
-            if(stats && stats.isFile && stats.isFile() && mime.isTXT(path)){
-                path1 = rename.buildRename(path, $path.join(root, path), conf, needBuild);
-                var needBuild = buildFilter(path1);
-                // needBuild &&　console.log(path1);
-                newPath = $path.join($root, path1);
+            if(stats && stats.isFile && stats.isFile()){
                 //console.log( referer.href + "/" + encodeURI(path) );
-                if (needBuild) {
+                if (mime.isTXT(path) && needBuild) {
                     building = 1;
                     http.get( referer.href + "/" + encodeURI(path) + '?_build_=true', function(res) {
                         if(res.statusCode === 200){
@@ -141,9 +147,19 @@ exports.execute = function(req, resp, root, handle, conf){
                         console.log(e);
                     });
                 }
-                else if (needBuild !== false){
-                    fs.writeFile(newPath, fs.readFileSync(fromPath), function (err) {
-                        console.log(err);
+                else {
+                    building = 1;
+                    // fs.writeFile(newPath, fs.readFileSync(fromPath), function (err) {
+                    //     building = 0;
+                    // });
+                    var readable = fs.createReadStream( fromPath );
+                    // 创建写入流
+                    var writable = fs.createWriteStream( newPath );   
+                    // 通过管道来传输流
+                    readable.pipe( writable ).on('finish', function (err) {
+                        if (err) {
+                            console.error(err);
+                        }
                         building = 0;
                     });
                 }
@@ -152,11 +168,16 @@ exports.execute = function(req, resp, root, handle, conf){
                     fs.mkdirSync(newPath);
                 }
                 catch (e) {
+                    // console.error(e);
                 }
                 fs.readdir(fromPath, function(error1, files){
-                    for ( var k in files) {        //对应下级目录或资源文件
-                        build(path + '/' + files[k]);
-                    }
+                    files.forEach(function (file, i) {
+                        setTimeout(function () {
+                            build(path + '/' + file);
+                        }, buildInterval * i);
+                        // 增加buildInterval配置参数, 项目需要构建的资源文件过多
+                        // 时候可以考虑设置, 防止http并发太大导致构建失败
+                    });
                 });
                 return;
             }

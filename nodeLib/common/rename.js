@@ -49,10 +49,10 @@ exports.execute = function(req, resp, root, str, mini, debug, conf){
     }
 };
 
-exports.buildRename = function (pathname, sourceUrl, conf, needBuild) {
+exports.buildRename = function (pathname, sourceUrl, conf) {
     var renameMap = conf.renameMap || [];
     var renamePath = pathname;
-    if(conf.middleware && needBuild){
+    if(conf.middleware){
         renameMap = renameMap.concat(middlewareRename);
     }
     renameMap.filter(function (r) {
