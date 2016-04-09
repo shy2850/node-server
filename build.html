@@ -8,6 +8,7 @@ $belong[layout.vm]
                 <li class="sidebar_head_li"><a href="#minify">合并压缩</a></li>
                 <li class="sidebar_head_li"><a href="#filter">过滤处理</a></li>
                 <li class="sidebar_head_li"><a href="#rename">中间件资源/重命名</a></li>
+                <li class="sidebar_head_li"><a href="#outftp">FTP直接上传</a></li>
             </ul>
         </div>
     </div>
@@ -29,16 +30,16 @@ $belong[layout.vm]
             <h2>合并压缩</h2>
             <p>我们建议您在开发阶段使用模板引用进行多文件动态合并(各种文本类型后缀名文件均支持模板引擎渲染), 例如：</p>
             <pre class="language-javascript"><code>&#36;include[js/config.js]
-&#36;include[js/m-attr.js]
-&#36;include[js/m-chart.js]
-&#36;include[js/m-cloud.js]
-&#36;include[js/m-debate.js]
-&#36;include[js/m-embed.js]
-&#36;include[js/m-gallery.js]
-&#36;include[js/m-store.js]
-&#36;include[js/m-timeLine.js]
-&#36;include[js/m-txt.js]
-&#36;include[js/script.js]</code></pre>
+&#36;include["js/m-attr.js"]
+&#36;include["js/m-chart.js"]
+&#36;include["js/m-cloud.js"]
+&#36;include["js/m-debate.js"]
+&#36;include["js/m-embed.js"]
+&#36;include["js/m-gallery.js"]
+&#36;include["js/m-store.js"]
+&#36;include["js/m-timeLine.js"]
+&#36;include["js/m-txt.js"]
+&#36;include["js/script.js"]</code></pre>
             <p>使用以下配置时：</p>
             <pre class="language-javascript"><code>exports["localhost"] = {
     "root": "d:\\doc\\",
@@ -138,6 +139,26 @@ $belong[layout.vm]
 &lt;body>
 &lt;/body>
 &lt;/html></code></pre>
+        </section>
+
+        <section id="outftp">
+            <h2>FTP上传</h2>
+            <p>从v1.12.5版本开始，f2e-server将支持一键FTP上传构建结果。 使用<a href="https://github.com/mscdex/node-ftp" target="_blank">node-ftp</a>， 具体配置如下：</p>
+            <p>下面所示ftp配置为免费空间，仅供测试. 可能会有比较高的上传失败率, 上传后可在 <a href="http://i.webfuture.cn/wfquery/">http://i.webfuture.cn/wfquery/</a> 查看</p>
+            <pre class="language-javascript"><code>exports["localhost"] = {
+    root: './',
+    debug: false,
+    autoprefixer: true,
+    outftp: {
+        host: '208.81.166.184',
+        port: 21,
+        user: 'i.webfuture.cn',
+        password: 'f2e-server',
+        connTimeout： 10000， // 初始化超时时间
+        pasvTimeout: 10000, // 超时时间10s
+        path: '/i.webfuture.cn/wwwroot/wfquery/' // 上传根目录
+    }
+};</code></pre>
         </section>
 </div>
 <div class="page_bottom col-md-9 pull-right">
