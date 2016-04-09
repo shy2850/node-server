@@ -42,7 +42,7 @@ var conf = {
     maxConnections: 1000,    //并发处理的最大连接数
     output: "c:\\output\\",
     buildFilter: function(filePath){
-        return !/\bnode_modules\b/.test( filePath );
+        return !/\bnode_modules|\.git\b/.test( filePath );
     },
     renameMap: [    //  html页面中使用$rename[]的资源修改, 如果配置了withBuild属性将在构建时候对文件进行对应重命名, 
     /*
