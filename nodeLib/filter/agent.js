@@ -16,6 +16,8 @@ function doRequest(request, response, option, path, fws){
       host: option.host || request.headers.host,
   };
 
+  option.config && option.config(request, headers);
+
   if(request.headers.origin){
       headers.origin = request.headers.origin.replace(hostReg, protocol + "://" + headers.host)
   }
@@ -48,9 +50,7 @@ function doRequest(request, response, option, path, fws){
           });
           cookies[option.host] = hck;
         }
-        if( res.statusCode === 302 ){ // 对于远程服务的302转发中的域名部分修改成本地域名
-          res.headers.location = res.headers.location.replace( /(https?:\/\/)[^\\\/]+/, "http://" + originHost );
-        }
+        option.rewrite && option.rewrite(res);
         response.writeHead(res.statusCode, res.headers);
         res.pipe(response);
         if(fws){
