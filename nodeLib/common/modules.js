@@ -5,7 +5,7 @@ exports.get = function(moduleName){
 	try{
 		return require(base + moduleName);
 	}catch(e){
-		console.log(e);
+		// console.log(e);
 		return null;
 	}
 };
