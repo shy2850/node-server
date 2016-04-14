@@ -6,6 +6,7 @@ var $path = require('path'),
     http = require('http'),
     exec = require('child_process').exec,
     execFile = require('child_process').execFile;
+var FtpClient= require('ftp');
 
 var rename = require('../common/rename');
 var building = 0;
@@ -113,6 +114,8 @@ exports.execute = function(req, resp, root, handle, conf){
         mime = req.util.mime,
         buildFilter = conf.buildFilter || function(){ return true; };
 
+    var ftpClient;
+
     var build = function( path ){
         var joinPath = $path.join($root, path);
         var fromPath = $path.join(root, path);
@@ -138,6 +141,13 @@ exports.execute = function(req, resp, root, handle, conf){
                             var fws = fs.createWriteStream( newPath );
                             res.pipe( fws ).on('finish',function(){
                                 building = 0;
+                                if (ftpClient) {
+                                    console.log('uploading...\t' + path1);
+                                    ftpClient.put(newPath, $path.join(ftpClient.root, path1), function (e) {
+                                        console.log((e ? '!upload error\t' : 'upload success\t') + path1);
+                                        ftpClient.end();
+                                    });
+                                }
                             });
                         }else{
                             console.log('build error for: ' + path);
@@ -161,6 +171,13 @@ exports.execute = function(req, resp, root, handle, conf){
                             console.error(err);
                         }
                         building = 0;
+                        if (ftpClient) {
+                            console.log('uploading...\t' + path1);
+                            ftpClient.put(newPath, $path.join(ftpClient.root, path1), function (e) {
+                                console.log((e ? '!upload error\t' : 'upload success\t') + path1);
+                                ftpClient.end();
+                            });
+                        }
                     });
                 }
             }else if(stats && stats.isDirectory && stats.isDirectory()){ // 文件夹内递归需要构建
@@ -170,15 +187,31 @@ exports.execute = function(req, resp, root, handle, conf){
                 catch (e) {
                     // console.error(e);
                 }
-                fs.readdir(fromPath, function(error1, files){
-                    files.forEach(function (file, i) {
-                        setTimeout(function () {
-                            build(path + '/' + file);
-                        }, buildInterval * i);
-                        // 增加buildInterval配置参数, 项目需要构建的资源文件过多
-                        // 时候可以考虑设置, 防止http并发太大导致构建失败
+                // 区分FTP上传和普通构建；
+                if (ftpClient) {
+                    ftpClient.mkdir($path.join(ftpClient.root, path1), function (e) {
+                        fs.readdir(fromPath, function(error1, files){
+                            files.forEach(function (file, i) {
+                                setTimeout(function () {
+                                    build(path + '/' + file);
+                                }, buildInterval * i);
+                                // 增加buildInterval配置参数, 项目需要构建的资源文件过多
+                                // 时候可以考虑设置, 防止http并发太大导致构建失败
+                            });
+                        });
                     });
-                });
+                }
+                else {
+                    fs.readdir(fromPath, function(error1, files){
+                        files.forEach(function (file, i) {
+                            setTimeout(function () {
+                                build(path + '/' + file);
+                            }, buildInterval * i);
+                            // 增加buildInterval配置参数, 项目需要构建的资源文件过多
+                            // 时候可以考虑设置, 防止http并发太大导致构建失败
+                        });
+                    });
+                }
                 return;
             }
 
@@ -188,55 +221,31 @@ exports.execute = function(req, resp, root, handle, conf){
             }
         });
     };
-    resp.end(JSON.stringify({
-        error: false,
-        command: '开始构建...'
-    }));
-    return build('');
-    // exec('del ' + $root + '* /s/q',function(err){
-    exec('dir',function(err){
-        if(!err){
-            var bash = 'xcopy ' + root.replace(/(.*?)[\\\/]$/,'$1') + ' ' + $root + ' /e/s/y';
-            exec(bash, function (error) {
-                if (!error) {
-                    try{
-                        build("");
-                    }catch(e){
-                        console.error("build error:");
-                        console.error(e);
-                    }
-                }
-                console.log(error);
-                resp.end(JSON.stringify({
-                    error: error,
-                    command: 'xcopy ' + root.replace(/(.*?)[\\\/]$/,'$1') + ' ' + $root + ' /e/s/y'
-                }));
-            });
-        }else{
-            // exec('rm -rf ' + $root + '/*',function(err2){
-            exec('ls',function(err2){
-                if(!err2){
-                    exec('cp -Rf ' + root + '* ' + $root,function(err3){
-                        if (!err3) {
-                            try{
-                                build("");
-                            }catch(e){
-                                console.error("build error:");
-                                console.error(e);
-                            }
-                        }
-                        resp.end(JSON.stringify({
-                            error: err3,
-                            command: 'cp -Rf  ' + root + '* ' + $root
-                        }));
-                    });
-                }else{
-                    resp.end(JSON.stringify({
-                        error: err2,
-                        command: 'xcopy ' + root.replace(/(.*?)[\\\/]$/,'$1') + ' ' + $root + ' /e/d/s'
-                    }));
-                }
-            });
-        }
-    });
+
+    if (conf.outftp) {
+        ftpClient = new FtpClient();
+        ftpClient.connect(conf.outftp);
+        ftpClient.root = conf.outftp.path || '/wwwroot/';
+        ftpClient.on('ready', function (e) {
+            build('');
+            resp.end(JSON.stringify({
+                command: '开始构建并进行FTP上传...'
+            }));
+        }).on('error', function (e) {
+            console.log(e);
+            resp.end(JSON.stringify({
+                error: 'FTP上传配置有误...'
+            }));
+        }).on('end', function () {
+            console.log('\nftp upload finished!\n');
+        });
+    }
+    else {
+        build('');
+        resp.end(JSON.stringify({
+            command: '开始构建...'
+        }));
+    }
+
+    
 };
