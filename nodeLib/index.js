@@ -9,7 +9,8 @@ var CONF = require("./config/conf"),    //综合配置
     mime = require("mime"),    //MIME类型
     http = require("http"),
      url = require("url"),
-      fs = require("fs");
+      fs = require("fs"),
+       _ = require("underscore");
 var staticConf = CONF.staticconf,                //静态文件服务器配置
     mini = middleware.mini,
     cdn = middleware.cdn,
@@ -103,13 +104,14 @@ exports.start = function(conf){
 
                     var expires = new Date();
                     expires.setTime( expires.getTime() + (conf.expires || 0) );
-                    resp.writeHead(200, {
+                    var baseHeader = {
                         "Content-Type": mime.get(pathname),
                         "Content-Encoding": resp.gzip ? "gzip" : "utf-8",
                         "Expires": expires.toUTCString(),
                         "Server": version,
                         "Last-Modified": new Date( +stats.mtime ).toUTCString()
-                    });
+                    };
+                    resp.writeHead(200, _.extend(baseHeader, conf.headers));
 
                     var rs = fs.createReadStream(pathname), s = '', dataArr = [], ware;
                     rs.on('error',function(err){
