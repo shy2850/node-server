@@ -178,6 +178,10 @@ exports.execute = function(req, resp, root, handle, conf){
                                 ftpClient.end();
                             });
                         }
+                        // 使用tinify压缩图片
+                        if (/image\/.*/.test(mime.get(path)) && buildFilter(path) && conf.tinify){
+                            tinifyImg(conf, path);
+                        }
                     });
                 }
             }else if(stats && stats.isDirectory && stats.isDirectory()){ // 文件夹内递归需要构建
@@ -214,11 +218,7 @@ exports.execute = function(req, resp, root, handle, conf){
                 }
                 return;
             }
-
-            // 使用tinify压缩图片
-            if (/image\/.*/.test(mime.get(path)) && buildFilter(path) && conf.tinify){
-                tinifyImg(conf, path);
-            }
+                
         });
     };
 
