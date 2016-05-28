@@ -10,14 +10,28 @@ exports.execute = function(req, resp, root, str, mini, debug, conf){
     var h = new RegExp(conf.belong).exec(str),
         inc;
     try{
+
+        if(conf.runJsBefore){try{ //模板引擎渲染前置
+            if( !conf.template || !conf.template.get || (conf.template.filter && !conf.template.filter.test(req.$.title) ) ){
+                var compiled = _.template(str);
+                str = compiled({request: req, response: resp, require: require});
+            }else{
+                str = conf.template.get(str, req.$.title, req, resp, require);
+            }
+        }catch(compileError){
+            console.log(compileError);
+            console.log(req.$.title + ": 模板引擎渲染异常！ ");
+        }}
+
         if(h){
             belong = fs.readFileSync( /^[\/\\]/.test(h[1]) ? path.join(root,h[1]) : path.join(pathname,h[1]), 'utf-8' );    //读取belong文本
             str = str.replace(h[0], "" );              //替换关键字
             str = belong.replace(conf.placeholder,str);
         }
-        while( ( inc = str.match(include) ) ){
-            str = str.replace( inc[0], fs.readFileSync( /^[\/\\]/.test(inc[1]) ? path.join(root,inc[1]) : path.join(pathname,inc[1]),'utf-8') );
-        }
+        
+        str = str.replace(include, function (all, filename) {
+            return fs.readFileSync( /^[\/\\]/.test(filename) ? path.join(root, filename) : path.join(pathname, filename),'utf-8');
+        });
 
         // 需要设置重命名
         str = require("./rename").execute(req, resp, root, str, mini, debug, conf);
