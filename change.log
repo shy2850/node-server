@@ -337,4 +337,6 @@
 	#BUG: 修改handle.js 的 $include替换方式改写
 	#Feature: 提供配置参数 runJsBefore: false // 可以在执行belong/include之前进行一轮模板渲染
 
+--2016/05/28 v1.12.6
+	#BUG: 修改handle.js 的 $include替换方式改写 手误（丢失了全局匹配）
 

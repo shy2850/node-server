@@ -5,7 +5,7 @@ var fs = require("fs"),
 
 exports.execute = function(req, resp, root, str, mini, debug, conf){
     var belong = "",
-        include = new RegExp(conf.include),
+        include = new RegExp(conf.include, 'g'),
         pathname = path.join(root, req.$.title).replace(/[^\\\/]+$/,"");
     var h = new RegExp(conf.belong).exec(str),
         inc;
