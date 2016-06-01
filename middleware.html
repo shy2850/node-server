@@ -150,14 +150,18 @@ register('less', 'css', function(req, resp, rs, pathname, DEBUG){
 });</code></pre>
             <p>从上面的4个样例中, 可以比较清楚的了解怎么扩展一个中间件</p>
             <p>事实上, 在配置文件中也支持添加middleware</p>
-            <pre class="language-javascript"><code>exports.setup = function (server) {
+            <pre class="language-javascript"><code>var baseDir = __dirname;
+var ssi = require('ssi');   // 请先全局安装 ssi (npm install -g ssi)
+var parser = new ssi(baseDir, baseDir, '/**/**/*.shtml');
+
+exports.setup = function (server) {
     var middleware = server.middleware;
-    middleware.register('jsx', 'js', function (req, resp, rs, pathname, DEBUG) {
-        // babel 自动编译jsx因此只需要配置babel就可以了, 这里直接返回
-        return rs;
+    // babel 自动编译jsx因此只需要配置babel就可以了, 这里只需要配置后缀映射
+    middleware.register('jsx', 'js');
+    // SSI 封装
+    middleware.register('shtml', 'html', function(req, resp, rs, pathname, DEBUG){
+        return parser.parse(pathname, rs.toString()).contents;
     });
-    // 如果直接原文本返回，还可以使用如下简写
-    middleware.register('shtml', 'html');
     // 如果需要封装成异步输出模式, 可以使用this.out(resultStr);
     middleware.register('scss', 'css', function(req, resp, rs, pathname, DEBUG){
         var out = this.out;
