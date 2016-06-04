@@ -64,7 +64,7 @@ exports.buildRename = function (pathname, sourceUrl, conf) {
         }else{
             renamePath = renamePath.replace(r.reg, r.release);
             if(pathname !== renamePath) {
-                // console.log(pathname + "\n" + renamePath);
+                // console.trace(pathname + "\n" + renamePath);
             }
         }
     });

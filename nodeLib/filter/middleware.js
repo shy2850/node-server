@@ -28,7 +28,7 @@ var out = function(str, resp){
     if( resp.gzip ){
         zlib.gzip(str, function(err, decoded){
             if(err){
-                console.log( err );
+                console.trace( err );
             }
             cdn.set( resp, decoded );
             resp.end( decoded );
@@ -111,7 +111,7 @@ exports.get = function(pathname){
             }
             fn.apply(middleware,arguments);
         }catch(e){
-            console.log(e);
+            console.trace(e);
             resp.writeHead(500, {"Content-Type": "text/html"});
             resp.end( JSON.stringify(e) );
         }

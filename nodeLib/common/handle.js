@@ -19,8 +19,8 @@ exports.execute = function(req, resp, root, str, mini, debug, conf){
                 str = conf.template.get(str, req.$.title, req, resp, require);
             }
         }catch(compileError){
-            console.log(compileError);
-            console.log(req.$.title + ": 模板引擎渲染异常！ ");
+            console.trace(compileError);
+            console.trace(req.$.title + ": 模板引擎渲染异常！ ");
         }}
 
         if(h){
@@ -29,9 +29,11 @@ exports.execute = function(req, resp, root, str, mini, debug, conf){
             str = belong.replace(conf.placeholder,str);
         }
         
-        str = str.replace(include, function (all, filename) {
-            return fs.readFileSync( /^[\/\\]/.test(filename) ? path.join(root, filename) : path.join(pathname, filename),'utf-8');
-        });
+        while (str.match(include)) {
+            str = str.replace(include, function (all, filename) {
+                return fs.readFileSync( /^[\/\\]/.test(filename) ? path.join(root, filename) : path.join(pathname, filename),'utf-8');
+            });
+        }
 
         // 需要设置重命名
         str = require("./rename").execute(req, resp, root, str, mini, debug, conf);
@@ -45,8 +47,8 @@ exports.execute = function(req, resp, root, str, mini, debug, conf){
                 result = conf.template.get(str, req.$.title, req, resp, require);
             }
         }catch(compileError){
-            console.log(compileError);
-            console.log(req.$.title + ": 模板引擎渲染异常！ ");
+            console.trace(compileError);
+            console.trace(req.$.title + ": 模板引擎渲染异常！ ");
         }}
 
         switch(typeof result){

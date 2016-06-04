@@ -17,11 +17,11 @@ setInterval(function(){
     if( _.find(l, function(n){ return !!n; }) ){
         if( i === 0 ){
             builded = true;
-            console.log( 'building......' );
+            console.trace( 'building......' );
         }
     }else if(builded){
         builded = false;
-        console.log( 'build finished!\n' );
+        console.trace( 'build finished!\n' );
     }
     i = (i + 1) % l.length;
 },200);
@@ -54,8 +54,8 @@ var tinifyImg = function (conf, path) {
         var source = tinify.fromFile(input);
         source.toFile(output, function (err) {
             if (err) {
-                console.log('tinify error:');
-                console.log(err);
+                console.trace('tinify error:');
+                console.trace(err);
             }
             else {
                 var res = fs.readFileSync(output);
@@ -83,11 +83,11 @@ var buildFile = function(pathname, conf, callback){
                 callback();
             });
         }catch(e){
-            console.log(e);
+            console.trace(e);
         }
     }).on('error', function(e){
-        console.log('build error for: ' + pathname);
-        console.log(e);
+        console.trace('build error for: ' + pathname);
+        console.trace(e);
         building = 0;
     });
 };
@@ -101,7 +101,7 @@ exports.execute = function(req, resp, root, handle, conf){
         return;
     }
     if( _.find(l, function(n){ return !!n; }) ){
-        console.log('building......');
+        console.trace('building......');
         resp.end(JSON.stringify({
             error: '构建中...'
         }));
@@ -123,7 +123,7 @@ exports.execute = function(req, resp, root, handle, conf){
         // 先获取真实构建目录, 在判断是否构建, 根目录需要直接返回 needBuild:true
         var path1 = rename.buildRename(path, fromPath, conf);
         var needBuild = !path ? true : buildFilter(path1);
-        // needBuild &&　console.log(path1);
+        // needBuild &&　console.trace(path1);
         if (needBuild === false) {
             // 如果路径匹配直接是false, 就不再构建了
             return;
@@ -133,7 +133,7 @@ exports.execute = function(req, resp, root, handle, conf){
         fs.stat(fromPath, function(error, stats){
             //文本类型资源通过HTTP获取, 以确保跟开发环境资源相同
             if(stats && stats.isFile && stats.isFile()){
-                //console.log( referer.href + "/" + encodeURI(path) );
+                //console.trace( referer.href + "/" + encodeURI(path) );
                 if (mime.isTXT(path) && needBuild) {
                     building = 1;
                     http.get( referer.href + "/" + encodeURI(path) + '?_build_=true', function(res) {
@@ -142,19 +142,19 @@ exports.execute = function(req, resp, root, handle, conf){
                             res.pipe( fws ).on('finish',function(){
                                 building = 0;
                                 if (ftpClient) {
-                                    console.log('uploading...\t' + path1);
+                                    console.trace('uploading...\t' + path1);
                                     ftpClient.put(newPath, $path.join(ftpClient.root, path1), function (e) {
-                                        console.log((e ? '!upload error\t' : 'upload success\t') + path1);
+                                        console.trace((e ? '!upload error\t' : 'upload success\t') + path1);
                                         ftpClient.end();
                                     });
                                 }
                             });
                         }else{
-                            console.log('build error for: ' + path);
+                            console.trace('build error for: ' + path);
                         }
                     }).on('error',function(e){
-                        console.log('build error for: ' + path);
-                        console.log(e);
+                        console.trace('build error for: ' + path);
+                        console.trace(e);
                     });
                 }
                 else {
@@ -172,9 +172,9 @@ exports.execute = function(req, resp, root, handle, conf){
                         }
                         building = 0;
                         if (ftpClient) {
-                            console.log('uploading...\t' + path1);
+                            console.trace('uploading...\t' + path1);
                             ftpClient.put(newPath, $path.join(ftpClient.root, path1), function (e) {
-                                console.log((e ? '!upload error\t' : 'upload success\t') + path1);
+                                console.trace((e ? '!upload error\t' : 'upload success\t') + path1);
                                 ftpClient.end();
                             });
                         }
@@ -232,12 +232,12 @@ exports.execute = function(req, resp, root, handle, conf){
                 command: '开始构建并进行FTP上传...'
             }));
         }).on('error', function (e) {
-            console.log(e);
+            console.trace(e);
             resp.end(JSON.stringify({
                 error: 'FTP上传配置有误...'
             }));
         }).on('end', function () {
-            console.log('\nftp upload finished!\n');
+            console.trace('\nftp upload finished!\n');
         });
     }
     else {

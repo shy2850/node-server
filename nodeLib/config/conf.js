@@ -69,7 +69,7 @@ var conf = {
     'nginx-http-concat': true,  // 支持
     filter: {
         get: function(/*req, resp*/){
-            // console.log( arguments[0].url );  // 这个前置过滤器可以过滤所有服务端请求
+            // console.trace( arguments[0].url );  // 这个前置过滤器可以过滤所有服务端请求
         }
     },
     agent: {},  // 代理复杂配置，匹配路径从另外服务器获取资源并可以修改响应信息
@@ -149,13 +149,13 @@ try{
                         exports.setup = currentConf.setup;
                     }
                 }catch(e){
-                    console.log(e);
-                    console.log("配置文件语法错误！：\n" + f2eConfPath);
+                    console.trace(e);
+                    console.trace("配置文件语法错误！：\n" + f2eConfPath);
                 }
             }
         }
     }
 }catch(e){
-    console.log("配置文件错误，使用默认配置！");
+    console.trace("配置文件错误，使用默认配置！");
     console.error(e);
 }

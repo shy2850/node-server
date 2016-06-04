@@ -340,3 +340,8 @@
 --2016/05/28 v1.12.6
 	#BUG: 修改handle.js 的 $include替换方式改写 手误（丢失了全局匹配）
 
+--2016/06/04 v1.12.7
+	#BUG: 修改handle.js 的 $include 替换方式改写, 上版本修改时丢失了多层嵌套支持
+	#CHANGE: 修改所有的console.log 为 console.trace
+
+

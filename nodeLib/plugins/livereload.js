@@ -42,7 +42,7 @@ var listenner = function(path){
     }
 };
 watcher.on('change', function(path){
-    console.log('changed: ' + decodeURI(path));
+    console.trace('changed: ' + decodeURI(path));
     listenner(path);
 }).on('add', listenner);
 

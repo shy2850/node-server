@@ -64,7 +64,7 @@ exports.start = function(conf){
                 _resp.writeHead(404, {"Content-Type": "text/html"});
                 fs.readFile(_conf.notFound || '', function (err, data){
                     if(err){
-                        if( _conf.notFound ){ console.log(err); }
+                        if( _conf.notFound ){ console.trace(err); }
                         _resp.end( '<h1 style="font-size:200px;text-align:center;">404</h1>' );
                     }else{
                         _resp.end( data );
@@ -148,7 +148,7 @@ exports.start = function(conf){
             });
         }, req.data.delay | 0 );// 增加delay参数，使得所有GET请求可以动态延时
     }catch(err){
-        console.log(err.stack);
+        console.trace(err.stack);
         resp.writeHead(500, {"Content-Type": "text/html"});
         resp.end( err.stack.toString().replace(/\n/g,"<br>") );
     }});
@@ -160,5 +160,5 @@ exports.start = function(conf){
 try{
     require('./config/update').execute(serverInfo);
 }catch(e){
-    console.log( e );
+    console.trace( e );
 }

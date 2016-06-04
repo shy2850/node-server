@@ -43,7 +43,7 @@ var loadJSON = function( url, callback ){
 exports.execute = function(server){
     loadJSON( path.join( __dirname , '../../package.json' ), function(err, json){
         if(err){
-            console.log(err);
+            // console.trace(err);
         }
         var version = json.version, init = false;
         function lookforupdate(){

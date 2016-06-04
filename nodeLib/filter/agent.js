@@ -110,7 +110,7 @@ exports.execute = function(request, response, option, path){
             //fws = fs.createWriteStream( filename.replace(/[?]+.*$/,"") );
           });
         }catch(e){
-          console.log(e);
+          console.trace(e);
         }
     }
   }
