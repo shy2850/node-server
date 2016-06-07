@@ -17,11 +17,11 @@ setInterval(function(){
     if( _.find(l, function(n){ return !!n; }) ){
         if( i === 0 ){
             builded = true;
-            console.trace( 'building......' );
+            console.log( 'building......' );
         }
     }else if(builded){
         builded = false;
-        console.trace( 'build finished!\n' );
+        console.log( 'build finished!\n' );
     }
     i = (i + 1) % l.length;
 },200);
@@ -54,7 +54,7 @@ var tinifyImg = function (conf, path) {
         var source = tinify.fromFile(input);
         source.toFile(output, function (err) {
             if (err) {
-                console.trace('tinify error:');
+                console.log('tinify error:');
                 console.trace(err);
             }
             else {
@@ -86,7 +86,7 @@ var buildFile = function(pathname, conf, callback){
             console.trace(e);
         }
     }).on('error', function(e){
-        console.trace('build error for: ' + pathname);
+        console.log('build error for: ' + pathname);
         console.trace(e);
         building = 0;
     });
@@ -101,7 +101,7 @@ exports.execute = function(req, resp, root, handle, conf){
         return;
     }
     if( _.find(l, function(n){ return !!n; }) ){
-        console.trace('building......');
+        console.log('building......');
         resp.end(JSON.stringify({
             error: '构建中...'
         }));
@@ -150,10 +150,10 @@ exports.execute = function(req, resp, root, handle, conf){
                                 }
                             });
                         }else{
-                            console.trace('build error for: ' + path);
+                            console.log('build error for: ' + path);
                         }
                     }).on('error',function(e){
-                        console.trace('build error for: ' + path);
+                        console.log('build error for: ' + path);
                         console.trace(e);
                     });
                 }
