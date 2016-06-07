@@ -53,7 +53,7 @@ mini = {
         return function(str, resp){
             var m;
             var conf = resp.util.conf;
-            if("text/css" === mimeType && resp.autoprefixer){
+            if("text/css" === mimeType && conf.autoprefixer){
                 if(autoprefixer){
                     postcss([ autoprefixer({inline:false,browsers: ['> 1%', 'IE 7']}) ]).process(str).then(function (result) {
                         result.warnings().forEach(function (warn) {
@@ -67,6 +67,17 @@ mini = {
                     });
                 }else{
                     console.error("autoprefixer 或 postcss 未安装, 自动前缀插件不可用！");
+                }
+            }else if("js" === extType && conf.babel){
+                str = babel.transform(str, _.extend({
+                    presets: ["react", "es2015"],
+                    filename: pathname.replace(/^[\\\/]+/, ''),
+                    sourceRoot: conf.root
+                }, conf.babel)).code;
+                if(!debug && (m = mini[extType]) ){
+                    m(str, resp);
+                }else{
+                    out(str, resp);
                 }
             }else{
                 if(resp.data.listen || conf.livereload && conf.livereload.inject && conf.livereload.inject(pathname)){

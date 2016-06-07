@@ -344,4 +344,6 @@
 	#BUG: 修改handle.js 的 $include 替换方式改写, 上版本修改时丢失了多层嵌套支持
 	#CHANGE: 修改所有的console.log 为 console.trace
 
+--2016/06/08 v1.12.8
+	#Feature: js后缀文件也支持babel编译
 

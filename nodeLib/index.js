@@ -50,7 +50,6 @@ exports.start = function(conf){
         };
         req.$ = {title: pathurl, fileList: [], needUpdate: serverInfo.needUpdate };
         resp.cdnPath = req.headers.host + req.url; // cdn 索引
-        resp.autoprefixer = conf.autoprefixer;
         var DEBUG = req.data.debug === "true" || conf.debug; //DEBUG模式判断
 
         // 资源未找到时， 处理信息
