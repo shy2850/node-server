@@ -2,7 +2,8 @@
 var http = require('http'),
     https = require('https'),
     url = require('url'),
-    fs = require('fs');
+    fs = require('fs'),
+    zlib = require('zlib');
 var _ = require('underscore');
 var hostReg = /(https?\:\/\/)[^\/]+/;
 var cookies = {};
@@ -59,11 +60,34 @@ function doRequest(request, response, option, path, fws){
         }
         response.writeHead(res.statusCode, res.headers);
         res.pipe(response);
+
         if(fws){
+          var chunks =[], data, encoding = res.headers['content-encoding'];
           res.on('data',function(chunk){
-            fws.write(chunk);
+            chunks.push(chunk);
           }).on('end',function(){
-            fws.end();
+            var buffer = Buffer.concat(chunks);
+            switch (encoding) {
+              case 'gzip':
+                zlib.gunzip(buffer, function (err, decoded) {
+                    data = decoded.toString();
+                    fws.write(data);
+                    fws.end();
+                });
+                break;
+              case 'deflate':
+                zlib.inflate(buffer, function (err, decoded) {
+                    console.log(err);
+                    data = decoded.toString();
+                    fws.write(data);
+                    fws.end();
+                });
+                break;
+              default:
+                data = buffer.toString();
+                fws.write(data);
+                fws.end();
+            }
           });
         }
     }).on('error',function(err){
