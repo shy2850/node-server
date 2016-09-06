@@ -350,3 +350,6 @@
 --2016/06/08 v1.12.9
 	#Feature: 代理下载支持gzip资源
 
+--2016/09/06 v1.12.10
+	#Feature: uglify 支持配置参数 `{uglify:{fromString: true, mangle: {}}}`
+

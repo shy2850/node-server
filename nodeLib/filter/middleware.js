@@ -40,7 +40,7 @@ var out = function(str, resp){
 },
 mini = {
     js: function(str, resp){
-        var resu = require("uglify-js").minify(str,{fromString: true});
+        var resu = require("uglify-js").minify(str, _.extend({fromString: true}, resp.util.conf.uglify));
         out( resu.code, resp );
     },
     css: function(str, resp){
