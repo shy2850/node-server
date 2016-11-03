@@ -51,7 +51,7 @@ program
             if(error){
                 console.log(error);
             }else{
-                var conf = new Function('var exports = {};' + str + ';return exports;')();
+                var conf = new Function("require", "__dirname", 'var exports = {};' + str + ';return exports;')(require, host.root);
                 for(var k in conf){
                     CONF[k] = _.extend({}, CONF[k], conf[k]);
                 }

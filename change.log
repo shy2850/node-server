@@ -353,3 +353,5 @@
 --2016/09/06 v1.12.10
 	#Feature: uglify 支持配置参数 `{uglify:{fromString: true, mangle: {}}}`
 
+--2016/11/03 v1.12.11
+	#BUG 修改cli 让host支持require & __dirname
