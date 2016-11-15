@@ -105,6 +105,7 @@ exports.localhost = conf.extend({});
 exports.staticconf = conf.extend({ //不要删除或者修改这个服务
     port: 2850,
     debug: false,
+    gzip: true,
     cdn: true,
     expires: 1000 * 60 * 60 * 24,
     filter: {

@@ -43,8 +43,8 @@
     });
   });
 
-  require(["clock"], function() {
-    return window.Clock({
+  require(["clock"], function(Clock) {
+    return Clock({
       holder: "clock",
       size: 100
     });
