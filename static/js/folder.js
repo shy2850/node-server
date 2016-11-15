@@ -43,11 +43,16 @@
     });
   });
 
-  require(["clock"], function() {
-    return window.Clock({
-      holder: "clock",
-      size: 100
+  // require(["clock"], function() {
+  //   return window.Clock({
+  //     holder: "clock",
+  //     size: 100
+  //   });
+  // });
+  require(["clock_es5"], function() {
+    return new Clock({
+      holder: "#clock",
+      r: 200
     });
   });
-
 }).call(this);
