@@ -72,7 +72,7 @@ var Clock = function () {
       this.ctx.save();
 
       var time = new Date(startTime);
-      time = Object.prototype.toString.call(time).slice(8, -1).toLowercase() === 'date' ? time : new Date();
+      time = Object.prototype.toString.call(time).slice(8, -1).toLowerCase() === 'date' ? time : new Date();
       var h = time.getHours();
       var m = time.getMinutes();
       var s = time.getSeconds();
@@ -104,3 +104,7 @@ var Clock = function () {
 
   return Clock;
 }();
+
+// export default Clock;
+
+window.Clock = Clock;

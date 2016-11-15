@@ -52,7 +52,7 @@ class Clock {
     this.ctx.save();
 
     let time = new Date(startTime);
-    time = Object.prototype.toString.call(time).slice(8, -1).toLowercase() === 'date'
+    time = Object.prototype.toString.call(time).slice(8, -1).toLowerCase() === 'date'
            ? time
            : new Date();
     const h = time.getHours();
@@ -80,3 +80,7 @@ class Clock {
     this.ctx.stroke();
   }
 }
+
+// export default Clock;
+
+window.Clock = Clock;
