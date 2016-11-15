@@ -41,6 +41,7 @@
   },
   "scripts": {
     "start": "node node-server.js start",
+    "build": "./node_modules/.bin/babel static/js/clock_es6.js -o static/js/clock_es5.js",
     "lint": "eslint -c eslint.json *.js nodeLib/*/*.js --no-ignore"
   },
   "repository": {

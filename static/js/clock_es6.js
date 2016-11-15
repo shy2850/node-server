@@ -80,5 +80,3 @@ class Clock {
     this.ctx.stroke();
   }
 }
-
-export default Clock;
