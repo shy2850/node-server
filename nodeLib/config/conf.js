@@ -16,7 +16,7 @@ var conf = {
     welcome: "", //使用欢迎页面的文件名，不为空时，fs_mod可能失效
     notFound: path.join( __dirname , "../html/404.html" ),      //访问的资源不存在时跳转的页面配置
     folder: path.join( __dirname , "../html/folder.html" ),     //显示文件夹列表时候的配置页面
-    include: "\\$include\\[[\"'\\s]*([^\"'\\s]+)[\"'\\s]*\\]",
+    include: "\\$include\\[[\"'\\s]*([^\"'\\s]+)[\"'\\s]*\\](\\[[\"'\\s]*([^\"'\\s]+)[\"'\\s]*\\])?",
     placeholder: "$[placeholder]",
     belong: "\\$belong\\[[\"\\s]*([^\"\\s]+)[\"\\s]*\\]",
     livereload: false,  //是否监听文件变化刷新网页, 详细配置如下

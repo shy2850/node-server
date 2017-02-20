@@ -1,7 +1,17 @@
 "use strict";
 var fs = require("fs"),
     path = require("path"),
+    mime = require("mime"),    //MIME类型
     _ = require("underscore");
+
+function includeFile (filePath, type) {
+    switch (type) {
+        case 'base64':
+            return 'data:' + mime.get(filePath) + ';base64,' + new Buffer(fs.readFileSync(filePath)).toString('base64'); 
+        default:
+            return fs.readFileSync(filePath,'utf-8');
+    }
+}
 
 exports.execute = function(req, resp, root, str, mini, debug, conf){
     var belong = "",
@@ -30,8 +40,8 @@ exports.execute = function(req, resp, root, str, mini, debug, conf){
         }
         
         while (str.match(include)) {
-            str = str.replace(include, function (all, filename) {
-                return fs.readFileSync( /^[\/\\]/.test(filename) ? path.join(root, filename) : path.join(pathname, filename),'utf-8');
+            str = str.replace(include, function (all, filename, type) {
+                return includeFile( /^[\/\\]/.test(filename) ? path.join(root, filename) : path.join(pathname, filename), type);
             });
         }
 
