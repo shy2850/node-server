@@ -5,6 +5,7 @@ var CONF = require("./config/conf"),    //综合配置
     modules = require("./common/modules"),//支持的插件配置
     filter = require('./filter/filter'),//支持前置过滤器
     querystring = require("querystring"),
+    path = require('path'),
     zlib = require("zlib"),
     mime = require("mime"),    //MIME类型
     http = require("http"),
@@ -85,6 +86,12 @@ exports.start = function(conf){
             resp.gzip = conf.gzip && mime.isTXT(pathname) && !req.data._build_; //构建阶段禁用
 
             fs.stat(pathname,function(error, stats){
+                pathname = path.resolve(pathname);  // 正则化路径
+                if (pathname.indexOf(root) !== 0) { // directory traversal
+                    other(req, resp, handle, conf, pathurl); 
+                    return;
+                }
+
                 if(stats && stats.isFile()){  //如果url对应的资源文件存在，根据后缀名写入MIME类型
                     if( req.method === "POST" ){    // POST请求 添加target参数以后, 使用 upload 插件进行解析。
                         req.data.target = pathurl;
