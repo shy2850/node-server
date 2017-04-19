@@ -355,3 +355,6 @@
 
 --2016/11/03 v1.12.11
 	#BUG 修改cli 让host支持require & __dirname
+--2017/04/19 v1.12.13
+        #BUG fix the directory traversal
+
