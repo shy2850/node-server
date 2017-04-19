@@ -26,6 +26,7 @@ exports.start = function(conf){
             pathurl,
             hostConf = CONF[ host[0] ],
             root,
+            basePath,
             agent;
         if( hostConf && (host[1] | 0) === (hostConf.port | 0) ){ //域名识别
             conf = hostConf;
@@ -34,6 +35,7 @@ exports.start = function(conf){
         }
         conf.hostname = conf.host || req.headers.host;
         root = conf.root;
+        basePath = path.resolve(root);
         if( typeof filter.execute(req,resp,conf) !== "undefined"){
             return false;   //有返回值的时候, 防止继续运行
         } //过滤器提前, 可以修改url
@@ -56,7 +58,7 @@ exports.start = function(conf){
         // 资源未找到时， 处理信息
         var other = function (_req, _resp, _handle, _conf, _pathurl){
             var m = modules.get( _pathurl.replace('/','') );
-            if(m){
+            if(m && m.execute){
                 m.execute(_req,_resp,_conf.root,_handle,_conf);
             }else if(_conf.agent && _conf.agent.get && (agent = _conf.agent.get(_pathurl, _req, _resp, _conf) ) ){   // 代理过滤
                 require('./filter/agent').execute(_req,_resp,agent,_req.url);
@@ -87,7 +89,7 @@ exports.start = function(conf){
 
             fs.stat(pathname,function(error, stats){
                 pathname = path.resolve(pathname);  // 正则化路径
-                if (pathname.indexOf(root) !== 0) { // directory traversal
+                if (pathname.indexOf(basePath) !== 0) { // directory traversal
                     other(req, resp, handle, conf, pathurl); 
                     return;
                 }
