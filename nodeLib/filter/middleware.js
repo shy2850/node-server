@@ -151,7 +151,7 @@ var register = function (ext, type, render) {
 register('less', 'css', function(req, resp, rs, pathname, DEBUG){
     var out = this.out;
     require("less").render(rs, {
-        paths: [ pathname.replace(/(\/[^\/]+?)$/,"") ],
+        paths: [ path.dirname(pathname) ],
         compress: !DEBUG
     }, function (err, output) {
         if (err) { throw err; }
@@ -166,7 +166,7 @@ register('scss', 'css', function(req, resp, rs, pathname, DEBUG){
     require('node-sass').render({
         file: pathname,
         outFile: pathname.replace(/(\.scss)$/,".css"),
-        includePaths: [ pathname.replace(/(\/[^\/]+?)$/,"") ],
+        includePaths: [ path.dirname(pathname) ],
         outputStyle: (!DEBUG ? "compressed" : "expanded")
     }, function (err, output) {
         if (err) { throw err; }
@@ -197,7 +197,7 @@ register('coffee', 'js', function(req, resp, rs, pathname, DEBUG){
 register('jsx', 'js', function (req, resp, rs, pathname, DEBUG) {
     var res = babel.transform(rs + '', _.extend({
         presets: ["react"],
-        filename: pathname.replace(/^[\\\/]+/, ''),
+        filename: path.dirname(pathname),
         sourceRoot: req.util.conf.root
     }, req.util.conf.babel)).code;
     return res;

@@ -1,6 +1,6 @@
 {
   "name": "f2e-server",
-  "version": "1.12.13",
+  "version": "1.12.14",
   "description": "a nodejs based file-system-server with easy-template-engine and several F2E-utils",
   "main": "node-server.js",
   "dependencies": {
@@ -10,6 +10,7 @@
     "cssmin": ">=0.4.1",
     "formidable": ">=1.0.15",
     "ftp": "^0.3.10",
+    "less": ">=2.0.0",
     "marked": ">=0.3.3",
     "mdppt": "*",
     "mime": "*",
@@ -28,7 +29,6 @@
     "freemarker.js": ">=1.2.0",
     "highlight": ">=0.2.3",
     "jade": ">=1.7.0",
-    "less": ">=2.0.0",
     "node-sass": ">=3.2.0",
     "postcss": "^5.0.16",
     "psd": ">=1.0.2"
