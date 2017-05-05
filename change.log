@@ -357,5 +357,5 @@
 	#BUG 修改cli 让host支持require & __dirname
 --2017/04/19 v1.12.13
         #BUG fix the directory traversal
---2017/05/05 v1.12.15
+--2017/05/05 v1.12.16
         #BUG fix pathname-executes of middlewares & `LESS` into dependencies

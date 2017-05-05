@@ -197,7 +197,7 @@ register('coffee', 'js', function(req, resp, rs, pathname, DEBUG){
 register('jsx', 'js', function (req, resp, rs, pathname, DEBUG) {
     var res = babel.transform(rs + '', _.extend({
         presets: ["react"],
-        filename: path.dirname(pathname),
+        filename: pathname.replace(/^[\\\/]+/, ''),
         sourceRoot: req.util.conf.root
     }, req.util.conf.babel)).code;
     return res;
