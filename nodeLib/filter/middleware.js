@@ -12,9 +12,7 @@ var livereload_code = require("uglify-js")
     .minify(
         fs.readFileSync(
             path.join( __dirname, '../../static/js/livereload.js')
-        ).toString(),{
-            fromString: true
-        }).code;
+        ).toString()).code;
 
 var postcss, autoprefixer;
 try{
@@ -40,7 +38,7 @@ var out = function(str, resp){
 },
 mini = {
     js: function(str, resp){
-        var resu = require("uglify-js").minify(str, _.extend({fromString: true}, resp.util.conf.uglify));
+        var resu = require("uglify-js").minify(str);
         out( resu.code, resp );
     },
     css: function(str, resp){

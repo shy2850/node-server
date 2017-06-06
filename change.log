@@ -359,3 +359,5 @@
         #BUG fix the directory traversal
 --2017/05/05 v1.12.16
         #BUG fix pathname-executes of middlewares & `LESS` into dependencies
+--2017/06/06 v1.12.17
+        #BUG fix uglifyjs3 api changed
