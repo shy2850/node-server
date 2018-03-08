@@ -1,6 +1,9 @@
 f2e-server 
 ==========
 
+> f2e-server 已经完全改写 注意使用1.0版本安装 使用 `npm i f2e-server@1.*`  
+> 查看文档： 需要通过git下载当前仓库 并切换 `gh-pages` 分支后 使用 f2eserver 启动目录
+
 f2e-server 是基于nodejs平台的HTTP服务器，提供了基本的模板引擎以及常用的前端工具。
 
 a nodejs based http-server with easy-template-engine and several F2E-utils
@@ -13,7 +16,7 @@ changelog: [change.log](change.log)
 f2e-server 1.8.3 以后支持全局安装
 
 * 安装: $ 
-	``npm install f2e-server -g``
+	``npm install f2e-server@1.* -g``
 * 启动:$ 
 	``f2eserver start`` 服务启动后，会在当前目录自动生成 f2e-conf.js 文件, 可参考修改
 * 修改hosts:$ 
