@@ -231,8 +231,8 @@ exports.register = register;
 
 mime.get = function(path, fallback){
     var extType = (path + "").split(".").pop();
-    return this.lookup( middTypes[extType] || path, fallback ) || 'application/octet-stream';
+    return mime.getType( middTypes[extType] || path, fallback ) || 'application/octet-stream';
 };
 mime.isTXT = function(path, fallback){
-    return /\b(php|jsp|asp)$/.test(path) || /\b(text|xml|javascript|json)\b/.test( this.get(path, fallback) );
+    return /\b(php|jsp|asp)$/.test(path) || /\b(text|xml|javascript|json)\b/.test( mime.get(path, fallback) );
 };
